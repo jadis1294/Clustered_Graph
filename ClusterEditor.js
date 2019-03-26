@@ -20,47 +20,22 @@ var edges = [];
 var clusters_fake = [];
 var cgraph = [clusters, nodes, edges, clusters_fake]
 
-var attractForce = d3.forceManyBody().strength(80).distanceMax(400).distanceMin(80);
-var collisionClustersForce = d3.forceCollide(function(d) {
-    return d.r + 10;
-}).strength(1).iterations(400);
-
-
-// We're passing in a function in d3.max to tell it what we're maxing (x value)
-// We're passing in a function in d3.max to tell it what we're maxing (x value)
-
-var clusterAttrs = {
-    cx: function(d) {
-        return d.x;
-    },
-    cy: function(d) {
-        return d.y;
-    },
-    r: function(d) {
-        return d.r;
-    }
-};
-
-
-var nodeAttrs = {
-    cx: function(d) {
-        return d.x;
-    },
-    cy: function(d) {
-        return d.y;
-    },
-    r: function(d) {
-        return d.r;
-    }
-};
-
 var crea_cluster = false;
 var crea_nodi = false;
 var crea_archi = false;
 var sposta_cluster = false;
 var elimina_clusterNodo = false;
 
-
+var simulationIntraClusters = d3.forceSimulation(clusters)
+    .force("collide", d3.forceCollide().radius(function(d) { return d.r + 0.5; }).iterations(2))
+    //.force("attract",d3.forceManyBody().strength(80).distanceMax(400).distanceMin(80))
+    .on("tick", ticked);
+var simulationInterClusters = d3.forceSimulation(clusters)
+    .force("collide", d3.forceCollide()
+        .radius(function(d) {
+     return d.r + 0.5;
+      }).iterations(2))
+    .on("tick", ticked);
 var drag = d3.drag()
     .on("drag", dragged)
 
@@ -339,7 +314,6 @@ function newCluster(coords) {
         .append("circle")
         .transition()
         .duration(800)
-        .attr(clusterAttrs)
         .attr("cx",function(d) {
         return d.x;
     })
@@ -352,13 +326,13 @@ function newCluster(coords) {
         .attr("fill", getRandomColor)
         .attr("opacity", 0.5)
         .attr("id", "cluster")
-var simulationclusters = d3.forceSimulation(clusters)
-    .velocityDecay(0.2)
+                var simulationIntraClusters = d3.forceSimulation(clusters)
     .force("collide", d3.forceCollide().radius(function(d) { return d.r + 0.5; }).iterations(2))
+        //.force("attract",d3.forceManyBody().strength(80).distanceMax(400).distanceMin(80))
     .on("tick", ticked);
     d3.select("#c_cluster")
         .selectAll("circle")
-        .on("click", function(i) {
+        .on("click", function(d) {
             var coords = d3.mouse(this);
             if (sposta_cluster == true)
                 dragCluster();
@@ -370,21 +344,20 @@ var simulationclusters = d3.forceSimulation(clusters)
                     .enter()
                     .append("circle")
             }
-            if (ingrandisci_cluster == true) {
+            if (crea_cluster == true) {
                 var bigRad = d3.select(this).attr("r")
                 if (bigRad >= 320) return;
-                if (bigRad == radiusCluster) {
-                    var r = radiusCluster + valore_scarto;
+                if(bigRad== radiusCluster){
                     d3.select(this)
                         .transition()
                         .duration(1000)
-                        .attr("r", r)
+                        .attr("r", d.r = d3.sum([bigRad,20]))
                 }
-                if (bigRad > radiusCluster) {
+                if(bigRad>radiusCluster){
                     d3.select(this)
                         .transition()
                         .duration(1000)
-                        .attr("r", bigRad * 2)
+                        .attr("r", d.r = d3.sum([bigRad,radiusCluster]))
                 }
             }
         });
@@ -537,6 +510,9 @@ function ticked() {
         .attr("cy", function(d) {
             return d.y;
         })
+        .attr("r",function(d){
+            return d.r;
+        })
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////funzioni per FLAT TIME//////////////////////////////////////////////////////////////////
@@ -635,7 +611,6 @@ function initialize() {
         .append("svg")
         .attr("width", w - 130)
         .attr("height", h - 100)
-
         .attr('id', 'cgraph')
         .call(d3.zoom()
             .on("zoom", function() {
