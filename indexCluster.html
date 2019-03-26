@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<!-- How to create Mouse Events for D3 -->
+<html>
+   <head>
+      <!-- Load D3 from site -->
+        <script src="https://cdn.rawgit.com/eligrey/canvas-toBlob.js/f1a01896135ab378aa5c0118eadd81da55e698d8/canvas-toBlob.js"></script>
+    <script src="https://cdn.rawgit.com/eligrey/FileSaver.js/e9d941381475b5df8b7d7691013401e171014e89/FileSaver.min.js"></script>
+            <script src="http://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+            <script src="https://d3js.org/d3-dispatch.v1.min.js"></script>
+<script src="https://d3js.org/d3-quadtree.v1.min.js"></script>
+<script src="https://d3js.org/d3-timer.v1.min.js"></script>
+<script src="https://d3js.org/d3-force.v2.min.js"></script>
+   </head>
+
+   <style>
+   .title{
+      color: #FFFFD0;
+        letter-spacing: 2.5px;
+          word-spacing: 10px;
+            text-decoration: underline overline;
+              font-family: "Times New Roman", Times, serif;
+                        font-size: 20px;
+   }
+    body{
+      background-color:#555550;
+      margin: 0 auto;
+
+    }
+      #c_edge{
+      stroke:grey;
+      stroke-width:3px;
+      }
+
+      #c_cluster{
+      stroke:black;  
+      stroke-width:3px;
+      }
+      #c_cluster_fake{
+      fill:#FFFFE0;
+      stroke: grey;
+      stroke-width:17px;
+      fill-opacity: 0;
+      stroke-opacity: 0.5;
+      }
+      #c_node{
+      stroke:#555555;  
+      stroke-width:3px;
+      fill: grey;
+
+      }
+      #cgraph {
+      background-color:#FFFFE0;
+  border: 2px solid #4CAF50;
+margin:0px 0 0 50px;
+}
+.bottoni-div{
+  float: center;
+  text-align: center;
+}
+.bottoni2-div{
+  float: center;
+  text-align: center;
+}
+.button{
+  text-decoration: underline;
+  background-color: #555555; /* Green */
+  color: white;
+  padding: 20px 26px 15px;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  border: 1px solid #4CAF50;
+    font-family: "Times New Roman", Times, serif;
+}
+.button:hover {
+  background-color: #4CAF50; /* Green */
+  color: white;
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    letter-spacing: 2px;
+  font-family: "Times New Roman", Times, serif;
+            font-size: 14px;
+}
+
+
+.button:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 1s
+}
+.button:focus{
+    background-color: #4CAF50;
+    font-family: "Times New Roman", Times, serif;
+        letter-spacing: 2px;
+          font-size: 14px;
+  }
+.svg-div{
+}
+
+
+   </style>
+
+   <body>
+    <div class="title">
+      <h1><center>Build / Import your Cluster Graph !</center><h1>
+    </div>
+         <div class="bottoni-div">
+            <input class="button" type="button" onclick="creaCluster()" value="New Clusters" />
+            <input class="button" type="button" onclick="creaNodi()" value="Edit Nodes" />
+            <input class="button" type="button" onclick="creaArchi()" value="Edit Edges" />
+            <input class="button" type="button" onclick="spostaCluster()" value="Drag Cluster" />
+            <input class="button" type="button" onclick="eliminaCluster()" value="Delete Cluster" />
+            <input class="button" type="button" onclick="naviga()" value="Navigate" />
+            <input class="button" type="button" onclick="eliminaGrafo()" value="Delete the graph" />
+            <input class="button" type="button" onclick="salvaGrafo()" value="Save as PNG" />
+            <input class="button" type="button" onclick="importSVG()" value="Import SVG" />
+            <input class="button" type="button" onclick="flatCluster()" value="FLAT TIME" />
+         </div> 
+
+         <div class="svg-div">
+            <script type="text/javascript" src="ClusterEditor.js"></script>
+         </div>   
+         <div class="bottoni2-div">
+            <input class="button" type="button" onclick="" value="Legend" />
+            <input class="button"type="button" onclick="" value="How to" />
+
+         </div> 
+   </body>
+</html>
