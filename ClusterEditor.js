@@ -1,6 +1,3 @@
-var node;
-var clickCount = 0;
-var nodoCliccato = false;
 var threshold = 300; // per il click VS doubleclick
 var w = window.innerWidth,
     h = window.innerHeight,
@@ -25,12 +22,6 @@ var crea_nodi = false;
 var crea_archi = false;
 var sposta_cluster = false;
 var elimina_clusterNodo = false;
-
-var simulationIntraClusters
-var drag = d3.drag()
-    .on("drag", dragged)
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////7
 ///////////////////////////FUNZIONI X IMPORTARE IL GRAFO ////////////////////////////
 function importSVG() {
@@ -142,13 +133,27 @@ function svgString2Image(svgString, width, height, format, callback) {
     image.src = imgsrc;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////7
 
+function flatCluster() {
+    crea_cluster = false;
+    crea_nodi = false;
+    crea_archi = false;
+    sposta_cluster = false;
+    elimina_clusterNodo = false;
+    naviga_cgraph = false;
+    d3.select("#c_cluster")
+        .attr("transform", null)
+    d3.select("#c_node")
+        .attr("transform", null)
+    d3.select("#c_edge")
+        .attr("transform", null)
 
-
-function dragged(d) {
-    d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+    d3.select("#c_cluster")
+        .selectAll("circle")
+        .data(clusters)
+        .on("click", flattingClusterDelete)
 }
-
 function ingrandisciCluster() {
             edit_cluster=false;
     ingrandisci_cluster = true;
@@ -200,7 +205,7 @@ function editCluster() {
 }
 
 function naviga() {
-                edit_cluster=false;
+    edit_cluster=false;
     ingrandisci_cluster = false;
     crea_cluster = false;
     crea_nodi = false;
@@ -211,7 +216,7 @@ function naviga() {
 }
 
 function creaNodi() {
-                edit_cluster=false;
+    edit_cluster=false;
     ingrandisci_cluster = false;
     crea_cluster = false;
     crea_nodi = true;
@@ -228,7 +233,7 @@ function creaNodi() {
 }
 
 function creaArchi() {
-                edit_cluster=false;
+    edit_cluster=false;
     ingrandisci_cluster = false;
     crea_cluster = false;
     crea_nodi = false;
@@ -245,7 +250,7 @@ function creaArchi() {
 }
 
 function spostaCluster() {
-                edit_cluster=false;
+    edit_cluster=false;
     ingrandisci_cluster = false;
     crea_cluster = false;
     crea_nodi = false;
@@ -261,7 +266,7 @@ function spostaCluster() {
 }
 
 function eliminaCluster() {
-                edit_cluster=false;
+    edit_cluster=false;
     ingrandisci_cluster = false;
     crea_cluster = false;
     crea_nodi = false;
@@ -278,7 +283,7 @@ function eliminaCluster() {
 }
 
 function flatCluster() {
-                edit_cluster=false;
+    edit_cluster=false;
     ingrandisci_cluster = false;
     crea_cluster = false;
     crea_nodi = false;
@@ -301,10 +306,23 @@ function eliminaGrafo() {
     clusters = [];
     nodes = [];
     edges = [];
-    // initialize();
-
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////FUNZIONI PER DRAG/////////////////////////////////////
+var drag = d3.drag()
+    .on("drag", dragged)
+function dragged(d) {
+    d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
 }
 
+function dragCluster() {
+    d3.select("#c_cluster")
+        .selectAll("circle") // For new circle, go through the update process
+        .call(drag)
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////    RANDOMIZZAZIOE DEI COLORI DEI CLUSTER    ////////////////////////////////
 function getRandomColor() {
     var letters = '0123456789ABCDEF';
     var color = '#';
@@ -314,7 +332,7 @@ function getRandomColor() {
     return color;
 }
 
-
+//////////////////////////    new & edit CLUSTERS    /////////////////////////////////////////////////////7 
 function bigAndNewCluster(key,coords){
     var newData = {
         x: coords[0], // Takes the pixel number to convert to number
@@ -344,17 +362,16 @@ function bigAndNewCluster(key,coords){
                 .attr("key",function(d){
             return d.key;
         })
-                        .attr("fill", getRandomColor)
-        .attr("opacity", 0.5)
-        .attr("id", "cluster")
-            var simulationInterClusters = d3.forceSimulation(clusters[key].internalCluster)
-            .force("attract",d3.forceManyBody().strength(80).distanceMax(400).distanceMin(80))
+    .attr("fill", getRandomColor)
+    var simulationInterClusters = d3.forceSimulation(clusters[key].internalCluster)
+    .force("attract",d3.forceManyBody().strength(80).distanceMax(400).distanceMin(80))
     .force("collide", d3.forceCollide().radius(function(d) {return d.r + 0.5;}).iterations(2))
     .on("tick", tickedinternalcluster);
 }
 
 function newCluster(coords) {
-    var newData = {
+    var newData =
+    {
         x: Math.round(coords[0]), // Takes the pixel number to convert to number
         y: Math.round(coords[1]),
         r: radiusCluster,
@@ -381,12 +398,9 @@ function newCluster(coords) {
         .attr("key",function(d){
             return d.key;
         })
-
-
         .attr("fill", getRandomColor)
-        .attr("opacity", 0.5)
-        .attr("id", "cluster")
-                simulationIntraClusters = d3.forceSimulation(clusters)
+        
+        var simulationIntraClusters = d3.forceSimulation(clusters)
     .force("collide", d3.forceCollide().radius(function(d) { return d.r + 0.5; }).iterations(2))
     .on("tick", tickedcluster);
 
@@ -407,7 +421,8 @@ function removeCluster(i) {
         .attr("opacity", 0.5)
         .attr("id", "cluster")
 }
-
+//////////////////////////////////////////////////////////////////////////////////////
+///////////////////////    NEW AND EDIT NODE     /////////////////////////////////////////
 function newNode(coords) {
     var newData = {
         x: Math.round(coords[0]), // Takes the pixel number to convert to number
@@ -434,8 +449,6 @@ function newNode(coords) {
         .attr("id", "nodo")
     d3.select("#c_node")
         .selectAll("circle")
-        .on("mouseover", handleMouseOver)
-        .on("mouseout", handleMouseOut)
         .on("click", function() {
             if (crea_archi == true) {
                 let smallRad = d3.select(this).attr("r")
@@ -457,6 +470,9 @@ function newNode(coords) {
             }
         });
 }
+
+//////////////////////////////////////////////////////////////////////////////////7
+//////////////////////////    Archi     /////////////////////////////////////////////////
 
 function fineArco() {
     var puntoFinaleX = d3.select(this).attr("cx");
@@ -501,16 +517,9 @@ function restart() {
         .attr("r", 9)
     nodoCliccato = false;
 }
-
-function dragCluster() {
-    d3.select("#c_cluster")
-        .selectAll("circle") // For new circle, go through the update process
-        .call(drag)
-}
-
-
+/////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////    TICKED ASINCRONI PER LE SIMULAZIONI    ///////////////////////
 function tickedcluster() {
-    //console.log("ciao")
     d3.select("#c_cluster")
         .selectAll("circle")
         .data(clusters)
@@ -570,64 +579,6 @@ function flattingClusterDelete(d, i) {
 }
 
 
-function flatCluster() {
-    crea_cluster = false;
-    crea_nodi = false;
-    crea_archi = false;
-    sposta_cluster = false;
-    elimina_clusterNodo = false;
-    naviga_cgraph = false;
-    d3.select("#c_cluster")
-        .attr("transform", null)
-    d3.select("#c_node")
-        .attr("transform", null)
-    d3.select("#c_edge")
-        .attr("transform", null)
-
-    d3.select("#c_cluster")
-        .selectAll("circle")
-        .data(clusters)
-        .on("click", flattingClusterDelete)
-}
-
-function handleMouseOver(d, i) { // Add interactivity
-    if (naviga_cgraph == false) return;
-    // Use D3 to select element, change color and size
-    d3.select(this).attr({
-        fill: "orange",
-        r: radiusNode * 1.5
-    });
-
-    // Specify where to put label of text
-    d3.select("#cgraph").append("text").attr({
-            id: "t" + d.x + "-" + d.y + "-" + i, // Create an id for text so we can select it later for removing on mouseout
-            x: function() {
-                return d.x;
-            },
-            y: function() {
-                return d.y;
-            }
-        })
-        .text(function() {
-            return [d.x, d.y]; // Value of the text
-        });
-}
-
-function handleMouseOut(d, i) {
-    if (naviga_cgraph == false) return;
-    // Use D3 to select element, change color back to normal
-    d3.select(this).attr({
-        fill: "grey",
-        r: radiusNode
-    });
-
-    // Select text by id and then remove
-    d3.select("#t" + d.x + "-" + d.y + "-" + i).remove(); // Remove text location
-};
-
-
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////inizializzazione DEI CLUSTERS E DEI NODI//////////////////////////////////////////////////////////////
 function initialize() {
@@ -665,21 +616,26 @@ function initialize() {
 initialize();
 
 
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////on click /////////////////////////////////////////////////////////
 d3.select("#cgraph")
     .call(d3.zoom()
+        .scaleExtent([1, 40])
+    .translateExtent([[-100, -100], [w + 90, h + 100]])
             .on("zoom", function() {
                 if (naviga_cgraph == true) {
+
                     d3.select("#c_cluster")
-                        .attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")")
+                        .attr("transform",d3.event.transform )
+                    d3.select("#c_cluster_int")
+                        .attr("transform", d3.event.transform )
                     d3.select("#c_node")
-                        .attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")")
+                        .attr("transform", d3.event.transform )
                     d3.select("#c_edge")
-                        .attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")")
+                        .attr("transform", d3.event.transform )
                 }
             }))
         .on("click", function() {
-            console.log("ciao")
             var coords = d3.mouse(this);
             if (crea_cluster == true)
                 newCluster(coords);
