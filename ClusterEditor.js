@@ -19,23 +19,14 @@ var nodes = [];
 var edges = [];
 var clusters_fake = [];
 var cgraph = [clusters, nodes, edges, clusters_fake]
-
+var edit_cluster=false;
 var crea_cluster = false;
 var crea_nodi = false;
 var crea_archi = false;
 var sposta_cluster = false;
 var elimina_clusterNodo = false;
 
-var simulationIntraClusters = d3.forceSimulation(clusters)
-    .force("collide", d3.forceCollide().radius(function(d) { return d.r + 0.5; }).iterations(2))
-    //.force("attract",d3.forceManyBody().strength(80).distanceMax(400).distanceMin(80))
-    .on("tick", ticked);
-var simulationInterClusters = d3.forceSimulation(clusters)
-    .force("collide", d3.forceCollide()
-        .radius(function(d) {
-     return d.r + 0.5;
-      }).iterations(2))
-    .on("tick", ticked);
+var simulationIntraClusters
 var drag = d3.drag()
     .on("drag", dragged)
 
@@ -159,6 +150,7 @@ function dragged(d) {
 }
 
 function ingrandisciCluster() {
+            edit_cluster=false;
     ingrandisci_cluster = true;
     crea_cluster = false;
     crea_nodi = false;
@@ -175,6 +167,7 @@ function ingrandisciCluster() {
 }
 
 function creaCluster() {
+        edit_cluster=false;
     ingrandisci_cluster = false;
     crea_cluster = true;
     crea_nodi = false;
@@ -189,8 +182,25 @@ function creaCluster() {
     d3.select("#c_edge")
         .attr("transform", null)
 }
+function editCluster() {
+    edit_cluster=true;
+    ingrandisci_cluster = false;
+    crea_cluster = false;
+    crea_nodi = false;
+    crea_archi = false;
+    sposta_cluster = false;
+    elimina_clusterNodo = false;
+    naviga_cgraph = false;
+    d3.select("#c_cluster")
+        .attr("transform", null)
+    d3.select("#c_node")
+        .attr("transform", null)
+    d3.select("#c_edge")
+        .attr("transform", null)
+}
 
 function naviga() {
+                edit_cluster=false;
     ingrandisci_cluster = false;
     crea_cluster = false;
     crea_nodi = false;
@@ -201,6 +211,7 @@ function naviga() {
 }
 
 function creaNodi() {
+                edit_cluster=false;
     ingrandisci_cluster = false;
     crea_cluster = false;
     crea_nodi = true;
@@ -217,6 +228,7 @@ function creaNodi() {
 }
 
 function creaArchi() {
+                edit_cluster=false;
     ingrandisci_cluster = false;
     crea_cluster = false;
     crea_nodi = false;
@@ -233,6 +245,7 @@ function creaArchi() {
 }
 
 function spostaCluster() {
+                edit_cluster=false;
     ingrandisci_cluster = false;
     crea_cluster = false;
     crea_nodi = false;
@@ -248,6 +261,7 @@ function spostaCluster() {
 }
 
 function eliminaCluster() {
+                edit_cluster=false;
     ingrandisci_cluster = false;
     crea_cluster = false;
     crea_nodi = false;
@@ -264,6 +278,7 @@ function eliminaCluster() {
 }
 
 function flatCluster() {
+                edit_cluster=false;
     ingrandisci_cluster = false;
     crea_cluster = false;
     crea_nodi = false;
@@ -300,11 +315,51 @@ function getRandomColor() {
 }
 
 
+function bigAndNewCluster(key,coords){
+    var newData = {
+        x: coords[0], // Takes the pixel number to convert to number
+        y: coords[1],
+        r: radiusCluster,
+        internalCluster: [],
+        key: clusters[key].internalCluster.length
+    };
+
+    clusters[key].internalCluster.push(newData); // Push data to our array
+    d3.select("#c_cluster_int")
+        .selectAll("circle")
+        .data(clusters[key].internalCluster)
+        .enter()
+        .append("circle")
+        .transition()
+        .duration(800)
+        .attr("cx",function(d) {
+        return d.x;
+    })
+        .attr("cy",function(d) {
+        return d.y;
+    })
+        .attr("r",function(d) {
+        return d.r;
+    })
+                .attr("key",function(d){
+            return d.key;
+        })
+                        .attr("fill", getRandomColor)
+        .attr("opacity", 0.5)
+        .attr("id", "cluster")
+            var simulationInterClusters = d3.forceSimulation(clusters[key].internalCluster)
+            .force("attract",d3.forceManyBody().strength(80).distanceMax(400).distanceMin(80))
+    .force("collide", d3.forceCollide().radius(function(d) {return d.r + 0.5;}).iterations(2))
+    .on("tick", tickedinternalcluster);
+}
+
 function newCluster(coords) {
     var newData = {
         x: Math.round(coords[0]), // Takes the pixel number to convert to number
         y: Math.round(coords[1]),
-        r: radiusCluster
+        r: radiusCluster,
+        internalCluster: [],
+        key: clusters.length
     };
     clusters.push(newData); // Push data to our array
     d3.select("#c_cluster")
@@ -323,44 +378,18 @@ function newCluster(coords) {
         .attr("r",function(d) {
         return d.r;
     })
+        .attr("key",function(d){
+            return d.key;
+        })
+
+
         .attr("fill", getRandomColor)
         .attr("opacity", 0.5)
         .attr("id", "cluster")
-                var simulationIntraClusters = d3.forceSimulation(clusters)
+                simulationIntraClusters = d3.forceSimulation(clusters)
     .force("collide", d3.forceCollide().radius(function(d) { return d.r + 0.5; }).iterations(2))
-        //.force("attract",d3.forceManyBody().strength(80).distanceMax(400).distanceMin(80))
-    .on("tick", ticked);
-    d3.select("#c_cluster")
-        .selectAll("circle")
-        .on("click", function(d) {
-            var coords = d3.mouse(this);
-            if (sposta_cluster == true)
-                dragCluster();
-            if (elimina_clusterNodo == true) {
-                clusters.splice(i, 1);
-                d3.select("#c_cluster")
-                    .selectAll("circle") 
-                    .data(clusters)
-                    .enter()
-                    .append("circle")
-            }
-            if (crea_cluster == true) {
-                var bigRad = d3.select(this).attr("r")
-                if (bigRad >= 320) return;
-                if(bigRad== radiusCluster){
-                    d3.select(this)
-                        .transition()
-                        .duration(1000)
-                        .attr("r", d.r = d3.sum([bigRad,20]))
-                }
-                if(bigRad>radiusCluster){
-                    d3.select(this)
-                        .transition()
-                        .duration(1000)
-                        .attr("r", d.r = d3.sum([bigRad,radiusCluster]))
-                }
-            }
-        });
+    .on("tick", tickedcluster);
+
 }
 
 function removeCluster(i) {
@@ -471,26 +500,6 @@ function restart() {
         .duration(1000)
         .attr("r", 9)
     nodoCliccato = false;
-    d3.select("#c_node")
-        .selectAll("circle")
-        .on("click", function() {
-            if (crea_archi == true) {
-                let smallRad = d3.select(this).attr("r")
-                d3.select(this)
-                    .transition()
-                    .duration(1000)
-                    .attr("r", smallRad * 1.5)
-                var puntoiniziale = d3.mouse(this);
-                line = d3.select("#c_edge")
-                    .append("line")
-                    .attr("x1", puntoiniziale[0])
-                    .attr("y1", puntoiniziale[1])
-                    .attr("x2", puntoiniziale[0])
-                    .attr("y2", puntoiniziale[1])
-                    .attr("id", "edge")
-                d3.select("#c_node").selectAll("circle").on("click", fineArco)
-            }
-        });
 }
 
 function dragCluster() {
@@ -500,10 +509,25 @@ function dragCluster() {
 }
 
 
-function ticked() {
+function tickedcluster() {
+    //console.log("ciao")
     d3.select("#c_cluster")
         .selectAll("circle")
         .data(clusters)
+        .attr("cx", function(d) {
+            return d.x;
+        })
+        .attr("cy", function(d) {
+            return d.y;
+        })
+        .attr("r",function(d){
+            return d.r;
+        })
+}
+function tickedinternalcluster() {
+    //console.log("ciao")
+    d3.select("#c_cluster_int")
+        .selectAll("circle")
         .attr("cx", function(d) {
             return d.x;
         })
@@ -612,7 +636,38 @@ function initialize() {
         .attr("width", w - 130)
         .attr("height", h - 100)
         .attr('id', 'cgraph')
-        .call(d3.zoom()
+
+    d3.select("#cgraph")
+        .append('g')
+        .attr('id', 'c_cluster')
+
+
+    d3.select("#cgraph")
+        .append('g')
+        .attr('id', 'c_cluster_fake')
+
+
+    d3.select("#cgraph")
+        .append('g')
+        .attr('id', 'c_cluster_int')
+
+
+    d3.select("#cgraph")
+        .append('g')
+        .attr('id', 'c_node')
+
+    d3.select("#cgraph")
+        .append("g")
+        .attr("id", "c_edge")
+
+}
+
+initialize();
+
+
+
+d3.select("#cgraph")
+    .call(d3.zoom()
             .on("zoom", function() {
                 if (naviga_cgraph == true) {
                     d3.select("#c_cluster")
@@ -624,34 +679,71 @@ function initialize() {
                 }
             }))
         .on("click", function() {
+            console.log("ciao")
             var coords = d3.mouse(this);
             if (crea_cluster == true)
                 newCluster(coords);
             if (crea_nodi == true)
                 newNode(coords);
+            else{
+                d3.select("#cgraph")
+                    .selectAll("circle")
+                    .data(clusters)
+                    .on("click", function(d) {
+                    var coords = d3.mouse(this);
+                        if (sposta_cluster == true)
+                            dragCluster();
+                    if (elimina_clusterNodo == true) {
+                clusters.splice(i, 1);
+                d3.select("#c_cluster")
+                    .selectAll("circle") 
+                    .data(clusters)
+                    .enter()
+                    .append("circle")
+            }
+            if (edit_cluster == true) {
+                var key= d3.select(this).attr("key")
+                bigAndNewCluster(key,coords);
+                console.log("edit_cluster")
+                var bigRad = d3.select(this).attr("r")
+                if (bigRad >= 320) return;
+                if(bigRad== radiusCluster){
+                    d3.select(this)
+                        .transition()
+                        .duration(1000)
+                        .attr("r", d.r = d3.sum([bigRad,20]))
+                }
+                if(bigRad>radiusCluster){
+                    d3.select(this)
+                        .transition()
+                        .duration(1000)
+                        .attr("r", d.r = d3.sum([bigRad,radiusCluster]))
+                }
+            }
+                            simulationIntraClusters = d3.forceSimulation(clusters)
+    .force("collide", d3.forceCollide().radius(function(d) { return d.r + 0.5; }).iterations(2))
+    .on("tick", tickedcluster);
+        });
+            }
 
         })
-    d3.select("c_node")
+d3.select("#c_node")
         .selectAll("circle")
-        .on("mouseover", handleMouseOver)
-        .on("mouseout", handleMouseOut);
-
-    d3.select("#cgraph")
-        .append('g')
-        .attr('id', 'c_cluster')
-
-
-    d3.select("#cgraph")
-        .append('g')
-        .attr('id', 'c_cluster_fake')
-
-    d3.select("#cgraph")
-        .append('g')
-        .attr('id', 'c_node')
-
-    d3.select("#cgraph")
-        .append("g")
-        .attr("id", "c_edge")
-
-}
-initialize();
+        .on("click", function() {
+            if (crea_archi == true) {
+                let smallRad = d3.select(this).attr("r")
+                d3.select(this)
+                    .transition()
+                    .duration(1000)
+                    .attr("r", smallRad * 1.5)
+                var puntoiniziale = d3.mouse(this);
+                line = d3.select("#c_edge")
+                    .append("line")
+                    .attr("x1", puntoiniziale[0])
+                    .attr("y1", puntoiniziale[1])
+                    .attr("x2", puntoiniziale[0])
+                    .attr("y2", puntoiniziale[1])
+                    .attr("id", "edge")
+                d3.select("#c_node").selectAll("circle").on("click", fineArco)
+            }
+        });
