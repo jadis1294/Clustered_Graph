@@ -12,10 +12,9 @@ function tickedcluster() {
         .attr("r",function(d){
             return d.r;
         })
-}
-function tickedinternalcluster() {
-    d3.select("#c_cluster_int")
+            d3.select("#c_cluster_int")
         .selectAll("circle")
+        //.data(clus.internalCluster)
         .attr("cx", function(d) {
             return d.x;
         })
@@ -25,12 +24,31 @@ function tickedinternalcluster() {
         .attr("r",function(d){
             return d.r;
         })
+        .attr("key",function(d){
+            return d.key;
+        })
+}
+function tickedinternalcluster() {
+    d3.select("#c_cluster_int")
+        .selectAll("circle")
+        //.data(clus.internalCluster)
+        .attr("cx", function(d) {
+            return d.x;
+        })
+        .attr("cy", function(d) {
+            return d.y;
+        })
+        .attr("r",function(d){
+            return d.r;
+        })
+        .attr("key",function(d){
+            return d.key;
+        })
 }
 
 
 
 initialize();
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////on click /////////////////////////////////////////////////////////
@@ -53,52 +71,26 @@ d3.select("#cgraph")
             }))
         .on("click", function() {
             var coords = d3.mouse(this);
-            if (crea_cluster == true)
+            if (crea_cluster == true){
+                console.log("new cluster")
                 newCluster(coords);
-            if (crea_nodi == true)
+            }
+            if (crea_nodi == true){
+                console.log("new node")
                 newNode(coords);
-            else{
-                d3.select("#cgraph")
-                    .selectAll("circle")
-                    .data(clusters)
-                    .on("click", function(d) {
-                    var coords = d3.mouse(this);
-                        if (sposta_cluster == true)
-                            dragCluster();
-                    if (elimina_clusterNodo == true) {
-                clusters.splice(i, 1);
-                d3.select("#c_cluster")
-                    .selectAll("circle") 
-                    .data(clusters)
-                    .enter()
-                    .append("circle")
             }
-            if (edit_cluster == true) {
-                var key= d3.select(this).attr("key")
-                bigAndNewCluster(key,coords);
-                console.log("edit_cluster")
-                var bigRad = d3.select(this).attr("r")
-                if (bigRad >= 320) return;
-                if(bigRad== radiusCluster){
-                    d3.select(this)
-                        .transition()
-                        .duration(1000)
-                        .attr("r", d.r = d3.sum([bigRad,20]))
-                }
-                if(bigRad>radiusCluster){
-                    d3.select(this)
-                        .transition()
-                        .duration(1000)
-                        .attr("r", d.r = d3.sum([bigRad,radiusCluster]))
-                }
+            if(sposta_cluster==true){
+                console.log("drag")
+                dragCluster();
             }
-                            simulationIntraClusters = d3.forceSimulation(clusters)
-    .force("collide", d3.forceCollide().radius(function(d) { return d.r + 0.5; }).iterations(2))
-    .on("tick", tickedcluster);
-        });
+            if(edit_cluster==true){
+                console.log("edit")
+                trasformaCluster();
             }
+                
+});
 
-        })
+
 d3.select("#c_node")
         .selectAll("circle")
         .on("click", function() {

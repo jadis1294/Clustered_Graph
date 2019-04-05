@@ -141,23 +141,6 @@ function spostaCluster() {
         .attr("transform", null)
 }
 
-function eliminaCluster() {
-    edit_cluster=false;
-    ingrandisci_cluster = false;
-    crea_cluster = false;
-    crea_nodi = false;
-    crea_archi = false;
-    sposta_cluster = false;
-    elimina_clusterNodo = true;
-    naviga_cgraph = false;
-    d3.select("#c_cluster")
-        .attr("transform", null)
-    d3.select("#c_node")
-        .attr("transform", null)
-    d3.select("#c_edge")
-        .attr("transform", null)
-}
-
 function flatCluster() {
     edit_cluster=false;
     ingrandisci_cluster = false;
