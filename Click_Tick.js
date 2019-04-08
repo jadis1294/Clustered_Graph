@@ -1,8 +1,10 @@
+
+
 //////////////////////    TICKED ASINCRONI PER LE SIMULAZIONI    ///////////////////////
 function tickedcluster() {
     d3.select("#c_cluster")
         .selectAll("circle")
-        .data(clusters)
+        //.data(clusters)
         .attr("cx", function(d) {
             return d.x;
         })
@@ -11,25 +13,10 @@ function tickedcluster() {
         })
         .attr("r",function(d){
             return d.r;
-        })
-            d3.select("#c_cluster_int")
-        .selectAll("circle")
-        //.data(clus.internalCluster)
-        .attr("cx", function(d) {
-            return d.x;
-        })
-        .attr("cy", function(d) {
-            return d.y;
-        })
-        .attr("r",function(d){
-            return d.r;
-        })
-        .attr("key",function(d){
-            return d.key;
         })
 }
 function tickedinternalcluster() {
-    d3.select("#c_cluster_int")
+            d3.select("#c_cluster_int")
         .selectAll("circle")
         //.data(clus.internalCluster)
         .attr("cx", function(d) {
