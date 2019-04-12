@@ -5,7 +5,7 @@
  * @param {id} id of the node 
  * @param {rotationScheme} id's array of the outgoing edges from the node 
  */
-function node(id,label,rotationScheme){
+function node(id,label,rotationScheme) {
  	this.id=id;
  	this.label=label;
  	this.rotationScheme=rotationScheme;
