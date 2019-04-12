@@ -1,26 +1,45 @@
 "use strict"
 
-/**
- * This function for create the object Node.
- * @param {id} id of the node 
- * @param {rotationScheme} id's array of the outgoing edges from the node 
- */
 class node{
+    /**
+ *Class node
+ * @param {number} id 
+ * @param {string} label
+ * @param {[]} rotationScheme - Array id's array of the outgoing edges from the node 
+ */
     constructor(id,label,rotationScheme){
  	    this.id=id;
  	    this.label=label;
  	    this.rotationScheme=rotationScheme;
     }
 }
+var n= new node
+class edge{
+    /**
+    * class edge
+    * This function for create the object Node.
+    * @param {number} id
+    * @param {string} label 
+    * @param {number} source - Source node's id 
+    * @param {number} target - Target node's id
+    */
+    constructor(id,label,source,target){
+ 	    this.id=id;
+ 	    this.label=label;
+        this.source=source;
+        this.target=target;
+    }
+}
 
-/**
- * This function for the object Cluster(a internal node of the inclusion_tree).
- * @param {label} string of the cluster's label 
- * @param {level} the depth of the cluster in the inclusion_tree
- * @param {cildren} array of the cildrens cluster's labels
- * @param {nodes} id of the cluster's node at the cluster's level 
- */
+
 class cluster{
+    /**
+    *Class cluster
+    * @param {string} label
+    * @param {number} level -depth of the cluster in the inclusion_tree
+    * @param {[]} cildren - Array of the cildrens cluster's labels
+    * @param {[]} nodes - id of the cluster's node at the cluster's level 
+    */
     constructor(label,level,cildrens,nodes)
     {
  	    this.label=label;
@@ -30,16 +49,14 @@ class cluster{
     }
 }
 
-
-/**
- * This function for the object Underlying_graph.
- * @param {label} the label of the graph
- * @param {embedded} boolean value to decide if the rotationScheme of the node should be read
- * @param {nodes} array of the nodes in the graph(objects node array)
- * @param {edges} array of the edges in the graph
- */
-
-class underlying_graph{
+class UnderlyingGraph{
+    /**
+     * class Underlying_graph
+     * @param {string} label
+     * @param {boolean} embedded boolean value to decide if the rotationScheme of the node should be read
+     * @param {[]} nodes - array of the nodes in the graph(objects node array)
+     * @param {[]} edges - array of the edges in the graph
+     */
     constructor(label,embedded,nodes,edges) 
     {
         this.label= label;
@@ -49,13 +66,12 @@ class underlying_graph{
     }
 }          
 
-/**
- * This function for the object inclusion_tree.
- * @param {label} the label of the graph
- * @param {root} boolean value to decide if the rotationScheme of the node should be read
- * @param {cildren} array of the cluster in the graph
- */
-class inclusion_tree{
+class InclusionTree{
+    /**
+     * class InclusionTree.
+     * @param {string} label
+     * @param {[]} cildren - array of the cluster in the graph
+     */
     constructor(label,cluster)
     {
         this.label=label;
@@ -63,9 +79,9 @@ class inclusion_tree{
     }
 
  /**
- * This function count all the nodes in the Internal cluster
- * @input {cluster} the internal cluster of which we want to know the nodes
- * @output {numberNode} int value of the nodes number
+ * count all the nodes in the Internal cluster
+ * @param {Object} cluster
+ * @returns {number} numberNode - value of the nodes number
  */
     nodesInClusterCount(cluster)
     {
@@ -77,9 +93,9 @@ class inclusion_tree{
     	return numberNode;
     }
  /**
- * This function return a list of nodes in the Internal cluster
- * @input {cluster} the internal cluster of which we want to know the nodes
- * @output {nodesInCluster} array of the nodes number
+ * get a list of nodes in the Internal cluster
+ * @param {Object} cluster
+ * @returns {[]} nodesInCluster
  */
     getNodesInCluster(cluster)
     {
@@ -92,20 +108,20 @@ class inclusion_tree{
     	return nodesInCluster;
     }
 
-    
+
     getClusterCount()
     {
 
     }
 
 } 
-/**
- * This function for the object c_graph. A c_graph is a pain(G,T) 
- * where G is the underlying_graph and T is the inclusion_Tree 
- * @param {graph} label of the underlying_graph 
- * @param {tree} label of the underlying_graph
- */
-class c_graph{
+class ClusteredGraph{
+    /**
+     * Class ClusteredGraph. A ClusteredGraph is a pain(G,T) 
+     * where G is the UnderlyingGraph and T is the InclusionTree 
+     * @param {Object} graph 
+     * @param {Object} tree 
+     */
     constructor(graph,tree)
     {
 	this.graph=graph;
