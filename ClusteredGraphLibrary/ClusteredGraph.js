@@ -44,14 +44,14 @@ class Cluster{
     /**
     * @param {string} label
     * @param {number} level -depth of the cluster in the InclusionTree
-    * @param {Set<number>} cildrens - Set of the cildrens cluster's id
+    * @param {Set<number>} cildren - Set of the cildrens cluster's id
     * @param {Set<number>} nodes - id of the cluster's node at the cluster's level 
     */
-    constructor(label,level,cildrens,nodes)
+    constructor(label,level,cildren,nodes)
     {
  	    this.label=label;
  	    this.level=level;
- 	    this.cildrens=cildrens;
+ 	    this.cildren=cildren;
  	    this.nodes=nodes;
     }
 }
@@ -100,7 +100,7 @@ class InclusionTree{
  */
     nodesInClusterCount(idCluster)
     {
-        var numberNode=getNodesInCluster(idCluster).size;
+        var numberNode=nodesInClusterList(idCluster).size;
     	return numberNode;
     }
     
@@ -109,33 +109,15 @@ class InclusionTree{
  * @returns {Set<number>}
  * @description Get a set of the nodes id in the cluster
  */
-    getNodesInCluster(idCluster)
+    nodesInClusterList(idCluster)
     {
         let cluster= clusters.get(idCluster);
-    	var nodesInCluster=new Set(uneval([...cluster.nodes]));
-        for (let item of cluster.cildrens){
+    	var nodesInCluster=new Set(Array.from(cluster.nodes));
+        for (let item of cluster.cildren){
             nodesInCluster.add(getNodesInCluster(item))
         }
         return nodesInCluster;
     }
-
-
- /**
- * @param {number} idCluster
- * @returns {number}
- * @description get the number of the outgoing edge in the cluster
- */
-    edgeInClusterCount(idCluster)
-    {
-        var edgesNumber;
-        let cluster= clusters.get(idCluster);
-        
-        var edgeInCluster= new Set();
-        for (let itemCluster1 of nodesCluster1)
-            edgeInCluster.add(itemCluster1.rotationScheme);
-        edgesNumber= edgeInCluster.size;
-    }
-
 
  /**
  * @param {number} idCluster1 
@@ -146,14 +128,19 @@ class InclusionTree{
     edgeListBetweenTwoClusters(idCluster1,idCluster2)
     {
         let edges=new Set();
+        let arrayedge;
         let nodesCluster1= getNodesInCluster(idCluster1);
         let nodesCluster2= getNodesInCluster(idCluster2);
         let edgeInCluster1= new Set();
         let edgeInCluster2=new Set();
-        for (let itemCluster1 of nodesCluster1)
-            edgeInCluster1.add(itemCluster1.rotationScheme);
-        for(let itemCluster2 of nodesCluster2)
-            edgeInCluster2.add(itemCluster2.rotationScheme);
+        for (let itemCluster1 of nodesCluster1){
+            arrayedge=Array.from(itemCluster1.rotationScheme)
+            arrayedge.forEach(itemA => edgeInCluster1.add(itemA))
+        }
+        for (let itemCluster2 of nodesCluster2){
+            arrayedge=Array.from(itemCluster2.rotationScheme)
+            arrayedge.forEach(itemA => edgeInCluster1.add(itemA))
+        }
         for(let item1 of edgeInCluster1)
             for(let item2 of edgeInCluster2){
                 if(item1==item2) edges.add(item1);
@@ -165,14 +152,31 @@ class InclusionTree{
  * @param {number} idCluster1 
  * @param {number} idCluster2
  * @returns {number}
- * @description get the number of nodes in the Internal cluster
+ * @description get the number of edges between two cluster
  */
     edgeNumberBetweenTwoClusters(idCluster1,idCluster2)
     {
         return edgeListBetweenTwoClusters(idCluster1,idCluster2).size
     }
-}
 
+
+/**
+ * @param {number} idCluster 
+ * @returns {Set<number>}
+ * @description get all the cildrens id of the input cluster
+ */
+    cildrenCluster(idCluster)
+    {
+    let cluster= clusters.get(idCluster);
+    let cildrenSet=cluster.cildren;
+    let arraynode;
+    for(let item of cluster.cildren){
+        arraynode= Array.from(cildrenSet(item));
+        arraynode.forEach(itemA => cildrenSet.add(itemA));
+    }
+    return cildrenSet;
+    }
+}
 
 /**
  * @class ClusteredGraph
