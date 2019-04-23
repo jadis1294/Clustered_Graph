@@ -5,7 +5,6 @@
 class node{
     /**
  *Class node
- * @param {number} id 
  * @param {string} label
  * @param {Set<number>} rotationScheme id's array of the outgoing edges from the node 
  */
@@ -64,7 +63,7 @@ class UnderlyingGraph{
     /**
      * @param {string} label
      * @param {boolean} embedded boolean value to decide if the rotationScheme of the node should be read
-     * @param {Set<node>} nodes List of the nodes id in the graph
+     * @param {Map<number,node>} nodes Map of the nodes id in the graph
      * @param {Set<Edge>} edges List of the edges id in the graph
      */
     constructor(label,embedded,nodes,edges) 
@@ -94,6 +93,7 @@ class InclusionTree{
 
 
 /**
+ * @function
  * @param {number} idCluster
  * @returns {number} numberNode value of the nodes number
  * @description Count all the nodes in the cluster with id = idCluster
@@ -105,6 +105,7 @@ class InclusionTree{
     }
     
  /**
+  * @function
  * @param {number} idCluster
  * @returns {Set<number>}
  * @description Get a set of the nodes id in the cluster
@@ -114,12 +115,13 @@ class InclusionTree{
         let cluster= clusters.get(idCluster);
     	var nodesInCluster=new Set(Array.from(cluster.nodes));
         for (let item of cluster.cildren){
-            nodesInCluster.add(getNodesInCluster(item))
+            nodesInCluster.add(nodesInClusterList(item))
         }
         return nodesInCluster;
     }
 
  /**
+  * @function
  * @param {number} idCluster1 
  * @param {number} idCluster2
  * @returns {Set<number>} edges
@@ -149,6 +151,7 @@ class InclusionTree{
         }
 
  /**
+  * @function
  * @param {number} idCluster1 
  * @param {number} idCluster2
  * @returns {number}
@@ -161,6 +164,7 @@ class InclusionTree{
 
 
 /**
+ * @function
  * @param {number} idCluster 
  * @returns {Set<number>}
  * @description get all the cildrens id of the input cluster
@@ -176,6 +180,7 @@ class InclusionTree{
     }
     return cildrenSet;
     }
+
 }
 
 /**

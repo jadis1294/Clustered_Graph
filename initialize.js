@@ -1,12 +1,24 @@
-var valore_scarto = 5;
-var radiusCluster = 40;
-var radiusNode = 9;
-var clusters = [];
-var nodes = [];
-var edges = [];
-var clusters_fake = [];
-var cgraph = [clusters, nodes, edges, clusters_fake]
-var w = window.innerWidth,
+"use strict"
+
+var edit_cluster,
+    crea_cluster,
+    crea_archi,
+    crea_nodi,
+    sposta_cluster,
+    elimina_clusterNodo,
+    naviga_cgraph,
+    valore_scarto = 5,
+    radiusCluster = 40,
+    radiusNode = 9,
+    clusters = [],
+    nodes = new Map(),
+    edges = [],
+    archi= new Set(edges),
+    clusters= new Map(),
+    undGraph=new UnderlyingGraph("grafo",false,nodes,archi),
+    incTree= new InclusionTree("albero",clusters),
+    clusteredGraph= new ClusteredGraph(undGraph,incTree),
+    w = window.innerWidth,
     h = window.innerHeight,
     margin = {
         top: 40,
@@ -15,6 +27,10 @@ var w = window.innerWidth,
         left: 40
     }
 
+/**
+ * @function 
+ * @description Initialize the Empty svg and the Svg's ID
+ */
 function initialize() {
     d3.select("body")
         .append("svg")
@@ -26,17 +42,6 @@ function initialize() {
         .append('g')
         .attr('id', 'c_cluster')
 
-
-    d3.select("#cgraph")
-        .append('g')
-        .attr('id', 'c_cluster_fake')
-
-
-    d3.select("#cgraph")
-        .append('g')
-        .attr('id', 'c_cluster_int')
-
-
     d3.select("#cgraph")
         .append('g')
         .attr('id', 'c_node')
@@ -45,4 +50,5 @@ function initialize() {
         .append("g")
         .attr("id", "c_edge")
 
-}
+    }
+    initialize();

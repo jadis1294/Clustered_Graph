@@ -10,7 +10,7 @@ function importSVG() {
     })
 }
 //////////////////////////FUNZIONI PER SALVARE GRAFO///////////////////////////////////////////
-function salvaGrafo() {
+function saveGraph() {
 
     var svgString = getSVGString(d3.select("#cgraph").node());
     svgString2Image(svgString, 2 * w, 2 * h, 'png', save); // passes Blob and filesize String to the callback

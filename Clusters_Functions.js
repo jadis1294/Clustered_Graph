@@ -1,5 +1,8 @@
-///////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////    RANDOMIZZAZIOE DEI COLORI DEI CLUSTER    ////////////////////////////////
+/**
+ * @function
+ * @returns {string} color 
+ * @description Get a randomic Color for the cluster's fill
+ */
 function getRandomColor() {
     var letters = '0123456789ABCDEF';
     var color = '#';
@@ -11,10 +14,9 @@ function getRandomColor() {
 
 
 
-function trasformaCluster() {
-    d3.select("#c_cluster")
-        .selectAll("circle")
-        .on("click", function(d) {
+function trasformaCluster(rad) {
+    let prova= d3.select(this)
+    console.log(prova)
             var keyclus = d3.select(this).attr("key")
             var clus = clusters[keyclus.substr(0,1)];
             for (var i =1; i <= keyclus.length - 1; i++) {
@@ -23,7 +25,6 @@ function trasformaCluster() {
             console.log(clus)
             var coords = d3.mouse(this);
             bigAndNewCluster(clus, keyclus, coords);
-        });
 }
 
 //////////////////////////    new & edit CLUSTERS    /////////////////////////////////////////////////////7 
@@ -120,44 +121,26 @@ simulationInterClusters = d3.forceSimulation(clus.internalCluster)
 
 
 
-
-function newCluster(coords) {
-    var newData = {
-        x: Math.round(coords[0]), // Takes the pixel number to convert to number
-        y: Math.round(coords[1]),
-        r: radiusCluster,
-        internalCluster: [],
-        key: clusters.length
-    };
-    clusters.push(newData); // Push data to our array
+/**
+ * @function
+ * @param {number} coords Array of d3.mouse(this)
+ * @param {number} label Label for the new Cluster
+ * @returns {undefined} 
+ * @description Create a new cluster in #c_cluster SVG
+ */
+function newCluster(coords,label) {
+    var newCluster= new Cluster(label,1,new Set(),new Set());
+    incTree.clusters.set(incTree.clusters.size,newCluster)
     d3.select("#c_cluster")
-        .selectAll("circle") // For new circle, go through the update process
-        .data(clusters)
+        .selectAll("circle")
+        .data(Array.from(incTree.clusters.values()))
         .enter()
         .append("circle")
-        .transition()
-        .duration(800)
-        .attr("cx", function(d) {
-            return d.x;
-        })
-        .attr("cy", function(d) {
-            return d.y;
-        })
-        .attr("r", function(d) {
-            return d.r;
-        })
-        .attr("key", function(d) {
-            return d.key;
-        })
-        .attr("internalCluster", function(d) {
-            return d.internalCluster;
-        })
-        .attr("fill", getRandomColor)
+        .attr("cx", coords[0])
+        .attr("cy", coords[1])
+        .attr("r", radiusCluster)
+        .attr("id","cluster")
+        .attr("fill", getRandomColor);
 
-    var simulationIntraClusters = d3.forceSimulation(clusters)
-        .force("collide", d3.forceCollide().radius(function(d) {
-            return d.r + 0.5;
-        }).iterations(2))
-        .on("tick", tickedcluster);
     return;
 }

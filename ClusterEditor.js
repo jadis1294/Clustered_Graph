@@ -1,27 +1,3 @@
-var threshold = 300; // per il click VS doubleclick
-var w = window.innerWidth,
-    h = window.innerHeight,
-    margin = {
-        top: 40,
-        right: 20,
-        bottom: 20,
-        left: 40
-    },
-    valore_scarto = 5;
-radiusCluster = 40;
-radiusNode = 9;
-var radius;
-var clusters = [];
-var nodes = [];
-var edges = [];
-var clusters_fake = [];
-var cgraph = [clusters, nodes, edges, clusters_fake]
-var edit_cluster=false;
-var crea_cluster = false;
-var crea_nodi = false;
-var crea_archi = false;
-var sposta_cluster = false;
-var elimina_clusterNodo = false;
 /////////////////////////////////////////////////////////////////////////////////////////////////7
 ///////////////////////////FUNZIONI X IMPORTARE IL GRAFO ////////////////////////////
 function importSVG() {
