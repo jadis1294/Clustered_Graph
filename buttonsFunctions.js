@@ -1,3 +1,7 @@
+/**
+ * @function 
+ * @description Remove the trasformation of the funcion ZoomGraph
+ */
 function removeTransformation(){
     d3.select("#c_cluster")
     .attr("transform", null)
@@ -6,7 +10,10 @@ d3.select("#c_node")
 d3.select("#c_edge")
     .attr("transform", null)
 }
-
+/**
+ * @function 
+ * @description Reset the boolean of the bottom to the false value
+ */
 function allFalse(){
     edit_cluster=false;
     crea_cluster = false;
@@ -18,40 +25,43 @@ function allFalse(){
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////7
-
+/**
+ * @function 
+ */
 function flatCluster() {
     allFalse();
     removeTransformation();
 }
-
+/**
+ * @function 
+ */
 function createCluster() {
     allFalse();
     crea_cluster=true
     removeTransformation();
     d3.select("#cgraph")
-    .on("click", function() {
-        if(crea_cluster==true){
+    .on("click", function(){
+        if(crea_cluster==true)
+        {
         let coords = d3.mouse(this);
         let label= "c"+clusteredGraph.tree.clusters.size;
-            newCluster(coords,label);
+            newCluster(coords,label,1);
         }
-        return;
     });
 }
-
+/**
+ * @function 
+ */
 function editCluster() {
     allFalse();
     removeTransformation();
     edit_cluster=true;
-    d3.select("#c_cluster")
-    .on("click", function() {
-            rad= d3.select(this).children()
-            console.log(rad);
-            trasformaCluster(rad);
-        });
+    editLevelCluster()
 
 }
-
+/**
+ * @function 
+ */
 function zoomGraph() {
     allFalse();
     naviga_cgraph = true;
@@ -73,7 +83,9 @@ function zoomGraph() {
                 }
             }));
 }
-
+/**
+ * @function 
+ */
 function createNodes() {
     allFalse();
     removeTransformation();
@@ -87,7 +99,9 @@ function createNodes() {
         }
     });
 }
-
+/**
+ * @function 
+ */
 function createEdges() {
     allFalse();
     removeTransformation();
@@ -96,23 +110,32 @@ function createEdges() {
     .selectAll("circle")
     .on("click", newEdge);
 }
-
+/**
+ * @function 
+ */
 function MoveCluster() {
     allFalse();
     removeTransformation();
     sposta_cluster=true;
         d3.select("#cgraph")
         .on("click", function() {
+            if(sposta_cluster==true)
         dragCluster();
 });
 }
 
+/**
+ * @function 
+ */
 function saveIt(){
     allFalse();
     removeTransformation();
     saveGraph();
 }
 
+/**
+ * @function 
+ */
 function DeleteGraph() {
     d3.select("#c_cluster").selectAll("circle").remove();
     d3.select("#c_node").selectAll("circle").remove();

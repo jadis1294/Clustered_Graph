@@ -51,4 +51,5 @@ function initialize() {
         .attr("id", "c_edge")
 
     }
-    initialize();
+
+initialize();

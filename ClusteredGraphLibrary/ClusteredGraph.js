@@ -171,14 +171,12 @@ class InclusionTree{
  */
     cildrenCluster(idCluster)
     {
-    let cluster= clusters.get(idCluster);
-    let cildrenSet=cluster.cildren;
-    let arraynode;
-    for(let item of cluster.cildren){
-        arraynode= Array.from(cildrenSet(item));
-        arraynode.forEach(itemA => cildrenSet.add(itemA));
-    }
-    return cildrenSet;
+        let clu= clusteredGraph.tree.clusters.get(idCluster);
+        let cildrenSet= new Set();
+        for(let item of clu.cildren){
+            cildrenSet.add(item)
+        }
+        return cildrenSet;
     }
 
 }
