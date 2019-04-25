@@ -1,3 +1,5 @@
+"use strict"
+
 /**
  * @function 
  * @description Remove the trasformation of the funcion ZoomGraph
@@ -15,13 +17,13 @@ d3.select("#c_edge")
  * @description Reset the boolean of the bottom to the false value
  */
 function allFalse(){
-    edit_cluster=false;
-    crea_cluster = false;
-    crea_nodi = false;
-    crea_archi = false;
-    sposta_cluster = false;
-    elimina_clusterNodo = false;
-    naviga_cgraph = false;
+    editClusterBoolean=false;
+    createClusterBoolean = false;
+    createNodesBoolean = false;
+    createEdgeBoolean = false;
+    dragClusterBoolean = false;
+    deleteClusterBoolean = false;
+    zoomGraphBoolean = false;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////7
@@ -35,64 +37,60 @@ function flatCluster() {
 /**
  * @function 
  */
-function createCluster() {
+function createClusterButton() {
     allFalse();
-    crea_cluster=true
+    createClusterBoolean=true
     removeTransformation();
     d3.select("#cgraph")
     .on("click", function(){
-        if(crea_cluster==true)
+        if(createClusterBoolean==true)
         {
-        let coords = d3.mouse(this);
-        let label= "c"+clusteredGraph.tree.clusters.size;
-            newCluster(coords,label,1);
+        let coordinates = d3.mouse(this);
+        let label= "c" + clusteredGraph.tree.clusters.size;
+            newCluster(coordinates,label,1);
         }
     });
 }
 /**
  * @function 
  */
-function editCluster() {
+function editClusterButton() {
     allFalse();
     removeTransformation();
-    edit_cluster=true;
-    editLevelCluster()
+    editClusterBoolean=true;
+    editCluster();
 
 }
 /**
  * @function 
  */
-function zoomGraph() {
+function zoomGraphButton() {
     allFalse();
-    naviga_cgraph = true;
+    zoomGraphBoolean = true;
     d3.select("#cgraph")
-    .call(d3.zoom()
-        .scaleExtent([1, 40])
-    .translateExtent([[-100, -100], [w + 90, h + 100]])
-            .on("zoom", function() {
-                if (naviga_cgraph == true) {
-
-                    d3.select("#c_cluster")
-                        .attr("transform",d3.event.transform )
-                    d3.select("#c_cluster_int")
-                        .attr("transform", d3.event.transform )
-                    d3.select("#c_node")
-                        .attr("transform", d3.event.transform )
-                    d3.select("#c_edge")
-                        .attr("transform", d3.event.transform )
-                }
-            }));
+    .call(d3.zoom().scaleExtent([1, 40]).translateExtent([[-100, -100], [w + 90, h + 100]])
+    .on("zoom", function() {
+        if (zoomGraphBoolean == true)
+        {
+            d3.select("#c_cluster")
+                .attr("transform",d3.event.transform )
+            d3.select("#c_node")
+                .attr("transform", d3.event.transform )
+            d3.select("#c_edge")
+                .attr("transform", d3.event.transform )
+        }
+    }));
 }
 /**
  * @function 
  */
-function createNodes() {
+function createNodesButton() {
     allFalse();
     removeTransformation();
-    crea_nodi=true;
+    createNodesBoolean=true;
     d3.select("#cgraph")
     .on("click", function() {
-        if(crea_nodi==true){
+        if(createNodesBoolean==true){
     let coords = d3.mouse(this);
         let label= "n"+ clusteredGraph.graph.nodes.size;
         newNode(coords,label);
@@ -102,24 +100,34 @@ function createNodes() {
 /**
  * @function 
  */
-function createEdges() {
+function createEdgesButton() {
     allFalse();
     removeTransformation();
-    crea_archi=true;
+    createEdgeBoolean=true;
     d3.select("#c_node")
     .selectAll("circle")
-    .on("click", newEdge);
+    .data(Array.from(clusteredGraph.graph.nodes.values()))
+    .on("click", function(){
+        if(createEdgeBoolean==true){
+            let id=d3.select(this).attr("key");
+            let nodo= clusteredGraph.graph.nodes.get( parseInt(id));
+            let label = "e"+ clusteredGraph.graph.edges.size;
+            let coordinates= [d3.select(this).attr("cx"),d3.select(this).attr("cy")]
+            d3.select(this).transition().duration(1000).attr("r",radiusNode*1.5)
+            newEdge(coordinates,nodo,label);
+        }
+    });
 }
 /**
  * @function 
  */
-function MoveCluster() {
+function moveClusterButton() {
     allFalse();
     removeTransformation();
-    sposta_cluster=true;
+    dragClusterBoolean=true;
         d3.select("#cgraph")
         .on("click", function() {
-            if(sposta_cluster==true)
+            if(dragClusterBoolean==true)
         dragCluster();
 });
 }
@@ -136,7 +144,7 @@ function saveIt(){
 /**
  * @function 
  */
-function DeleteGraph() {
+function DeleteGraphButton() {
     d3.select("#c_cluster").selectAll("circle").remove();
     d3.select("#c_node").selectAll("circle").remove();
     d3.select("#c_edge").selectAll("line").remove();

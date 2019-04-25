@@ -1,31 +1,26 @@
 "use strict"
 
-var edit_cluster,
-    crea_cluster,
-    crea_archi,
-    crea_nodi,
-    sposta_cluster,
-    elimina_clusterNodo,
-    naviga_cgraph,
-    valore_scarto = 5,
+var editClusterBoolean,
+    createClusterBoolean,
+    createEdgeBoolean,
+    createNodesBoolean,
+    dragClusterBoolean,
+    deleteClusterBoolean,
+    zoomGraphBoolean,
     radiusCluster = 40,
     radiusNode = 9,
     clusters = [],
     nodes = new Map(),
-    edges = [],
-    archi= new Set(edges),
+    edges = new Set(),
     clusters= new Map(),
-    undGraph=new UnderlyingGraph("grafo",false,nodes,archi),
+    undGraph=new UnderlyingGraph("grafo",false,nodes,edges),
     incTree= new InclusionTree("albero",clusters),
     clusteredGraph= new ClusteredGraph(undGraph,incTree),
-    w = window.innerWidth,
-    h = window.innerHeight,
-    margin = {
-        top: 40,
-        right: 20,
-        bottom: 20,
-        left: 40
-    }
+    w = window.innerWidth-130,
+    h = window.innerHeight-100,
+    drag = d3.drag().on("drag", dragged)
+
+
 
 /**
  * @function 
@@ -34,8 +29,8 @@ var edit_cluster,
 function initialize() {
     d3.select("body")
         .append("svg")
-        .attr("width", w - 130)
-        .attr("height", h - 100)
+        .attr("width", w)
+        .attr("height", h)
         .attr('id', 'cgraph')
 
     d3.select("#cgraph")

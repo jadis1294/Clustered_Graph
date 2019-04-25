@@ -1,11 +1,13 @@
+"use strict"
+
 /**
  * @function
- * @returns {string} color 
+ * @returns {String} color 
  * @description Get a randomic Color for the cluster's fill
  */
 function getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
+    let letters = '0123456789ABCDEF';
+    let color = '#';
     for (var i = 0; i < 6; i++) {
         color += letters[Math.floor(Math.random() * 16)];
     }
@@ -62,25 +64,26 @@ function getRandomColor() {
         //         });
 
         // }
+
 /**
  * @function
- * @returns {undefined} 
+ * @returns {void} 
  * @description insert a cildren of the cluster when it is clicked 
  */
-function editLevelCluster(){
+function editCluster(){
     d3.select("#c_cluster")
     .selectAll("circle")
     .data(Array.from(clusteredGraph.tree.clusters.values()))
     .on("click", function() {
-            if(edit_cluster==true){
-            let coords = d3.mouse(this);
-            let clus= clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key")))
+            if(editClusterBoolean==true)
+            {
+            let clus= clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key")));
             console.log(clus)
             let label= "c"+clusteredGraph.tree.clusters.size;
             clus.cildren.add(clusteredGraph.tree.clusters.size);
-            let son= clusteredGraph.tree.cildrenCluster(parseInt(d3.select(this).attr("key"))).size+1
-            d3.select(this).attr("r", radiusCluster *son)
-            newCluster(coords,label,clus.level+1);
+            let cildrenClusterNumber= clusteredGraph.tree.cildrenCluster(parseInt(d3.select(this).attr("key"))).size+1
+            d3.select(this).attr("r", radiusCluster *cildrenClusterNumber)
+            newCluster(d3.mouse(this),label,clus.level+1);
             }
         });
     return;
@@ -88,24 +91,49 @@ function editLevelCluster(){
 
 /**
  * @function
- * @param {number} coords Array of d3.mouse(this)
- * @param {number} label Label for the new Cluster
- * @returns {undefined} 
+ * @param {number} coordinates Array of d3.mouse(this)
+ * @param {number} clusterLabel Label for the new Cluster
+ * @returns {void} 
  * @description Create a new cluster in #c_cluster SVG
  */
-function newCluster(coords,label,level) {
-    var newCluster= new Cluster(label,level,new Set(),new Set());
-    incTree.clusters.set(incTree.clusters.size,newCluster)
+function newCluster(coordinates,clusterLabel,level)
+{
+    let cluster= new Cluster(clusterLabel,level,new Set(),new Set());
+    clusteredGraph.tree.clusters.set(clusteredGraph.tree.clusters.size,cluster)
+
     d3.select("#c_cluster")
         .selectAll("circle")
-        .data(Array.from(incTree.clusters.values()))
+        .data(Array.from(clusteredGraph.tree.clusters.values()))
         .enter()
         .append("circle")
-        .attr("cx", coords[0])
-        .attr("cy", coords[1])
+        .attr("cx", coordinates[0])
+        .attr("cy", coordinates[1])
         .attr("r", radiusCluster)
         .attr("id","cluster")
         .attr("fill", getRandomColor)
-        .attr("key", incTree.clusters.size-1);
+        .attr("key", clusteredGraph.tree.clusters.size-1);
     return;
+}
+
+/**
+ * @function
+ * @returns {void} 
+ * @description move the select cluster into the SVG
+ */
+function dragged(d) {
+	if(dragClusterBoolean==false) return;
+    d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+}
+
+
+/**
+ * @function
+ * @returns {void} 
+ * @description function to select the elements in the svg to Drag
+ */
+function dragCluster() {
+	if(dragClusterBoolean==false) return;
+    d3.select("#c_cluster")
+        .selectAll("circle") // For new circle, go through the update process
+        .call(drag)
 }
