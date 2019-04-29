@@ -9,19 +9,12 @@
  */
 function newNode(coordinates,label) {
     let nodeToInsert= new node(clusteredGraph.graph.nodes.size,label,new Set())
-    clusteredGraph.graph.nodes.set(clusteredGraph.graph.nodes.size,nodeToInsert)
-    d3.select("#c_node")
-        .selectAll("circle")
-        .data(Array.from(clusteredGraph.graph.nodes.values()))
-        .enter()
-        .append("circle")
-        .transition()
-        .duration(800)
-        .attr("cx",coordinates[0])
-        .attr("cy",coordinates[1])
-        .attr("r",radiusNode)
-        .attr("id", "nodo")
-        .attr("key", clusteredGraph.graph.nodes.size-1);
+    clusteredGraph.graph.nodes.set(clusteredGraph.graph.nodes.size,nodeToInsert);
+    nodeToInsert.x=coordinates[0];
+    nodeToInsert.y=coordinates[1];
+    nodeToInsert.dispx=0;
+    nodeToInsert.dispy=0;
+    redraw();
     return;
 }
 

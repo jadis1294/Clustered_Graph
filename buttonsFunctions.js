@@ -47,7 +47,7 @@ function createClusterButton() {
         {
         let coordinates = d3.mouse(this);
         let label= "c" + clusteredGraph.tree.clusters.size;
-            newCluster(coordinates,label,1);
+            newCluster(coordinates,label,1,radiusCluster);
         }
     });
 }
@@ -144,11 +144,40 @@ function saveIt(){
 /**
  * @function 
  */
-function DeleteGraphButton() {
+function deleteGraphButton() {
     d3.select("#c_cluster").selectAll("circle").remove();
     d3.select("#c_node").selectAll("circle").remove();
     d3.select("#c_edge").selectAll("line").remove();
     clusteredGraph.graph.nodes.clear();
     clusteredGraph.graph.edges.clear();
     clusteredGraph.tree.clusters.clear();
+}
+
+
+function redraw(){
+    let clus=Array.from(clusteredGraph.tree.clusters.values());
+
+    d3.select("#c_node")
+    .selectAll("circle")
+    .data(clus)
+    .enter()
+    .append("circle")
+    .transition()
+    .duration(800)
+    .attr("r",radiusNode)
+    .attr("id", "nodo")
+    .attr("key", clusteredGraph.graph.nodes.size-1);
+
+
+    d3.select("#c_cluster")
+    .selectAll("circle")
+    .data(clus)
+    .enter()
+    .append("circle")
+    .attr("r", function(d){ return d.r;})
+    .attr("id","cluster")
+    .attr("cx", function(d){ return d.x;})
+    .attr("cy", function(d){return d.y})
+    .attr("fill", getRandomColor)
+    .attr("key", clusteredGraph.tree.clusters.size-1);
 }

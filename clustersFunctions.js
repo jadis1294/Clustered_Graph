@@ -82,8 +82,9 @@ function editCluster(){
             let label= "c"+clusteredGraph.tree.clusters.size;
             clus.cildren.add(clusteredGraph.tree.clusters.size);
             let cildrenClusterNumber= clusteredGraph.tree.cildrenCluster(parseInt(d3.select(this).attr("key"))).size+1
-            d3.select(this).attr("r", radiusCluster *cildrenClusterNumber)
-            newCluster(d3.mouse(this),label,clus.level+1);
+            let radius= radiusCluster*cildrenClusterNumber
+            d3.select(this).attr("r", radius)
+            newCluster(d3.mouse(this),label,clus.level+1,radiusCluster);
             }
         });
     return;
@@ -96,23 +97,17 @@ function editCluster(){
  * @returns {void} 
  * @description Create a new cluster in #c_cluster SVG
  */
-function newCluster(coordinates,clusterLabel,level)
+function newCluster(coordinates,clusterLabel,level,radius)
 {
     let cluster= new Cluster(clusterLabel,level,new Set(),new Set());
-    clusteredGraph.tree.clusters.set(clusteredGraph.tree.clusters.size,cluster)
-
-    d3.select("#c_cluster")
-        .selectAll("circle")
-        .data(Array.from(clusteredGraph.tree.clusters.values()))
-        .enter()
-        .append("circle")
-        .attr("cx", coordinates[0])
-        .attr("cy", coordinates[1])
-        .attr("r", radiusCluster)
-        .attr("id","cluster")
-        .attr("fill", getRandomColor)
-        .attr("key", clusteredGraph.tree.clusters.size-1);
-    return;
+    clusteredGraph.tree.clusters.set(clusteredGraph.tree.clusters.size,cluster);
+    cluster.x=coordinates[0];
+    cluster.y=coordinates[1];
+    cluster.r=radius;
+    let newcoords=forceCollide(cluster.x,cluster.y);
+    cluster.x=newcoords[0];
+    cluster.y=newcoords[1];
+    redraw();
 }
 
 /**
@@ -136,4 +131,13 @@ function dragCluster() {
     d3.select("#c_cluster")
         .selectAll("circle") // For new circle, go through the update process
         .call(drag)
+}
+
+function forceCollide(cx,cy){
+    let newcoords=[cx,cy];
+    for (let index = 0; index < Array.from(clusteredGraph.tree.clusters.values()).length; index++) {
+        
+        
+    }
+    return newcoords
 }

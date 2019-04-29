@@ -1,6 +1,7 @@
 "use strict"
 
 var editClusterBoolean,
+    simulationIntraClusters,
     createClusterBoolean,
     createEdgeBoolean,
     createNodesBoolean,
@@ -48,3 +49,28 @@ function initialize() {
     }
 
 initialize();
+
+var drag = d3.behavior.drag()
+    			.origin(function(d) { return d; })
+    			.on("dragstart", function() {
+ 			 	d3.event.sourceEvent.stopPropagation();
+ 			 	d3.select(this).attr("dragging", function(d) {
+ 			 		d.dragging = true;
+ 			 		return true;
+ 			 	
+ 			 	});
+			}).on("drag", function(d){
+    				mainStep(k_el, k_springf, k_springl, gravity);
+    				d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+    		
+    
+    			}).on("dragend", function (d){
+    				d3.select(this).attr("dragging", function(d) {
+ 			 		d.dragging = false;
+ 			 		return false;
+ 			 	});
+
+    				for (p=0; p<1000; p++)
+					setTimeout(mainStep(k_el, k_springf, k_springl, gravity), 100);
+					//mainStep(k_el, k_springf, k_springl);
+    			});
