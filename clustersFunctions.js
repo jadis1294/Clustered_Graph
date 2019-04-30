@@ -104,9 +104,6 @@ function newCluster(coordinates,clusterLabel,level,radius)
     cluster.x=coordinates[0];
     cluster.y=coordinates[1];
     cluster.r=radius;
-    let newcoords=forceCollide(cluster.x,cluster.y);
-    cluster.x=newcoords[0];
-    cluster.y=newcoords[1];
     redraw();
 }
 
@@ -131,13 +128,4 @@ function dragCluster() {
     d3.select("#c_cluster")
         .selectAll("circle") // For new circle, go through the update process
         .call(drag)
-}
-
-function forceCollide(cx,cy){
-    let newcoords=[cx,cy];
-    for (let index = 0; index < Array.from(clusteredGraph.tree.clusters.values()).length; index++) {
-        
-        
-    }
-    return newcoords
 }

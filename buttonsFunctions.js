@@ -180,4 +180,57 @@ function redraw(){
     .attr("cy", function(d){return d.y})
     .attr("fill", getRandomColor)
     .attr("key", clusteredGraph.tree.clusters.size-1);
+
+    let clustersLevelOne=new Set();
+    for (let index = 0; index < clus.length; index++) {
+        if (clus[index].level==1)
+            clustersLevelOne.add(clus[index])
+    }
+    force(clustersLevelOne);
+    console.log(clustersLevelOne)
+}
+
+function force(clustersLevelX){
+    let arrayclus=Array.from(clustersLevelX.values())
+    for (let index = 0; index < arrayclus.length; index++) {
+            let x1=arrayclus[index].x;
+            let y1=arrayclus[index].y
+        for (let i = 0; i < arrayclus.length; i++) {
+            if(arrayclus[i]!=arrayclus[index]){
+                let x2=arrayclus[i].x;
+                let y2=arrayclus[i].y;
+                let x12= x1-x2;
+                let y12= y1-y2;
+                let d= Math.sqrt(Math.pow(x12,2)+Math.pow(y12,2));
+                console.log(d)
+                if(d <arrayclus[index].r+arrayclus[i].r){
+                    repulsiveForce(arrayclus[index],arrayclus[i])
+                }
+            }
+            
+        }
+        if(arrayclus[index].cildren.size!=0){
+            let arrayfigli=Array.from(arrayclus[index].cildren.values())
+            for (let j = 0; j < arrayfigli.length; j++) {
+                let xfiglio= arrayfigli[j].x;
+                let yfiglio= arrayfigli[j].y;
+                let xIndexFiglio=x1-xfiglio;
+                let yIndexFiglio= y1-yfiglio;
+                let dPadreFiglio=Math.sqrt(Math.pow(xIndexFiglio,2)+Math.pow(yIndexFiglio,2));
+                if(dPadreFiglio>=arrayclus[index].r+ arrayfigli[j].r){
+                    attractiveForce(arrayclus[index],arrayfigli[j]);
+                }
+                force(arrayclus[index].cildren);
+            }
+        }
+        
+    }
+}
+
+function repulsiveForce(){
+
+}
+
+function attractiveForce(){
+
 }
