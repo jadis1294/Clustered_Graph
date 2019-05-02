@@ -186,78 +186,67 @@ function redraw(){
     .attr("cy", function(d){return d.y})
     .attr("fill", function(d){return d.fill})
     .attr("key", function(d){return d.key});
-
     let clustersLevelOne=new Set();
-    for (let index = 0; index < clus.length; index++) {
-        if (clus[index].level==1)
-            clustersLevelOne.add(clus[index])
+    for (let item of clusteredGraph.tree.clusters){
+        if(item[1].level==1) {
+            clustersLevelOne.add(item[1])
+        } 
+
     }
-    force(clus,1);
+    force(clustersLevelOne);
 }
 
-function force(clus,level){
-    for (let index = 0; index < clus.length; index++) {
-        if (clus[index].level==level) {
-            let x1=clus[index].x;
-            let y1=clus[index].y
-        for (let i = 0; i < clus.length; i++) {
-            if(clus[i]!=clus[index] && clus[i].level==level){
-                let x2=clus[i].x;
-                let y2=clus[i].y;
-                let x12= x1-x2;
-                let y12= y1-y2;
-                let d= Math.sqrt(Math.pow(x12,2)+Math.pow(y12,2));
-
-                if(d <clus[index].r+clus[i].r){
-                    // let difference=clus[index].r+clus[i].r-d;
-                    //     clus[index].x+=difference/2;
-                    //     clus[index].y+=difference/2;
-                    //     clus[i].x+=difference/2;
-                    //     clus[i].y+=difference/2;
-                    // d3.select("c_cluster")
-                    // .selectAll("circle")
-                    // .data(clus)
-                    // .attr("cx", function(d) {return d.x})
-                    // .attr("cy", function(d) {return d.y});
-                    simulationIntraClusters = d3.forceSimulation(clus)
-                .force("collide", d3.forceCollide().radius(function(d) {
-                    return d.r;
-                }).iterations(2))
-                .on("tick", function(){
-                    console.log("intrA")
+function force(clustersLevelX){
+    simulationIntraClusters = d3.forceSimulation(Array.from(clustersLevelX.values()))
+    .force("collide", d3.forceCollide().radius(function(d) {return d.r;}).iterations(2))
+    .on("tick", function(){
+        d3.select("#c_cluster")
+        .selectAll("circle")
+        .attr("cx", function(d) {
+            return d.x;
+        })
+        .attr("cy", function(d) {
+            return d.y;
+        })
+    });
+    for (let item of clustersLevelX){
+            let x1=item.x;
+            let y1=item.y;
+        if(item.cildren.size!=0){
+            let itemcildren=new Set()
+            for (let figlioid of item.cildren) {
+                if(clusteredGraph.tree.clusters.get(figlioid).level==item.level+1)
+                itemcildren.add(clusteredGraph.tree.clusters.get(figlioid))
+            }
+            console.log(item.x)
+                  simulationIntraClusters = d3.forceSimulation(Array.from(itemcildren))
+                    //.force("center",d3.forceCenter([item.x, item.y]))
+                    .force("collide", d3.forceCollide().radius(function(d) {return d.r;}).iterations(2))
+                    .on("tick", function(){
                     d3.select("#c_cluster")
-                .selectAll("circle")
-                .attr("cx", function(d) {
-                    return d.x;
-                })
-                .attr("cy", function(d) {
-                    return d.y;
-                })
+                    .selectAll("circle")
+                    .attr("cx", function(d) {
+                        return d.x;
+                    })
+                    .attr("cy", function(d) {
+                        return d.y;
+                    })
                 });
 
-                }
-            }
-            
-        }
-        if(clus[index].cildren.size!=0){
-            let arrayfigli=Array.from(clus[index].cildren.values())
-            for (let j = 0; j < arrayfigli.length; j++) {
-                let xfiglio= arrayfigli[j].x;
-                let yfiglio= arrayfigli[j].y;
-                let xIndexFiglio=x1-xfiglio;
-                let yIndexFiglio= y1-yfiglio;
-                let dPadreFiglio=Math.sqrt(Math.pow(xIndexFiglio,2)+Math.pow(yIndexFiglio,2));
-                if(dPadreFiglio>=clus[index].r+ arrayfigli[j].r){
-                    let difference=clus[index].r+clus[i].r-d;
-                    clus[i].x-=difference/2;
-                    clus[i].y-=difference/2;
-                }
-                force(Array.from(clus[index].cildren.values()),clus[index].level+1);
+                // let figlio=clusteredGraph.tree.clusters.get(figlioid)
+                // itemcildren.add(figlio)
+                // let xfiglio= figlio.x;
+                // let yfiglio= figlio.y;
+                // let xIndexFiglio=x1-xfiglio;
+                // let yIndexFiglio= y1-yfiglio;
+                // let dPadreFiglio=Math.sqrt(Math.pow(xIndexFiglio,2)+Math.pow(yIndexFiglio,2));
+                // if(dPadreFiglio>=item.r+ figlio.r){
+                //     let difference=item.r+figlio.r-dPadreFiglio;
+                //     figlio.x-=difference/2;
+                //     figlio.y-=difference/2;
+                // }
             }
         }
         
     }
-        }
-            
-}
 
