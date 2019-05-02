@@ -14,57 +14,6 @@ function getRandomColor() {
     return color;
 }
 
-
-//////////////////////////    new & edit CLUSTERS    /////////////////////////////////////////////////////7 
-        // function bigAndNewCluster(clus, key, coords) {
-        //             simulationIntraClusters = d3.forceSimulation(clusters)
-        //         .force("collide", d3.forceCollide().radius(function(d) {
-        //             return d.r + 0.5;
-        //         }).iterations(2))
-        //         .on("tick", function(){
-        //             console.log("intrA")
-        //             d3.select("#c_cluster")
-        //         .selectAll("circle")
-        //         //.data(clus.internalCluster)
-        //         .attr("cx", function(d) {
-        //             return d.x;
-        //         })
-        //         .attr("internalCluster", function(d) {
-        //             return d.internalCluster;
-        //         })
-        //         .attr("cy", function(d) {
-        //             return d.y;
-        //         })
-        //         .attr("r",function(d){
-        //             return d.r;
-        //         })
-        //         });
-
-        // simulationInterClusters = d3.forceSimulation(clus.internalCluster)
-        //         .force("collide", d3.forceCollide().radius(function(d) {
-        //             return d.r + 0.5;
-        //         }).iterations(2))
-        //         .on("tick", function(){
-        //             console.log("inter")
-        //             d3.select("#c_cluster")
-        //         .selectAll("circle")
-        //         //.data(clus.internalCluster)
-        //         .attr("cx", function(d) {
-        //             return d.x;
-        //         })
-        //         .attr("internalCluster", function(d) {
-        //             return d.internalCluster;
-        //         })
-        //         .attr("cy", function(d) {
-        //             return d.y;
-        //         })
-        //         .attr("r",function(d){
-        //             return d.r;
-        //         })
-        //         });
-
-        // }
-
 /**
  * @function
  * @returns {void} 
@@ -78,13 +27,18 @@ function editCluster(){
             if(editClusterBoolean==true)
             {
             let clus= clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key")));
-            console.log(clus)
             let label= "c"+clusteredGraph.tree.clusters.size;
             clus.cildren.add(clusteredGraph.tree.clusters.size);
-            let cildrenClusterNumber= clusteredGraph.tree.cildrenCluster(parseInt(d3.select(this).attr("key"))).size+1
-            let radius= radiusCluster*cildrenClusterNumber
-            d3.select(this).attr("r", radius)
-            newCluster(d3.mouse(this),label,clus.level+1,radiusCluster);
+            for (let item of clus.parents) clusteredGraph.tree.clusters.get(item).cildren.add(clusteredGraph.tree.clusters.size);
+            newCluster(d3.mouse(this),label,clus.level+1);
+            let clusterfiglio= clusteredGraph.tree.clusters.get(clusteredGraph.tree.clusters.size-1);
+            clusterfiglio.parents.add(parseInt(d3.select(this).attr("key")));
+            for (let item of clus.parents) clusterfiglio.parents.add(item);
+            for(let item of clusteredGraph.tree.clusters.values())
+            {
+                item.r=radiusCluster*(item.cildren.size+1)
+                redraw();
+            }
             }
         });
     return;
@@ -97,13 +51,15 @@ function editCluster(){
  * @returns {void} 
  * @description Create a new cluster in #c_cluster SVG
  */
-function newCluster(coordinates,clusterLabel,level,radius)
+function newCluster(coordinates,clusterLabel,level)
 {
-    let cluster= new Cluster(clusterLabel,level,new Set(),new Set());
+    let cluster= new Cluster(clusterLabel,level,new Set(),new Set(),new Set());
     clusteredGraph.tree.clusters.set(clusteredGraph.tree.clusters.size,cluster);
     cluster.x=coordinates[0];
     cluster.y=coordinates[1];
-    cluster.r=radius;
+    cluster.r=radiusCluster;
+    cluster.fill=getRandomColor();
+    cluster.key=clusteredGraph.tree.clusters.size-1;
     redraw();
 }
 

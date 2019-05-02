@@ -12,8 +12,7 @@ function newNode(coordinates,label) {
     clusteredGraph.graph.nodes.set(clusteredGraph.graph.nodes.size,nodeToInsert);
     nodeToInsert.x=coordinates[0];
     nodeToInsert.y=coordinates[1];
-    nodeToInsert.dispx=0;
-    nodeToInsert.dispy=0;
+    nodeToInsert.key=clusteredGraph.graph.nodes.size-1;
     redraw();
     return;
 }

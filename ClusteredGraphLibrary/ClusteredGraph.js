@@ -44,13 +44,15 @@ class Cluster{
     * @param {string} label
     * @param {number} level -depth of the cluster in the InclusionTree
     * @param {Set<number>} cildren - Set of the cildrens cluster's id
+    * @param {Set<number>} parents - Set of the parents's id of the Cluster
     * @param {Set<number>} nodes - id of the cluster's node at the cluster's level 
     */
-    constructor(label,level,cildren,nodes)
+    constructor(label,level,cildren,parents,nodes)
     {
  	    this.label=label;
  	    this.level=level;
- 	    this.cildren=cildren;
+         this.cildren=cildren;
+         this.parents=parents;
  	    this.nodes=nodes;
     }
 }

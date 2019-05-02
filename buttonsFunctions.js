@@ -47,7 +47,7 @@ function createClusterButton() {
         {
         let coordinates = d3.mouse(this);
         let label= "c" + clusteredGraph.tree.clusters.size;
-            newCluster(coordinates,label,1,radiusCluster);
+            newCluster(coordinates,label,1);
         }
     });
 }
@@ -156,18 +156,24 @@ function deleteGraphButton() {
 
 function redraw(){
     let clus=Array.from(clusteredGraph.tree.clusters.values());
-
-    d3.select("#c_node")
+    let nod=Array.from(clusteredGraph.graph.nodes.values());
+    
+    d3.select("#c_cluster")
     .selectAll("circle")
     .data(clus)
+    .remove()
+    d3.select("#c_node")
+    .selectAll("circle")
+    .data(nod)
     .enter()
     .append("circle")
     .transition()
     .duration(800)
     .attr("r",radiusNode)
     .attr("id", "nodo")
-    .attr("key", clusteredGraph.graph.nodes.size-1);
-
+    .attr("cx", function(d){ return d.x;})
+    .attr("cy", function(d){return d.y})
+    .attr("key", function(d){return d.key});
 
     d3.select("#c_cluster")
     .selectAll("circle")
@@ -178,59 +184,80 @@ function redraw(){
     .attr("id","cluster")
     .attr("cx", function(d){ return d.x;})
     .attr("cy", function(d){return d.y})
-    .attr("fill", getRandomColor)
-    .attr("key", clusteredGraph.tree.clusters.size-1);
+    .attr("fill", function(d){return d.fill})
+    .attr("key", function(d){return d.key});
 
     let clustersLevelOne=new Set();
     for (let index = 0; index < clus.length; index++) {
         if (clus[index].level==1)
             clustersLevelOne.add(clus[index])
     }
-    force(clustersLevelOne);
-    console.log(clustersLevelOne)
+    force(clus,1);
 }
 
-function force(clustersLevelX){
-    let arrayclus=Array.from(clustersLevelX.values())
-    for (let index = 0; index < arrayclus.length; index++) {
-            let x1=arrayclus[index].x;
-            let y1=arrayclus[index].y
-        for (let i = 0; i < arrayclus.length; i++) {
-            if(arrayclus[i]!=arrayclus[index]){
-                let x2=arrayclus[i].x;
-                let y2=arrayclus[i].y;
+function force(clus,level){
+    for (let index = 0; index < clus.length; index++) {
+        if (clus[index].level==level) {
+            let x1=clus[index].x;
+            let y1=clus[index].y
+        for (let i = 0; i < clus.length; i++) {
+            if(clus[i]!=clus[index] && clus[i].level==level){
+                let x2=clus[i].x;
+                let y2=clus[i].y;
                 let x12= x1-x2;
                 let y12= y1-y2;
                 let d= Math.sqrt(Math.pow(x12,2)+Math.pow(y12,2));
-                console.log(d)
-                if(d <arrayclus[index].r+arrayclus[i].r){
-                    repulsiveForce(arrayclus[index],arrayclus[i])
+
+                if(d <clus[index].r+clus[i].r){
+                    // let difference=clus[index].r+clus[i].r-d;
+                    //     clus[index].x+=difference/2;
+                    //     clus[index].y+=difference/2;
+                    //     clus[i].x+=difference/2;
+                    //     clus[i].y+=difference/2;
+                    // d3.select("c_cluster")
+                    // .selectAll("circle")
+                    // .data(clus)
+                    // .attr("cx", function(d) {return d.x})
+                    // .attr("cy", function(d) {return d.y});
+                    simulationIntraClusters = d3.forceSimulation(clus)
+                .force("collide", d3.forceCollide().radius(function(d) {
+                    return d.r;
+                }).iterations(2))
+                .on("tick", function(){
+                    console.log("intrA")
+                    d3.select("#c_cluster")
+                .selectAll("circle")
+                .attr("cx", function(d) {
+                    return d.x;
+                })
+                .attr("cy", function(d) {
+                    return d.y;
+                })
+                });
+
                 }
             }
             
         }
-        if(arrayclus[index].cildren.size!=0){
-            let arrayfigli=Array.from(arrayclus[index].cildren.values())
+        if(clus[index].cildren.size!=0){
+            let arrayfigli=Array.from(clus[index].cildren.values())
             for (let j = 0; j < arrayfigli.length; j++) {
                 let xfiglio= arrayfigli[j].x;
                 let yfiglio= arrayfigli[j].y;
                 let xIndexFiglio=x1-xfiglio;
                 let yIndexFiglio= y1-yfiglio;
                 let dPadreFiglio=Math.sqrt(Math.pow(xIndexFiglio,2)+Math.pow(yIndexFiglio,2));
-                if(dPadreFiglio>=arrayclus[index].r+ arrayfigli[j].r){
-                    attractiveForce(arrayclus[index],arrayfigli[j]);
+                if(dPadreFiglio>=clus[index].r+ arrayfigli[j].r){
+                    let difference=clus[index].r+clus[i].r-d;
+                    clus[i].x-=difference/2;
+                    clus[i].y-=difference/2;
                 }
-                force(arrayclus[index].cildren);
+                force(Array.from(clus[index].cildren.values()),clus[index].level+1);
             }
         }
         
     }
+        }
+            
 }
 
-function repulsiveForce(){
-
-}
-
-function attractiveForce(){
-
-}
