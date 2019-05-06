@@ -38,10 +38,12 @@ margin:0px 0 0 50px;
   float: center;
   text-align: center;
 }
-.bottoni2-div{
+.import-div{
   float: center;
   text-align: center;
 }
+
+
 .button{
   text-decoration: underline;
   background-color: #555555; /* Green */

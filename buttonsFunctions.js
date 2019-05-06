@@ -39,28 +39,21 @@ function flatCluster() {
  */
 function createClusterButton() {
     allFalse();
-    createClusterBoolean=true
+    createClusterBoolean=true;
+    editClusterBoolean=true;
     removeTransformation();
-    d3.select("#cgraph")
-    .on("click", function(){
+    editCluster();
+        d3.select("#cgraph")
+        .on("click", function(){
+            console.log("sono dentro")
         if(createClusterBoolean==true)
         {
-        let coordinates = d3.mouse(this);
         let label= "c" + clusteredGraph.tree.clusters.size;
-            newCluster(coordinates,label,1);
+            newCluster(d3.mouse(this),label,1);
         }
     });
 }
-/**
- * @function 
- */
-function editClusterButton() {
-    allFalse();
-    removeTransformation();
-    editClusterBoolean=true;
-    editCluster();
 
-}
 /**
  * @function 
  */
@@ -131,16 +124,6 @@ function moveClusterButton() {
         dragCluster();
 });
 }
-
-/**
- * @function 
- */
-function saveIt(){
-    allFalse();
-    removeTransformation();
-    saveGraph();
-}
-
 /**
  * @function 
  */
@@ -151,6 +134,15 @@ function deleteGraphButton() {
     clusteredGraph.graph.nodes.clear();
     clusteredGraph.graph.edges.clear();
     clusteredGraph.tree.clusters.clear();
+}
+/**
+ * @function 
+ */
+function drawJsonButton(){
+    deleteGraphButton()
+    clusteredGraph = JSON.parse(reader.result);
+    redraw()
+
 }
 
 

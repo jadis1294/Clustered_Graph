@@ -1,5 +1,5 @@
 "use strict"
-
+document.getElementById('files').addEventListener('change', handleFileSelect, false);
 var editClusterBoolean,
     simulationIntraClusters,
     createClusterBoolean,
@@ -8,6 +8,7 @@ var editClusterBoolean,
     dragClusterBoolean,
     deleteClusterBoolean,
     zoomGraphBoolean,
+    reader,
     radiusCluster = 40,
     radiusNode = 9,
     clusters = [],
@@ -21,7 +22,14 @@ var editClusterBoolean,
     h = window.innerHeight-100,
     drag = d3.drag().on("drag", dragged)
 
-
+/**
+ * @function 
+ */
+function handleFileSelect(evt) {
+    var file = evt.target.files[0];    
+    reader = new FileReader();
+    reader.readAsText(file);
+}
 
 /**
  * @function 
@@ -49,28 +57,3 @@ function initialize() {
     }
 
 initialize();
-
-var drag = d3.behavior.drag()
-    			.origin(function(d) { return d; })
-    			.on("dragstart", function() {
- 			 	d3.event.sourceEvent.stopPropagation();
- 			 	d3.select(this).attr("dragging", function(d) {
- 			 		d.dragging = true;
- 			 		return true;
- 			 	
- 			 	});
-			}).on("drag", function(d){
-    				mainStep(k_el, k_springf, k_springl, gravity);
-    				d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
-    		
-    
-    			}).on("dragend", function (d){
-    				d3.select(this).attr("dragging", function(d) {
- 			 		d.dragging = false;
- 			 		return false;
- 			 	});
-
-    				for (p=0; p<1000; p++)
-					setTimeout(mainStep(k_el, k_springf, k_springl, gravity), 100);
-					//mainStep(k_el, k_springf, k_springl);
-    			});

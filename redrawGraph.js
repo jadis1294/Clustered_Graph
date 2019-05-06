@@ -50,7 +50,7 @@ function redraw(){
  */
 function force(clustersLevelX){
     simulationIntraClusters = d3.forceSimulation(Array.from(clustersLevelX.values()))
-    .force("collide", d3.forceCollide().radius(function(d) {return d.r;}).iterations(2))
+    .force("collide", d3.forceCollide().radius(function(d) {return d.r;}).iterations(20))
     .on("tick", function(){
         d3.select("#c_cluster")
         .selectAll("circle")
@@ -73,7 +73,7 @@ function force(clustersLevelX){
             console.log(item.x)
                   simulationIntraClusters = d3.forceSimulation(Array.from(itemcildren))
                     //.force("center",d3.forceCenter([item.x, item.y]))
-                    .force("collide", d3.forceCollide().radius(function(d) {return d.r;}).iterations(2))
+                    .force("collide", d3.forceCollide().radius(function(d) {return d.r;}).iterations(20))
                     .on("tick", function(){
                     d3.select("#c_cluster")
                     .selectAll("circle")

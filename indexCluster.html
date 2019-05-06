@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<!-- How to create Mouse Events for D3 -->
+<meta charset="UTF-8">
 <html>
    <head>
       <!-- Load D3 from site -->
 <script src="https://cdn.rawgit.com/eligrey/canvas-toBlob.js/f1a01896135ab378aa5c0118eadd81da55e698d8/canvas-toBlob.js"></script>
 <script src="https://cdn.rawgit.com/eligrey/FileSaver.js/e9d941381475b5df8b7d7691013401e171014e89/FileSaver.min.js"></script>
 <script src="http://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+<!--<script src="https://requirejs.org/docs/release/2.3.6/minified/require.js"></script>--->
 <script src="https://d3js.org/d3-dispatch.v1.min.js"></script>
 <script src="https://d3js.org/d3-quadtree.v1.min.js"></script>
 <script src="https://d3js.org/d3-timer.v1.min.js"></script>
@@ -17,15 +18,19 @@
     <div class="title">
       <h1><center>Build / Import your Cluster Graph !</center><h1>
     </div>
+         <div class= "import-div">
+            <input class="button" type="file" id="files" name="file" accept=".json"/>
+            <input class="button" type="button" onclick="drawJsonButton()" value="Draw the Json" />
+            <input class="button" type="button" onclick="saveAsJsonButton()" value="Save as Json file" />
+            <input class="button" type="button" onclick="saveGraph()" value="Save as PNG" />
+         </div>
          <div class="bottoni-div">
             <input class="button" type="button" onclick="createClusterButton()" value="New Clusters" />
-            <input class="button" type="button" onclick="editClusterButton()" value="Edit Clusters" />
             <input class="button" type="button" onclick="createNodesButton()" value="New Nodes" />
             <input class="button" type="button" onclick="createEdgesButton()" value="Edit Edges" />
             <input class="button" type="button" onclick="moveClusterButton()" value="Drag Cluster" />
             <input class="button" type="button" onclick="zoomGraphButton()" value="Navigate" />
             <input class="button" type="button" onclick="deleteGraphButton()" value="Delete the graph" />
-            <input class="button" type="button" onclick="saveIt()" value="Save as PNG" />
             <input class="button" type="button" onclick="flatCluster()" value="FLAT TIME" />
          </div> 
 
@@ -34,7 +39,7 @@
             <script type="text/javascript"  src="redrawGraph.js"></script>
             <script type="text/javascript"  src="nodesEdgesFunction.js"></script>
             <script type="text/javascript"  src="clustersFunctions.js"></script>
-            <script type="text/javascript"  src="importSaveGraph.js"></script>
+            <script type="text/javascript"  src="saveGraph.js"></script>
             <script type="text/javascript"  src="buttonsFunctions.js"></script>
             <script type="text/javascript"  src="initialize.js"></script>
             <script type="text/javascript"  src="flatCluster.js"></script>

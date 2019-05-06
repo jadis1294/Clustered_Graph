@@ -1,21 +1,10 @@
-/////////////////////////////////////////////////////////////////////////////////////////////////7
-///////////////////////////FUNZIONI X IMPORTARE IL GRAFO ////////////////////////////
-function importSVG() {
-    d3.xml("d3.svg", "image/svg+xml", function(xml) {
-        var importedNode = document.importNode(xml.documentElement, true);
-        d3.select("#cgraph")
-            .each(function() {
-                this.appendChild(importedNode);
-            })
-    })
-}
 //////////////////////////FUNZIONI PER SALVARE GRAFO///////////////////////////////////////////
 function saveGraph() {
 
     var svgString = getSVGString(d3.select("#cgraph").node());
     svgString2Image(svgString, 2 * w, 2 * h, 'png', save); // passes Blob and filesize String to the callback
 
-    function save(dataBlob, filesize) {
+    function save(dataBlob) {
         saveAs(dataBlob, 'D3 vis exported to PNG.png'); // FileSaver.js function
     }
 }
@@ -107,4 +96,11 @@ function svgString2Image(svgString, width, height, format, callback) {
         });
     };
     image.src = imgsrc;
+}
+
+
+function saveAsJsonButton(){
+    var json = JSON.stringify(clusteredGraph);
+    var blob = new Blob([json], {type: "application/json"});
+    saveAs(blob, "save c_graph as Json"); // FileSaver.js function
 }

@@ -24,6 +24,7 @@ function editCluster(){
     .selectAll("circle")
     .data(Array.from(clusteredGraph.tree.clusters.values()))
     .on("click", function() {
+        createClusterBoolean=false;
             if(editClusterBoolean==true)
             {
             let clus= clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key")));
