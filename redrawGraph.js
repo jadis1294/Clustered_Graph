@@ -4,24 +4,11 @@
  */
 function redraw(){
     let clus=Array.from(clusteredGraph.tree.clusters.values());
-    let nod=Array.from(clusteredGraph.graph.nodes.values());
     
     d3.select("#c_cluster")
     .selectAll("circle")
     .data(clus)
     .remove()
-    d3.select("#c_node")
-    .selectAll("circle")
-    .data(nod)
-    .enter()
-    .append("circle")
-    .transition()
-    .duration(800)
-    .attr("r",radiusNode)
-    .attr("id", "nodo")
-    .attr("cx", function(d){ return d.x;})
-    .attr("cy", function(d){return d.y})
-    .attr("key", function(d){return d.key});
 
     d3.select("#c_cluster")
     .selectAll("circle")
@@ -42,6 +29,27 @@ function redraw(){
 
     }
     force(clustersLevelOne);
+}
+function redrawNodes(){
+    let nodes=Array.from(clusteredGraph.graph.nodes.values());
+    console.log(nodes)
+    d3.select("#c_node")
+    .selectAll("circle")
+    .data(nodes)
+    .enter()
+    .append("circle")
+    .transition()
+    .duration(800)
+    .attr("r",radiusNode)
+    .attr("id", "nodo")
+    .attr("cx", function(d){ return d.x;})
+    .attr("cy", function(d){return d.y})
+    .attr("key", function(d){return d.key});
+    //nodesForce(nodes)
+}
+
+function nodesForce(){
+    
 }
 
 /**
@@ -101,4 +109,5 @@ function force(clustersLevelX){
         }
         
     }
+
 

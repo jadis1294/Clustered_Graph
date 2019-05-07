@@ -65,7 +65,7 @@ class UnderlyingGraph{
     /**
      * @param {string} label
      * @param {boolean} embedded boolean value to decide if the rotationScheme of the node should be read
-     * @param {Map<number,node>} nodes Map of the nodes id in the graph
+     * @param {Set<node>} nodes Map of the nodes id in the graph
      * @param {Set<Edge>} edges List of the edges id in the graph
      */
     constructor(label,embedded,nodes,edges) 

@@ -7,13 +7,19 @@
  * @returns {void} 
  * @description Create a new Node in #c_node SVG
  */
-function newNode(coordinates,label) {
-    let nodeToInsert= new node(clusteredGraph.graph.nodes.size,label,new Set())
-    clusteredGraph.graph.nodes.set(clusteredGraph.graph.nodes.size,nodeToInsert);
+function newNode(cluster,coordinates,label) {
+    let nodeToInsert= new node(clusteredGraph.graph.nodes.size,label,new Set());
+    clusteredGraph.graph.nodes.add(nodeToInsert);
+    cluster.nodes.add(clusteredGraph.graph.nodes.size-1)
+    for (let genitore of cluster.parents) 
+    {
+        clusteredGraph.tree.clusters.get(genitore).nodes.add(clusteredGraph.graph.nodes.size-1)
+    }
     nodeToInsert.x=coordinates[0];
+    console.log(nodeToInsert.x)
     nodeToInsert.y=coordinates[1];
     nodeToInsert.key=clusteredGraph.graph.nodes.size-1;
-    redraw();
+    redrawNodes();
     return;
 }
 

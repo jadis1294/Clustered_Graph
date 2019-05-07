@@ -45,7 +45,6 @@ function createClusterButton() {
     editCluster();
         d3.select("#cgraph")
         .on("click", function(){
-            console.log("sono dentro")
         if(createClusterBoolean==true)
         {
         let label= "c" + clusteredGraph.tree.clusters.size;
@@ -81,12 +80,15 @@ function createNodesButton() {
     allFalse();
     removeTransformation();
     createNodesBoolean=true;
-    d3.select("#cgraph")
+    d3.select("#c_cluster")
+    .selectAll("circle")
+    .data(Array.from(clusteredGraph.tree.clusters.values()))
     .on("click", function() {
         if(createNodesBoolean==true){
-    let coords = d3.mouse(this);
+        let cluster= clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key")));
+        let coords = d3.mouse(this);
         let label= "n"+ clusteredGraph.graph.nodes.size;
-        newNode(coords,label);
+        newNode(cluster,coords,label);
         }
     });
 }
@@ -141,6 +143,7 @@ function deleteGraphButton() {
 function drawJsonButton(){
     deleteGraphButton()
     clusteredGraph = JSON.parse(reader.result);
+    //initImportedGraph()
     redraw()
 
 }

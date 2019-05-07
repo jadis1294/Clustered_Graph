@@ -30,21 +30,29 @@ function editCluster(){
             let clus= clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key")));
             let label= "c"+clusteredGraph.tree.clusters.size;
             clus.cildren.add(clusteredGraph.tree.clusters.size);
-            for (let item of clus.parents) clusteredGraph.tree.clusters.get(item).cildren.add(clusteredGraph.tree.clusters.size);
+            for (let item of clus.parents)
+                clusteredGraph.tree.clusters.get(item).cildren.add(clusteredGraph.tree.clusters.size);
             newCluster(d3.mouse(this),label,clus.level+1);
             let clusterfiglio= clusteredGraph.tree.clusters.get(clusteredGraph.tree.clusters.size-1);
             clusterfiglio.parents.add(parseInt(d3.select(this).attr("key")));
-            for (let item of clus.parents) clusterfiglio.parents.add(item);
+            for (let item of clus.parents)
+                clusterfiglio.parents.add(item);
             for(let item of clusteredGraph.tree.clusters.values())
-            {
                 item.r=radiusCluster*(item.cildren.size+1)
-                redraw();
-            }
+            redraw();
             }
         });
     return;
 }
 
+function findNodesList(cluster){
+    let foundedNodes= new Set();
+    for (let node in clusteredGraph.graph.nodes)
+        if(Math.abs(node.x-cluster.x)<cluster.r || Math.abs(node.y -cluster.y)<cluster.r)
+            foundedNodes.add(node.id)
+    
+    return foundedNodes;
+}
 /**
  * @function
  * @param {number} coordinates Array of d3.mouse(this)
@@ -61,6 +69,9 @@ function newCluster(coordinates,clusterLabel,level)
     cluster.r=radiusCluster;
     cluster.fill=getRandomColor();
     cluster.key=clusteredGraph.tree.clusters.size-1;
+    let foundedNodes=findNodesList(cluster);
+    for(let item of foundedNodes)
+        cluster.nodes.add(item);
     redraw();
 }
 
