@@ -46,10 +46,15 @@ function editCluster(){
 }
 
 function findNodesList(cluster){
+    console.log("inizio find node")
     let foundedNodes= new Set();
-    for (let node in clusteredGraph.graph.nodes)
-        if(Math.abs(node.x-cluster.x)<cluster.r || Math.abs(node.y -cluster.y)<cluster.r)
+    for (let node of clusteredGraph.graph.nodes){
+        console.log(node)
+        if(Math.abs(node.x-cluster.x)<cluster.r && Math.abs(node.y -cluster.y)<cluster.r){
+            console.log("era minore")
             foundedNodes.add(node.id)
+        }
+    }
     
     return foundedNodes;
 }

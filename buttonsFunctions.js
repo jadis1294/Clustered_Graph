@@ -59,6 +59,11 @@ function createClusterButton() {
 function zoomGraphButton() {
     allFalse();
     zoomGraphBoolean = true;
+    d3.select("#c_cluster")
+    .selectAll("circle")
+    .data(Array.from(clusteredGraph.tree.clusters.values()))
+    .on("mouseover", handleMouseOver)
+    .on("mouseout", handleMouseOut);
     d3.select("#cgraph")
     .call(d3.zoom().scaleExtent([1, 40]).translateExtent([[-100, -100], [w + 90, h + 100]])
     .on("zoom", function() {
@@ -148,4 +153,30 @@ function drawJsonButton(){
 
 }
 
+    // Create Event Handlers for mouse
+    function handleMouseOver(d, i) {  // Add interactivity
+        console.log("mouseover")
+        // Use D3 to select element, change color and size
+        //color=d3.select(this).attr("fill")
+        d3.select(this)
+        .attr("r",function(){ return d.r*1.2;});
+        //Specify where to put label of text
+        
+        // d3.select(this).append("text").attr({
+        //    id: "t" + d.x + "-" + d.y + "-" + i,  // Create an id for text so we can select it later for removing on mouseout
+        //     x: function() { return d.x},
+        //     y: function() { return d.y}
+        // })
+        // .text(function() {
+        //   return [d.x, d.y];  // Value of the text
+        // });
+      }
 
+  function handleMouseOut(d, i) {
+        // Use D3 to select element, change color back to normal
+        d3.select(this)
+        .attr("r", function(){return d.r})
+
+        // Select text by id and then remove
+        //d3.select("#t" + d.x + "-" + d.y + "-" + i).remove();  // Remove text location
+    }
