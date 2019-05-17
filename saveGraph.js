@@ -100,7 +100,27 @@ function svgString2Image(svgString, width, height, format, callback) {
 
 
 function saveAsJsonButton(){
-    var json = JSON.stringify(clusteredGraph);
-    var blob = new Blob([json], {type: "application/json"});
-    saveAs(blob, "save c_graph as Json"); // FileSaver.js function
+    let clu=[]
+    for(let c of clusteredGraph.tree.clusters){
+        c[1].parents=Array.from(c[1].parents);
+        c[1].cildren=Array.from(c[1].cildren);
+        c[1].nodes=Array.from(c[1].nodes);
+        clu.push(c[1])
+
+    }
+    let arc=[]
+    for(let c of clusteredGraph.graph.edges) arc.push(c[1])
+    let nod=[]
+    for(let c of clusteredGraph.graph.nodes){
+        c[1].rotationScheme=Array.from(c[1].rotationScheme);
+        nod.push(c[1])
+    } 
+    let cgraph={
+        "nodes": nod,
+        "edges": arc,
+        "clusters" : clu
+    }
+    var jsonse = JSON.stringify(cgraph);
+    let blob = new Blob([jsonse], {type: "application/json"});
+    saveAs(blob, "cgraph.json"); // FileSaver.js function
 }

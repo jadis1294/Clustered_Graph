@@ -105,7 +105,7 @@ function forceClusters(clustersLevelX){
                 if(clusteredGraph.tree.clusters.get(figlioid).level==item.level+1)
                 itemcildren.add(clusteredGraph.tree.clusters.get(figlioid))
             }
-            console.log(item.x)
+            //console.log(item.x)
                   simulationIntraClusters = d3.forceSimulation(Array.from(itemcildren))
                     .force('center', d3.forceCenter(item.x,item.y))
                     .force("charge", d3.forceManyBody().strength(0.4)) // Nodes are attracted one each other of value is > 0

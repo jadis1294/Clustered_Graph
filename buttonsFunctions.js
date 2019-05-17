@@ -218,7 +218,7 @@ function drawJsonButton(){
         c[1].key=c[0];
     }
     for(let n of nodes){
-        n[1].rotationScheme=new Set(c[1].rotationScheme)
+        n[1].rotationScheme=new Set(n[1].rotationScheme)
         n[1].r=radiusNode;
         n[1].key=n[0];
         }
