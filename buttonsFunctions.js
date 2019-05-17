@@ -22,8 +22,8 @@ function allFalse(){
     createNodesBoolean = false;
     createEdgeBoolean = false;
     dragClusterBoolean = false;
-    deleteClusterBoolean = false;
     zoomGraphBoolean = false;
+    deleteObjectBoolean=false;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////7
@@ -47,8 +47,15 @@ function createClusterButton() {
         .on("click", function(){
         if(createClusterBoolean==true)
         {
-        let label= "c" + clusteredGraph.tree.clusters.size;
-            newCluster(d3.mouse(this),label,1);
+            let ultimaChiave;
+            if(clusteredGraph.tree.clusters.size==0)
+                ultimaChiave=0;
+            else {
+                for(let key of clusteredGraph.tree.clusters)
+                    ultimaChiave= key[0];
+                ultimaChiave++;
+            }
+            newCluster(d3.mouse(this),ultimaChiave,"c"+ultimaChiave,1);
         }
     });
 }
@@ -59,11 +66,7 @@ function createClusterButton() {
 function zoomGraphButton() {
     allFalse();
     zoomGraphBoolean = true;
-    d3.select("#c_cluster")
-    .selectAll("circle")
-    .data(Array.from(clusteredGraph.tree.clusters.values()))
-    .on("mouseover", handleMouseOver)
-    .on("mouseout", handleMouseOut);
+    changeRadiusAndDescription()
     d3.select("#cgraph")
     .call(d3.zoom().scaleExtent([1, 40]).translateExtent([[-100, -100], [w + 90, h + 100]])
     .on("zoom", function() {
@@ -91,9 +94,17 @@ function createNodesButton() {
     .on("click", function() {
         if(createNodesBoolean==true){
         let cluster= clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key")));
-        let coords = d3.mouse(this);
-        let label= "n"+ clusteredGraph.graph.nodes.size;
-        newNode(cluster,coords,label);
+        let ultimaChiave;
+        if(clusteredGraph.graph.nodes.size==0){
+            ultimaChiave=0;
+            newNode(cluster,ultimaChiave,d3.mouse(this),"n0")
+        }
+        else {
+            for(let key of clusteredGraph.graph.nodes)
+                ultimaChiave= key[0];
+            ultimaChiave++;
+            newNode(cluster,ultimaChiave,d3.mouse(this),"n"+ultimaChiave)
+            }
         }
     });
 }
@@ -109,12 +120,18 @@ function createEdgesButton() {
     .data(Array.from(clusteredGraph.graph.nodes.values()))
     .on("click", function(){
         if(createEdgeBoolean==true){
-            let id=d3.select(this).attr("key");
-            let nodo= clusteredGraph.graph.nodes.get( parseInt(id));
-            let label = "e"+ clusteredGraph.graph.edges.size;
-            let coordinates= [d3.select(this).attr("cx"),d3.select(this).attr("cy")]
-            d3.select(this).transition().duration(1000).attr("r",radiusNode*1.5)
-            newEdge(coordinates,nodo,label);
+            let ultimaChiave;
+            if(clusteredGraph.graph.edges.size==0)
+                ultimaChiave=0;
+            else{ 
+                for(let key of clusteredGraph.graph.edges)
+                ultimaChiave= key[0]+1;
+            }
+                let nodo= clusteredGraph.graph.nodes.get( parseInt(d3.select(this).attr("key")));
+                let label = "e"+ clusteredGraph.graph.edges.size;
+                let coordinates= [parseInt(d3.select(this).attr("cx")),parseInt(d3.select(this).attr("cy"))]
+                d3.select(this).transition().duration(1000).attr("r",radiusNode*1.5)
+                newEdge(ultimaChiave,coordinates,nodo,label);
         }
     });
 }
@@ -142,41 +159,74 @@ function deleteGraphButton() {
     clusteredGraph.graph.edges.clear();
     clusteredGraph.tree.clusters.clear();
 }
+
+/**
+ * @function 
+ */
+function deleteObjectButton(){
+    allFalse();
+    removeTransformation();
+    deleteObjectBoolean=true;
+    d3.select("#c_cluster")
+    .selectAll("circle")
+    .data(Array.from(clusteredGraph.tree.clusters.values()))
+    .on("click", function(){
+        if( deleteObjectBoolean==true){
+            let id=parseInt(d3.select(this).attr("key"))
+            deleteCluster(id)
+        }
+    });
+    d3.select("#c_node")
+    .selectAll("circle")
+    .data(Array.from(clusteredGraph.graph.nodes.values()))
+    .on("click", function(){
+        console.log("cliccato nodo")
+        if( deleteObjectBoolean==true){
+        let id=parseInt(d3.select(this).attr("key"))
+        d3.select(this).remove()
+        clusteredGraph.graph.nodes.delete(id)
+        for(let c of clusteredGraph.tree.clusters)
+           c[1].nodes.delete(id)
+        for(let arco of clusteredGraph.graph.edges)
+            if(arco[1].source==id || arco[1].target==id)
+                clusteredGraph.graph.edges.delete(arco[0]);
+        redraw()
+            }
+    });
+}
 /**
  * @function 
  */
 function drawJsonButton(){
     deleteGraphButton()
-    clusteredGraph = JSON.parse(reader.result);
-    //initImportedGraph()
+    let clusteredGraphReader = JSON.parse(reader.result);
+    edges = new Map(clusteredGraphReader.edges);
+
+    for (let index = 0; index < clusteredGraphReader.clusters.length; index++)
+        clusters.set(clusters.size,clusteredGraphReader.clusters[index]);
+    for(let index = 0; index < clusteredGraphReader.nodes.length; index++)
+        nodes.set(nodes.size,clusteredGraphReader.nodes[index]);
+    for(let index = 0; index < clusteredGraphReader.edges.length; index++)
+        edges.set(edges.size,clusteredGraphReader.edges[index]);
+
+    for(let c of clusters){
+        c[1].fill= getRandomColor();
+        c[1].parents=new Set(c[1].parents);
+        c[1].cildren=new Set(c[1].cildren);
+        c[1].nodes=new Set(c[1].nodes);
+        if(c[1].level==1) c[1].r=radiusCluster;
+        c[1].key=c[0];
+    }
+    for(let n of nodes){
+        n[1].rotationScheme=new Set(c[1].rotationScheme)
+        n[1].r=radiusNode;
+        n[1].key=n[0];
+        }
+        
+    undGraph=new UnderlyingGraph("grafo",false,nodes,edges)
+    incTree= new InclusionTree("albero",clusters)
+    clusteredGraph= new ClusteredGraph(undGraph,incTree)
     redraw()
 
 }
 
-    // Create Event Handlers for mouse
-    function handleMouseOver(d, i) {  // Add interactivity
-        console.log("mouseover")
-        // Use D3 to select element, change color and size
-        //color=d3.select(this).attr("fill")
-        d3.select(this)
-        .attr("r",function(){ return d.r*1.2;});
-        //Specify where to put label of text
-        
-        // d3.select(this).append("text").attr({
-        //    id: "t" + d.x + "-" + d.y + "-" + i,  // Create an id for text so we can select it later for removing on mouseout
-        //     x: function() { return d.x},
-        //     y: function() { return d.y}
-        // })
-        // .text(function() {
-        //   return [d.x, d.y];  // Value of the text
-        // });
-      }
-
-  function handleMouseOut(d, i) {
-        // Use D3 to select element, change color back to normal
-        d3.select(this)
-        .attr("r", function(){return d.r})
-
-        // Select text by id and then remove
-        //d3.select("#t" + d.x + "-" + d.y + "-" + i).remove();  // Remove text location
-    }

@@ -1,14 +1,51 @@
 /**
  * @function
- * @description Redraw the graph everytime it changes 
+ * @description redrawClusters the graph everytime it changes 
  */
 function redraw(){
     let clus=Array.from(clusteredGraph.tree.clusters.values());
-    
+    let nodes=Array.from(clusteredGraph.graph.nodes.values());
+    let edges=Array.from(clusteredGraph.graph.edges.values());
     d3.select("#c_cluster")
     .selectAll("circle")
     .data(clus)
     .remove()
+    
+    d3.select("#c_cluster")
+    .selectAll("circle")
+    .data(nodes)
+    .remove()
+    
+    d3.select("#c_edge")
+    .selectAll("line")
+    .data(edges)
+    .remove()
+    
+    d3.select("#c_node")
+    .selectAll("circle")
+    .data(nodes)
+    .enter()
+    .append("circle")
+    .transition()
+    .duration(800)
+    .attr("r",radiusNode)
+    .attr("id", "nodo")
+    .attr("cx", function(d){ return d.x;})
+    .attr("cy", function(d){return d.y})
+    .attr("key", function(d){return d.key});
+    
+
+    d3.select("#c_edge")
+    .selectAll("line")
+    .data(edges)
+    .enter()
+    .append("line")
+    .attr("id", "edge")
+    .attr("x1", function(d){ return d.x1;})
+    .attr("y1", function(d){return d.y1})
+    .attr("x2", function(d){ return d.x2;})
+    .attr("y2", function(d){return d.y2})
+    .attr("key", function(d){return d.id});
 
     d3.select("#c_cluster")
     .selectAll("circle")
@@ -28,35 +65,27 @@ function redraw(){
         } 
 
     }
-    force(clustersLevelOne);
-}
-function redrawNodes(){
-    let nodes=Array.from(clusteredGraph.graph.nodes.values());
-    console.log(nodes)
-    d3.select("#c_node")
-    .selectAll("circle")
-    .data(nodes)
-    .enter()
-    .append("circle")
-    .transition()
-    .duration(800)
-    .attr("r",radiusNode)
-    .attr("id", "nodo")
-    .attr("cx", function(d){ return d.x;})
-    .attr("cy", function(d){return d.y})
-    .attr("key", function(d){return d.key});
-    //nodesForce(nodes)
+    let nodeClusters = new Set();
+    for(let cluster of clusteredGraph.tree.clusters){
+        for(let nodo of clusteredGraph.graph.nodes){
+            for(let figlio of cluster[1].cildren){
+                if(!clusteredGraph.tree.clusters.get(figlio).nodes.has(nodo[0])){
+                    nodeClusters.add(figlio)
+                    nodeClusters.add(nodo)
+                }
+            }
+        }
+
+    }
+    forceClusters(clustersLevelOne);
 }
 
-function nodesForce(){
-    
-}
 
 /**
  * @function
- * @description funcion for start the collision and attraction force everytime the graph changes 
+ * @description function for start the collision and attraction force everytime the graph changes 
  */
-function force(clustersLevelX){
+function forceClusters(clustersLevelX){
     simulationIntraClusters = d3.forceSimulation(Array.from(clustersLevelX.values()))
     .force("collide", d3.forceCollide().radius(function(d) {return d.r;}).iterations(20))
     .on("tick", function(){
@@ -70,8 +99,6 @@ function force(clustersLevelX){
         })
     });
     for (let item of clustersLevelX){
-            let x1=item.x;
-            let y1=item.y;
         if(item.cildren.size!=0){
             let itemcildren=new Set()
             for (let figlioid of item.cildren) {
@@ -80,7 +107,8 @@ function force(clustersLevelX){
             }
             console.log(item.x)
                   simulationIntraClusters = d3.forceSimulation(Array.from(itemcildren))
-                    //.force("center",d3.forceCenter([item.x, item.y]))
+                    .force('center', d3.forceCenter(item.x,item.y))
+                    .force("charge", d3.forceManyBody().strength(0.4)) // Nodes are attracted one each other of value is > 0
                     .force("collide", d3.forceCollide().radius(function(d) {return d.r;}).iterations(20))
                     .on("tick", function(){
                     d3.select("#c_cluster")
@@ -92,19 +120,6 @@ function force(clustersLevelX){
                         return d.y;
                     })
                 });
-
-                // let figlio=clusteredGraph.tree.clusters.get(figlioid)
-                // itemcildren.add(figlio)
-                // let xfiglio= figlio.x;
-                // let yfiglio= figlio.y;
-                // let xIndexFiglio=x1-xfiglio;
-                // let yIndexFiglio= y1-yfiglio;
-                // let dPadreFiglio=Math.sqrt(Math.pow(xIndexFiglio,2)+Math.pow(yIndexFiglio,2));
-                // if(dPadreFiglio>=item.r+ figlio.r){
-                //     let difference=item.r+figlio.r-dPadreFiglio;
-                //     figlio.x-=difference/2;
-                //     figlio.y-=difference/2;
-                // }
             }
         }
         

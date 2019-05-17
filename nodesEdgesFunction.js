@@ -7,20 +7,18 @@
  * @returns {void} 
  * @description Create a new Node in #c_node SVG
  */
-function newNode(cluster,coordinates,label) {
+function newNode(cluster,key,coordinates,label) {
     let nodeToInsert= new node(clusteredGraph.graph.nodes.size,label,new Set());
-    clusteredGraph.graph.nodes.add(nodeToInsert);
+    clusteredGraph.graph.nodes.set(key,nodeToInsert);
     cluster.nodes.add(clusteredGraph.graph.nodes.size-1)
     for (let genitore of cluster.parents) 
     {
-        clusteredGraph.tree.clusters.get(genitore).nodes.add(clusteredGraph.graph.nodes.size-1)
+        clusteredGraph.tree.clusters.get(genitore).nodes.add(key)
     }
     nodeToInsert.x=coordinates[0];
-    console.log(nodeToInsert.x)
     nodeToInsert.y=coordinates[1];
-    nodeToInsert.key=clusteredGraph.graph.nodes.size-1;
-    redrawNodes();
-    return;
+    nodeToInsert.key=key;
+    redraw();
 }
 
 
@@ -33,38 +31,31 @@ function newNode(cluster,coordinates,label) {
  * @returns {void} 
  * @description Create a new Edge in svg #C_EDGE
  */
-function newEdge(coordinates,nodo,label)
+function newEdge(key,coordinates,nodo,label)
 {
-    let edge= new Edge(clusteredGraph.graph.edges.size,label,nodo.id,nodo.id);
-    clusteredGraph.graph.edges.add(edge);
+    let edge= new Edge(key,label,nodo.id,nodo.id);
+    clusteredGraph.graph.edges.set(key,edge);
     nodo.rotationScheme.add(edge.id);
+    edge.x1=coordinates[0]
+    edge.y1=coordinates[1]
 
-    let line = d3.select("#c_edge")
-        .append("line")
-        .attr("x1", coordinates[0])
-        .attr("y1", coordinates[1])
-        .attr("x2", coordinates[0])
-        .attr("y2", coordinates[1])
-        .attr("id", "edge");
-        
     d3.select("#c_node")
         .selectAll("circle")
         .data(Array.from(clusteredGraph.graph.nodes.values()))
         .on("click", function(){
+            d3.select(this)
+            .transition()
+            .duration(1000)
+            .attr("r", radiusNode * 1.5);
             let id=d3.select(this).attr("key");
             let nodo= clusteredGraph.graph.nodes.get(parseInt(id));
+            nodo.rotationScheme.add(edge.id);
             edge.target=nodo.id;
-                
-            d3.select(this)
-                .transition()
-                .duration(1000)
-                .attr("r", radiusNode * 1.5); 
-                
-            line.attr("x2", d3.select(this).attr("cx"))
-                .attr("y2", d3.select(this).attr("cy"));
-            
+            edge.x2=parseInt(d3.select(this).attr("cx"))
+            edge.y2=parseInt(d3.select(this).attr("cy"))
             d3.select("#c_node").selectAll("circle").transition().duration(1000).attr("r",radiusNode);
-
+            redraw();
             createEdgesButton();
         });
 }
+

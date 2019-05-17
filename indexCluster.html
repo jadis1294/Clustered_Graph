@@ -6,48 +6,61 @@
 <script src="https://cdn.rawgit.com/eligrey/canvas-toBlob.js/f1a01896135ab378aa5c0118eadd81da55e698d8/canvas-toBlob.js"></script>
 <script src="https://cdn.rawgit.com/eligrey/FileSaver.js/e9d941381475b5df8b7d7691013401e171014e89/FileSaver.min.js"></script>
 <script src="http://d3js.org/d3.v5.min.js" charset="utf-8"></script>
-<!--<script src="https://requirejs.org/docs/release/2.3.6/minified/require.js"></script>--->
 <script src="https://d3js.org/d3-dispatch.v1.min.js"></script>
 <script src="https://d3js.org/d3-quadtree.v1.min.js"></script>
 <script src="https://d3js.org/d3-timer.v1.min.js"></script>
 <script src="https://d3js.org/d3-force.v2.min.js"></script>
-<link rel="stylesheet" href="graphStyle.css" />
+<link rel="stylesheet" href="graphStyle.css" /> 
    </head>
 
-   <body>
-    <div class="title">
-      <h1><center>Build / Import your Cluster Graph !</center><h1>
-    </div>
-         <div class= "import-div">
-            <input class="button" type="file" id="files" name="file" accept=".json"/>
-            <input class="button" type="button" onclick="drawJsonButton()" value="Draw the Json" />
-            <input class="button" type="button" onclick="saveAsJsonButton()" value="Save as Json file" />
-            <input class="button" type="button" onclick="saveGraph()" value="Save as PNG" />
-         </div>
-         <div class="bottoni-div">
-            <input class="button" type="button" onclick="createClusterButton()" value="New Clusters" />
-            <input class="button" type="button" onclick="createNodesButton()" value="New Nodes" />
-            <input class="button" type="button" onclick="createEdgesButton()" value="Edit Edges" />
-            <input class="button" type="button" onclick="moveClusterButton()" value="Drag Cluster" />
-            <input class="button" type="button" onclick="zoomGraphButton()" value="Navigate" />
-            <input class="button" type="button" onclick="deleteGraphButton()" value="Delete the graph" />
-            <input class="button" type="button" onclick="flatCluster()" value="FLAT TIME" />
-         </div> 
+<body>
+      <div id="titolo">
+            <table>
+                  <tr>
+                     <td><input type="file" id="files" name="file" accept=".json"/></td>
+                     <td><h1 id="title">Build Or Import your ClusteredGraph !<h1></td>
+                  </tr>
+            </table>
+      </div>
 
-         <div class="svg-div">
-            <script type="text/javascript"  src="ClusteredGraphLibrary/ClusteredGraph.js"></script>
-            <script type="text/javascript"  src="redrawGraph.js"></script>
-            <script type="text/javascript"  src="nodesEdgesFunction.js"></script>
-            <script type="text/javascript"  src="clustersFunctions.js"></script>
-            <script type="text/javascript"  src="saveGraph.js"></script>
-            <script type="text/javascript"  src="buttonsFunctions.js"></script>
-            <script type="text/javascript"  src="initialize.js"></script>
-            <script type="text/javascript"  src="flatCluster.js"></script>
-         </div>   
-         <div class="bottoni2-div">
-            <input class="button" type="button" onclick="" value="Legend" />
-            <input class="button"type="button" onclick="" value="How to" />
+      <div id="container">
+            <div id="buttonsLeft">
+                  <table align="left">
+                        <tr><td><input class="button" type="button" onclick="drawJsonButton()" value="Draw A Json" /></td></tr>
+                        <tr><td><input class="button" type="button" onclick="saveAsJsonButton()" value="Save as Json" /></td></tr>
+                        <tr><td><input class="button" type="button" onclick="saveGraph()" value="Save as PNG" /></td></tr>
+                        <tr><td><input class="button" type="button" onclick="deleteGraphButton()" value="Delete graph" /></td></tr>
+                        <tr><td><input class="button" type="button" onclick="deleteObjectButton()" value="Delete object"/></td></tr>
+                        <tr><td><input class="button" type="button" onclick="createLegendButton()" value="Legend" /></td></tr>  
+                        <tr><td><input class="button"type="button" onclick="" value="How to" /></td></tr>
+                        <tr><td><input class="button"type="button" onclick="" value="JsDoc" /></td></tr>
+                  </table>
+            </div>
+               
+            <div id="buttonsRight">
+                  <table align="right">
+                        <tr><td><input class="button" type="button" onclick="createClusterButton()" value="New Clusters" /></td></tr>
+                        <tr><td><input class="button" type="button" onclick="createNodesButton()" value="New Nodes" /></td></tr>
+                        <tr><td><input class="button" type="button" onclick="createEdgesButton()" value="Edit Edges"/></td></tr>
+                        <tr><td><input class="button" type="button" onclick="moveClusterButton()" value="Drag Cluster" /></td></tr>
+                        <tr><td><input class="button" type="button" onclick="zoomGraphButton()" value="Navigate" /></td></tr>
+                        <tr><td><input class="button" type="button" onclick="flatCluster()" value="FLAT TIME" /></td></tr>
+                  </table>
+            </div>
+            
+            <div id="svg">
+                              <script type="text/javascript"  src="ClusteredGraphLibrary/ClusteredGraph.js"></script>
+                              <script type="text/javascript"  src="redrawGraph.js"></script>
+                              <script type="text/javascript"  src="legendText.js"></script>
+                              <script type="text/javascript"  src="nodesEdgesFunction.js"></script>
+                              <script type="text/javascript"  src="clustersFunctions.js"></script>
+                              <script type="text/javascript"  src="saveGraph.js"></script>
+                              <script type="text/javascript"  src="buttonsFunctions.js"></script>
+                              <script type="text/javascript"  src="initialize.js"></script>
+                              <script type="text/javascript"  src="flatCluster.js"></script> 
+            </div>
+      </div>
 
-         </div> 
-   </body>
+</body>
+
 </html>
