@@ -106,7 +106,6 @@ function dragCluster() {
 
 
 function deleteCluster(id){
-            d3.select(this).remove()
             clusteredGraph.tree.clusters.delete(id)
             for(let c of clusteredGraph.tree.clusters){
                 for(let figlio of c[1].cildren){

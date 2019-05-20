@@ -1,30 +1,28 @@
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////funzioni per FLAT TIME//////////////////////////////////////////////////////////////////
-function flattingClusterDelete(d, i) {
-    var rad = d3.select(this).attr("r")
-    if (rad <= 40) return;
-    var newCluster_fake = {
-        x: clusters[i].x, // Takes the pixel number to convert to number
-        y: clusters[i].y
-    };
-    clusters_fake.push(newCluster_fake)
-    clusters.splice(i, 1);
-    d3.select(this)
-        .remove()
-    d3.select("#c_cluster_fake")
-        .selectAll("circle") // For new circle, go through the update process
-        .data(clusters_fake)
-        .enter()
-        .append("circle")
-        .transition()
-        .duration(800)
-        .attr("cx", function(d) {
-            return d.x;
-        })
-        .attr("cy", function(d) {
-            return d.y
-        })
-        .attr("r", rad)
-        .attr("id", "cluster_fake")
+/**
+ * @function 
+ */
+function flatClusterButton()
+ {
+    allFalse();
+    removeTransformation();
+    for(let c of clusteredGraph.tree.clusters)
+    {
+            if(c[1].cildren.size==0)
+            {
+                for(let parent of c[1].parents)
+                {
+                    if(clusteredGraph.tree.clusters.get(parent).level==parseInt(c[1].level)-1)
+                    {
+                        deleteCluster(parent)
+                        let l= parseInt(c[1].level)
+                        c[1].level= l-1;
+                        addFakeClusters(c[1])
+                    }
+                }
+            }
+        }
+    }
+
+function addFakeClusters(cluster){
 
 }

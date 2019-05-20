@@ -30,13 +30,6 @@ function allFalse(){
 /**
  * @function 
  */
-function flatCluster() {
-    allFalse();
-    removeTransformation();
-}
-/**
- * @function 
- */
 function createClusterButton() {
     allFalse();
     createClusterBoolean=true;
@@ -73,11 +66,11 @@ function zoomGraphButton() {
         if (zoomGraphBoolean == true)
         {
             d3.select("#c_cluster")
-                .attr("transform",d3.event.transform )
+                .attr("transform",d3.event.transform );
             d3.select("#c_node")
-                .attr("transform", d3.event.transform )
+                .attr("transform", d3.event.transform );
             d3.select("#c_edge")
-                .attr("transform", d3.event.transform )
+                .attr("transform", d3.event.transform );
         }
     }));
 }
@@ -97,13 +90,13 @@ function createNodesButton() {
         let ultimaChiave;
         if(clusteredGraph.graph.nodes.size==0){
             ultimaChiave=0;
-            newNode(cluster,ultimaChiave,d3.mouse(this),"n0")
+            newNode(cluster,ultimaChiave,d3.mouse(this),"n0");
         }
         else {
             for(let key of clusteredGraph.graph.nodes)
                 ultimaChiave= key[0];
             ultimaChiave++;
-            newNode(cluster,ultimaChiave,d3.mouse(this),"n"+ultimaChiave)
+            newNode(cluster,ultimaChiave,d3.mouse(this),"n"+ultimaChiave);
             }
         }
     });
@@ -129,8 +122,8 @@ function createEdgesButton() {
             }
                 let nodo= clusteredGraph.graph.nodes.get( parseInt(d3.select(this).attr("key")));
                 let label = "e"+ clusteredGraph.graph.edges.size;
-                let coordinates= [parseInt(d3.select(this).attr("cx")),parseInt(d3.select(this).attr("cy"))]
-                d3.select(this).transition().duration(1000).attr("r",radiusNode*1.5)
+                let coordinates= [parseInt(d3.select(this).attr("cx")),parseInt(d3.select(this).attr("cy"))];
+                d3.select(this).transition().duration(1000).attr("r",radiusNode*1.5);
                 newEdge(ultimaChiave,coordinates,nodo,label);
         }
     });
@@ -173,6 +166,7 @@ function deleteObjectButton(){
     .on("click", function(){
         if( deleteObjectBoolean==true){
             let id=parseInt(d3.select(this).attr("key"))
+            d3.select(this).remove()
             deleteCluster(id)
         }
     });
@@ -200,7 +194,6 @@ function deleteObjectButton(){
 function drawJsonButton(){
     deleteGraphButton()
     let clusteredGraphReader = JSON.parse(reader.result);
-    edges = new Map(clusteredGraphReader.edges);
 
     for (let index = 0; index < clusteredGraphReader.clusters.length; index++)
         clusters.set(clusters.size,clusteredGraphReader.clusters[index]);
@@ -208,25 +201,25 @@ function drawJsonButton(){
         nodes.set(nodes.size,clusteredGraphReader.nodes[index]);
     for(let index = 0; index < clusteredGraphReader.edges.length; index++)
         edges.set(edges.size,clusteredGraphReader.edges[index]);
-
+    console.log(edges)
     for(let c of clusters){
         c[1].fill= getRandomColor();
         c[1].parents=new Set(c[1].parents);
         c[1].cildren=new Set(c[1].cildren);
         c[1].nodes=new Set(c[1].nodes);
-        if(c[1].level==1) c[1].r=radiusCluster;
+        c[1].r= radiusCluster*(c[1].cildren.size+1)
         c[1].key=c[0];
     }
     for(let n of nodes){
-        n[1].rotationScheme=new Set(n[1].rotationScheme)
+        n[1].rotationScheme=new Set(n[1].rotationScheme);
         n[1].r=radiusNode;
         n[1].key=n[0];
         }
         
-    undGraph=new UnderlyingGraph("grafo",false,nodes,edges)
-    incTree= new InclusionTree("albero",clusters)
-    clusteredGraph= new ClusteredGraph(undGraph,incTree)
-    redraw()
+    undGraph=new UnderlyingGraph("grafo",false,nodes,edges);
+    incTree= new InclusionTree("albero",clusters);
+    clusteredGraph= new ClusteredGraph(undGraph,incTree);
+    redraw();
 
 }
 
