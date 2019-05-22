@@ -3,9 +3,15 @@
  * @description redrawClusters the graph everytime it changes 
  */
 function redraw(){
-    let clus=Array.from(clusteredGraph.tree.clusters.values());
+    let clus=[]
     let nodes=Array.from(clusteredGraph.graph.nodes.values());
     let edges=Array.from(clusteredGraph.graph.edges.values());
+    let clusFake=[]
+    for(let c of clusteredGraph.tree.clusters)
+        if(c[1].label=="c_fake")
+            clusFake.push(c[1])
+        else clus.push(c[1])
+    console.log(clusFake)
     d3.select("#c_cluster")
     .selectAll("circle")
     .data(clus)
@@ -20,20 +26,17 @@ function redraw(){
     .selectAll("line")
     .data(edges)
     .remove()
-    
+
     d3.select("#c_node")
     .selectAll("circle")
     .data(nodes)
     .enter()
     .append("circle")
-    .transition()
-    .duration(800)
     .attr("r",radiusNode)
     .attr("id", "nodo")
     .attr("cx", function(d){ return d.x;})
     .attr("cy", function(d){return d.y})
     .attr("key", function(d){return d.key});
-    
 
     d3.select("#c_edge")
     .selectAll("line")
@@ -42,10 +45,34 @@ function redraw(){
     .append("line")
     .attr("id", "edge")
     .attr("x1", function(d){ return d.x1;})
-    .attr("y1", function(d){return d.y1})
+    .attr("y1", function(d){return d.y1;})
     .attr("x2", function(d){ return d.x2;})
-    .attr("y2", function(d){return d.y2})
-    .attr("key", function(d){return d.id});
+    .attr("y2", function(d){return d.y2;})
+    .attr("key", function(d){return d.id;});
+
+
+    d3.select("#c_cluster_Fake")
+    .selectAll("circle")
+    .data(clusFake)
+    .enter()
+    .append("circle")
+    .attr("r", function(d){ return d.r;})
+    .attr("id","clusterFake")
+    .attr("cx", function(d){ return d.x;})
+    .attr("cy", function(d){return d.y;})
+    .attr("fill", function(d){return d.fill;})
+    .attr("key", function(d){return d.key});
+    let sim = d3.forceSimulation(clusFake)
+    .force("collide", d3.forceCollide().radius(function(d) {return d.r;}).iterations(20))
+    .on("tick", function(){
+        d3.selectAll("circle")
+        .attr("cx", function(d) {
+            return d.x;
+        })
+        .attr("cy", function(d) {
+            return d.y;
+        })
+    });
 
     d3.select("#c_cluster")
     .selectAll("circle")
@@ -55,8 +82,8 @@ function redraw(){
     .attr("r", function(d){ return d.r;})
     .attr("id","cluster")
     .attr("cx", function(d){ return d.x;})
-    .attr("cy", function(d){return d.y})
-    .attr("fill", function(d){return d.fill})
+    .attr("cy", function(d){return d.y;})
+    .attr("fill", function(d){return d.fill;})
     .attr("key", function(d){return d.key});
     let clustersLevelOne=new Set();
     for (let item of clusteredGraph.tree.clusters){

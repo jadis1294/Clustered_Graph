@@ -46,7 +46,13 @@
       #c_cluster{
       stroke:black;  
       stroke-width:3px;
-      opacity: 0.5;
+      opacity: 0.6;
+      }
+
+      #c_cluster_Fake{
+        stroke:rgb(29, 29, 29);  
+        stroke-width:2px;
+        opacity: 0.34;
       }
       #c_node{
       stroke:#555555;  

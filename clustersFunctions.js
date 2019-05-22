@@ -78,7 +78,7 @@ function newCluster(coordinates,key,clusterLabel,level)
     cluster.key=key;
     let foundedNodes=findNodesList(cluster);
     for(let item of foundedNodes) cluster.nodes.add(item);
-    redraw();
+    //redraw();
 }
 
 /**

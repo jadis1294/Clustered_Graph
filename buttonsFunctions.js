@@ -49,6 +49,7 @@ function createClusterButton() {
                 ultimaChiave++;
             }
             newCluster(d3.mouse(this),ultimaChiave,"c"+ultimaChiave,1);
+            redraw();
         }
     });
 }
@@ -88,16 +89,15 @@ function createNodesButton() {
         if(createNodesBoolean==true){
         let cluster= clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key")));
         let ultimaChiave;
-        if(clusteredGraph.graph.nodes.size==0){
+        if(clusteredGraph.graph.nodes.size==0)
             ultimaChiave=0;
-            newNode(cluster,ultimaChiave,d3.mouse(this),"n0");
-        }
         else {
             for(let key of clusteredGraph.graph.nodes)
                 ultimaChiave= key[0];
             ultimaChiave++;
+        }
             newNode(cluster,ultimaChiave,d3.mouse(this),"n"+ultimaChiave);
-            }
+            redraw()
         }
     });
 }

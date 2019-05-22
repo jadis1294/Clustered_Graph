@@ -16,6 +16,7 @@ var editClusterBoolean,
     nodes = new Map(),
     edges = new Map(),
     clusters= new Map(),
+    clustersFake=new Map(),
     undGraph=new UnderlyingGraph("grafo",false,nodes,edges),
     incTree= new InclusionTree("albero",clusters),
     clusteredGraph= new ClusteredGraph(undGraph,incTree),
@@ -54,7 +55,11 @@ function initialize() {
     d3.select("#cgraph")
         .append("g")
         .attr("id", "c_edge")
-
+    
+    d3.select("#cgraph")
+        .append('g')
+        .attr('id', 'c_cluster_Fake')
+    
     }
 
 initialize();

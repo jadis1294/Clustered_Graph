@@ -18,7 +18,7 @@ function newNode(cluster,key,coordinates,label) {
     nodeToInsert.x=coordinates[0];
     nodeToInsert.y=coordinates[1];
     nodeToInsert.key=key;
-    redraw();
+    //redraw();
 }
 
 
