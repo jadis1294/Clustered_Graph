@@ -84,22 +84,14 @@ function newCluster(coordinates,key,clusterLabel,level)
 /**
  * @function
  * @returns {void} 
- * @description move the select cluster into the SVG
- */
-function dragged(d) {
-	if(dragClusterBoolean==false) return;
-    d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
-}
-
-
-/**
- * @function
- * @returns {void} 
  * @description function to select the elements in the svg to Drag
  */
 function dragCluster() {
 	if(dragClusterBoolean==false) return;
     d3.select("#c_cluster")
+        .selectAll("circle") // For new circle, go through the update process
+        .call(drag)
+    d3.select("#c_cluster_fake")
         .selectAll("circle") // For new circle, go through the update process
         .call(drag)
 }

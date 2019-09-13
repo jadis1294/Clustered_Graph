@@ -7,8 +7,11 @@ var editClusterBoolean,
     createEdgeBoolean,
     createNodesBoolean,
     dragClusterBoolean,
+    dragNodeBoolean,
     zoomGraphBoolean,
     deleteObjectBoolean,
+    treeviewBoolean=false,
+    graphviewBoolean=true,
     reader,
     radiusCluster = 40,
     radiusNode = 9,
@@ -22,7 +25,14 @@ var editClusterBoolean,
     clusteredGraph= new ClusteredGraph(undGraph,incTree),
     w = window.innerWidth-272,
     h = window.innerHeight,
-    drag = d3.drag().on("drag", dragged)
+    drag = d3.drag().on("drag", function(d){
+        if(dragClusterBoolean==false) return;
+        d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+    }),
+    dragN=d3.drag().on("drag",function(d){
+        if(dragNodeBoolean==false) return;
+        d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+    })
 
 /**
  * @function 

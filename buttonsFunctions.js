@@ -22,6 +22,7 @@ function allFalse(){
     createNodesBoolean = false;
     createEdgeBoolean = false;
     dragClusterBoolean = false;
+    dragNodeBoolean=false;
     zoomGraphBoolean = false;
     deleteObjectBoolean=false;
 }
@@ -144,6 +145,19 @@ function moveClusterButton() {
 /**
  * @function 
  */
+function moveNodeButton() {
+    allFalse();
+    removeTransformation();
+    dragNodeBoolean=true;
+        d3.select("#c_node")
+        .on("click", function() {
+            if(dragNodeBoolean==true)
+        dragNode();
+});
+}
+/**
+ * @function 
+ */
 function deleteGraphButton() {
     d3.select("#c_cluster").selectAll("circle").remove();
     d3.select("#c_node").selectAll("circle").remove();
@@ -222,4 +236,23 @@ function drawJsonButton(){
     redraw();
 
 }
+/**
+ * @function 
+ */
+function treeViewButton(){
+    if(treeviewBoolean==true)return;
+    treeviewBoolean=true;
+    graphviewBoolean=false;
+    d3.select("#cgraph").remove();
+    drawTree();
 
+}
+
+function graphViewButton(){
+    if (graphviewBoolean==true) return;
+    graphviewBoolean=true;
+    treeviewBoolean=false;
+    d3.select("#inctree").remove();
+    initialize();
+    redraw();
+}

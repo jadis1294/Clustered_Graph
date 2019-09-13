@@ -149,7 +149,39 @@ function forceClusters(clustersLevelX){
                 });
             }
         }
+
+    for(let item of clustersLevelX){
+        if(item.cildren.size!=0){
+            let itemcildren=new Set()
+            for (let figlioid of item.cildren) {
+                if(clusteredGraph.tree.clusters.get(figlioid).level==item.level+1)
+                itemcildren.add(clusteredGraph.tree.clusters.get(figlioid))
+        }
+            for(let nodoid of item.nodes)
+                itemcildren.add(clusteredGraph.graph.nodes.get(nodoid))
+                console.log(itemcildren)
+                simulationIntraClusters = d3.forceSimulation(Array.from(itemcildren))
+                .force("collide", d3.forceCollide().radius(function(d) {console.log(d.r); return d.r;}).iterations(20))
+                .on("tick", function(){
+                d3.select("#c_cluster")
+                .selectAll("circle")
+                .attr("cx", function(d) {
+                    return d.x;
+                })
+                .attr("cy", function(d) {
+                    return d.y;
+                })
+                d3.select("#c_nodes")
+                .selectAll("nodes")
+                .attr("cx",function(d){
+                    return d.x;
+                })
+                .attr("cy",function(d){
+                    return d.y;
+                })
+            });    
+    }
         
     }
-
+}
 

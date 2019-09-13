@@ -11,13 +11,14 @@ function newNode(cluster,key,coordinates,label) {
     let nodeToInsert= new node(clusteredGraph.graph.nodes.size,label,new Set());
     clusteredGraph.graph.nodes.set(key,nodeToInsert);
     cluster.nodes.add(clusteredGraph.graph.nodes.size-1)
-    for (let genitore of cluster.parents) 
-    {
-        clusteredGraph.tree.clusters.get(genitore).nodes.add(key)
-    }
+    // for (let genitore of cluster.parents) 
+    // {
+    //     clusteredGraph.tree.clusters.get(genitore).nodes.add(key)
+    // }
     nodeToInsert.x=coordinates[0];
     nodeToInsert.y=coordinates[1];
     nodeToInsert.key=key;
+    nodeToInsert.r=radiusNode;
     //redraw();
 }
 
@@ -59,3 +60,10 @@ function newEdge(key,coordinates,nodo,label)
         });
 }
 
+
+function dragNode() {
+	if(dragNodeBoolean==false) return;
+    d3.select("#c_node")
+        .selectAll("circle") // For new circle, go through the update process
+        .call(dragN)
+}
