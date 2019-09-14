@@ -1,32 +1,44 @@
-
 /**
  * @function 
  */
 function drawTree(){
     let flatDataList=[
-      {"name": "r", "parent": null, "hasChildren": true,"fill":"black"}, 
+      {"name": "root", "parent": null, "hasChildren": true,"fill":"black"}, 
     ];
     for (let item of clusteredGraph.tree.clusters){
-            let figli=false, genitore=null,fill;
-            if(item[1].cildren.size==0) figli=true;
-            if(item[1].parents.size!=0)
-              for(let f of item[1].cildren)
-              genitore=String(f);
-            else genitore= "r";
-            flatDataList.push({"name":item[1].label,"parent":genitore, "hasChildren":figli,"fill":item[1].fill});
-        
+            let figli=false,genitore;
+            if(item[1].cildren.size!=0) figli=true;
+            if(item[1].level==1) genitore="root";
+            if(item[1].parents.size!=0){
+              let f= Array.from(item[1].parents)[0]
+              genitore=clusteredGraph.tree.clusters.get(f).label
+            }
+            
+            flatDataList.push({
+              "name":item[1].label,
+              "parent":genitore, 
+              "hasChildren":figli,
+              "fill":item[1].fill
+            });
     }
+    for (let item of clusteredGraph.graph.nodes)
+      flatDataList.push({
+        "name":item[1].label,
+        "parent":item[1].cluster, 
+        "hasChildren":false,
+        "fill":"black"
+      });
+
     var flatData = [];
     flatDataList.map( data => {
-      if (data.hasChildren) flatData.push(data);
+      flatData.push(data);
     })
-      
-    const handleNodeClick = d => {
-    console.log(d)
-     if (d.children && d.children.length > 0) window.actions.drawList(d.children)
-  }
-    
-    function drawVerticalTree(flatData) {
+
+/**
+ * @function 
+ */
+function drawVerticalTree(flatData) {
+
           // ************** Generate the tree diagram	 *****************
       var margin = {top: 40, right: 120, bottom: 20, left: 120},
         width = 960 - margin.right - margin.left,
@@ -46,16 +58,7 @@ function drawTree(){
         });
   
   
-      var tree = d3.tree()
-        .size([height, width]);
-  
-          const diagonal = d => {
-        if (d.children && d.children.length > 0)
-        return "M" + d.y + "," + d.x
-               + "C" + (d.y + d.parent.y) / 2 + "," + d.x
-               + " " + (d.y + d.parent.y) / 2 + "," + d.parent.x
-               + " " + d.parent.y + "," + d.parent.x;
-             }
+      var tree = d3.tree().size([height, width]);
   
       // set the dimensions and margins of the diagram
       var margin = {top: 40, right: 90, bottom: 50, left: 90},
@@ -63,8 +66,7 @@ function drawTree(){
           height = h - margin.top - margin.bottom;
   
       // declares a tree layout and assigns the size
-      var treemap = d3.tree()
-          .size([width, height]);
+      var treemap = d3.tree().size([width, height]);
   
       //  assigns the data to a hierarchy using parent-child relationships
       var nodes = d3.hierarchy(treeData);
@@ -80,13 +82,12 @@ function drawTree(){
             .attr("height", h)
             .attr("id","inctree"),
           g = svg.append("g")
-            .attr("transform",
-                  "translate(" + margin.left + "," + margin.top + ")");
+            .attr("transform","translate(" + margin.left + "," + margin.top + ")");
   
       // adds the links between the nodes
       var link = g.selectAll(".link")
           .data( nodes.descendants().slice(1))
-        .enter().append("path")
+          .enter().append("path")
           .attr("class", "link")
           .attr("d", function(d) {
              return "M" + d.x + "," + d.y
@@ -98,16 +99,26 @@ function drawTree(){
       // adds each node as a group
       var node = g.selectAll(".node")
           .data(nodes.descendants())
-        .enter().append("g")
+          .enter().append("g")
           .attr("class", function(d) { 
             return "node" + 
               (d.children ? " node--internal" : " node--leaf"); })
-          .on('click', handleNodeClick);
+              .attr("transform", function(d) { 
+                return "translate(" + 0 + "," + 0 + ")"; })
   
       // adds the circle to the node
       node.append("circle")
-        .attr("r", 10)
-        .attr("fill",function(d){ return d.fill});
-          } 
+        .attr("r", 10);
+          
+          // adds the text to the node
+    node.append("text")
+    .attr("dy", ".35em")
+    .attr("x",function(d) { return d.x-20; })
+    .attr("y",function(d) { return d.y-20; })
+    .style("text-anchor", "middle")
+    .text(function(d) { return d.data.name; });
+
+      } 
+  
     drawVerticalTree(flatData);
   }

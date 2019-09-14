@@ -32,7 +32,7 @@ var editClusterBoolean,
     dragN=d3.drag().on("drag",function(d){
         if(dragNodeBoolean==false) return;
         d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
-    })
+    });
 
 /**
  * @function 

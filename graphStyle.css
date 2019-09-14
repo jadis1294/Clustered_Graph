@@ -3,8 +3,9 @@
         letter-spacing: 2.5px;
           word-spacing: 10px;
               font-family: "Times New Roman", Times, serif;
-        font-size: 35px;
-        text-align: center;
+        font-size: 40px;
+        text-align: right;
+        float: right;
    }
 
    #legend{
@@ -70,14 +71,18 @@ align-content: center;
 .link {
   fill: none;
   stroke: #ccc;
-  stroke-width: 2px;
+  stroke-width: 3px;
 }
-.node circle {
+.node--internal circle {
   fill: #fff;
   stroke: steelblue;
   stroke-width: 3px;
 }
-
+.node--leaf circle {
+  fill: rgb(41, 40, 40);
+  stroke: steelblue;
+  stroke-width: 2.5px;
+}
 .node text { font: 12px sans-serif; }
 
 .node--internal text {
