@@ -19,6 +19,12 @@
       word-spacing: 5px;
       font-family: "Times New Roman", Times, serif;
    }
+   #navigateText{
+    font-family: "Times New Roman", Times, serif;
+    fill: #555555;
+    font-size: 25px;
+
+   }
 
    #definition{
     color: #4CAF50; 
@@ -56,11 +62,11 @@
         opacity: 0.34;
       }
       #c_node{
-      stroke:#555555;  
+        fill: #ccc;
+        stroke: steelblue; 
       stroke-width:3px;
-      fill: grey;
-
       }
+
       #cgraph {
       background-color:#FFFFE0;
   border: 2px solid #4CAF50; 
@@ -71,6 +77,11 @@ align-content: center;
 .link {
   fill: none;
   stroke: #ccc;
+  stroke-width: 3px;
+}
+.edge {
+  fill: none;
+  stroke:#ccc;
   stroke-width: 3px;
 }
 .node--internal circle {

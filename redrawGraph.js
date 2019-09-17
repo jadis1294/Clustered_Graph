@@ -43,28 +43,21 @@ function redraw() {
             return d.key
         });
 
-    d3.select("#c_edge")
-        .selectAll("line")
-        .data(edges)
-        .enter()
-        .append("line")
-        .attr("id", "edge")
-        .attr("x1", function(d) {
-            return d.x1;
-        })
-        .attr("y1", function(d) {
-            return d.y1;
-        })
-        .attr("x2", function(d) {
-            return d.x2;
-        })
-        .attr("y2", function(d) {
-            return d.y2;
-        })
-        .attr("key", function(d) {
-            return d.id;
-        });
-
+          // adds the links between the nodes
+    d3.select("#c_edge").selectAll(".edge")
+          .data( edges)
+          .enter().append("path")
+          .attr("class", "edge")
+          .attr("d", function(d) {
+             return "M" + d.x1 + "," + d.y1
+               + "C" + d.x1 + "," + (d.y1 + d.y2) /1.7
+               + " " + d.x2 + "," +  (d.y1 + d.y2) / 1.7
+               + " " + d.x2 + "," + d.y2;
+             })
+             .attr("key", function(d) {
+                return d.id;
+            })
+            .attr("id", "edge");
 
     d3.select("#c_cluster_Fake")
         .selectAll("circle")

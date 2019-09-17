@@ -45,14 +45,18 @@ function editCluster() {
         });
     return;
 }
-
+/**
+ * @function
+ * @returns {Set<number>} 
+ * @description take a cluster and return the set of the nodes that have distance< cluster
+ */
 function findNodesList(cluster) {
-    console.log("inizio find node")
+    //console.log("inizio find node")
     let foundedNodes = new Set();
     for (let node of clusteredGraph.graph.nodes) {
-        console.log(node)
+        //console.log(node)
         if (Math.abs(node.x - cluster.x) < cluster.r && Math.abs(node.y - cluster.y) < cluster.r) {
-            console.log("era minore")
+            //console.log("era minore")
             foundedNodes.add(node.id)
         }
     }
@@ -119,12 +123,12 @@ function changeRadiusAndDescription() {
 
             d3.select(this)
                 .attr("r", raggio * 1.2)
-            let testo = clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key"))).label
 
             d3.select("#cgraph")
                 .append("text")
-                .text(testo + " ")
-                .attr("y", parseInt(d3.select(this).attr("cy"))+parseInt(d3.select(this).attr("r")))
+                .attr("dy", ".35em")
+                .text("label: " + clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key"))).label  + "\n level: " + clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key"))).level)
+                .attr("y", parseInt(d3.select(this).attr("cy"))-parseInt(d3.select(this).attr("r"))-10)
                 .attr("x", parseInt(d3.select(this).attr("cx")))
                 .attr("id", "navigateText")
         })

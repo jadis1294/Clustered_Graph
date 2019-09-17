@@ -81,6 +81,10 @@ function zoomGraphButton() {
  * @function 
  */
 function createNodesButton() {
+    if (clusteredGraph.tree.clusters.size==0) {
+        window.alert("Isn't possible insert nodes without a cluster")
+        return;   
+    }
     allFalse();
     removeTransformation();
     createNodesBoolean = true;
@@ -107,6 +111,10 @@ function createNodesButton() {
  * @function 
  */
 function createEdgesButton() {
+    if (clusteredGraph.graph.nodes.size<=1) {
+        window.alert("Isn't possible insert edges without two nodes")
+        return;   
+    }
     allFalse();
     removeTransformation();
     createEdgeBoolean = true;
@@ -134,6 +142,10 @@ function createEdgesButton() {
  * @function 
  */
 function moveClusterButton() {
+    if (clusteredGraph.tree.clusters.size==0) {
+        window.alert("Nothing to move!")
+        return;   
+    }
     allFalse();
     removeTransformation();
     dragClusterBoolean = true;
@@ -147,6 +159,10 @@ function moveClusterButton() {
  * @function 
  */
 function moveNodeButton() {
+    if (clusteredGraph.graph.nodes.size==0) {
+        window.alert("Nothing to move!")
+        return;   
+    }
     allFalse();
     removeTransformation();
     dragNodeBoolean = true;
@@ -172,6 +188,10 @@ function deleteGraphButton() {
  * @function 
  */
 function deleteObjectButton() {
+    if (clusteredGraph.graph.nodes.size==0 || clusteredGraph.tree.clusters.size==0) {
+        window.alert("Nothing to delete!")
+        return;   
+    }
     allFalse();
     removeTransformation();
     deleteObjectBoolean = true;
@@ -207,6 +227,10 @@ function deleteObjectButton() {
  * @function 
  */
 function drawJsonButton() {
+    if (reader=== undefined) {
+        window.alert("select a Json!")
+        return;   
+    }
     deleteGraphButton()
     let clusteredGraphReader = JSON.parse(reader.result);
 
