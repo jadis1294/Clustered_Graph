@@ -42,6 +42,8 @@ function editCluster() {
                     item.r = radiusCluster * (item.cildren.size + 1)
                 redraw();
             }
+            let d= new Date();
+            log.set(log.size," created a cluster's children " +  d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds() )
         });
     return;
 }
@@ -80,6 +82,8 @@ function newCluster(coordinates, key, clusterLabel, level) {
     cluster.key = key;
     let foundedNodes = findNodesList(cluster);
     for (let item of foundedNodes) cluster.nodes.add(item);
+    let d= new Date();
+    log.set(log.size," created a cluster " +  d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds() )
     //redraw();
 }
 
@@ -111,10 +115,13 @@ function deleteCluster(id) {
                 c[1].parents.delete(padre)
         }
     }
+    let d= new Date();
+    log.set(log.size," deleted a cluster " +  d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds() )
     redraw();
 }
 
 function changeRadiusAndDescription() {
+    if(zoomGraphBoolean==false) return;
     d3.select("#c_cluster")
         .selectAll("circle")
         .data(Array.from(clusteredGraph.tree.clusters.values()))
@@ -127,7 +134,8 @@ function changeRadiusAndDescription() {
             d3.select("#cgraph")
                 .append("text")
                 .attr("dy", ".35em")
-                .text("label: " + clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key"))).label  + "\n level: " + clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key"))).level)
+                .text("Label: " + clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key"))).label +"," + 
+                    "Level: " + clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key"))).level)
                 .attr("y", parseInt(d3.select(this).attr("cy"))-parseInt(d3.select(this).attr("r"))-10)
                 .attr("x", parseInt(d3.select(this).attr("cx")))
                 .attr("id", "navigateText")
@@ -149,20 +157,21 @@ function changeRadiusAndDescription() {
 
             d3.select(this)
                 .attr("r", raggio * 1.2)
-            let testo = clusteredGraph.graph.nodes.get(parseInt(d3.select(this).attr("key"))).label
 
             d3.select("#cgraph")
                 .append("text")
-                .text(testo + " ")
-                .attr("y", parseInt(d3.select(this).attr("cy"))+parseInt(d3.select(this).attr("r")+15))
+                .attr("dy", ".35em")
+                .text("Label: "+clusteredGraph.graph.nodes.get(parseInt(d3.select(this).attr("key"))).label +","+ 
+                    "Cluster: "+ clusteredGraph.graph.nodes.get(parseInt(d3.select(this).attr("key"))).cluster)
+                .attr("y", parseInt(d3.select(this).attr("cy"))+parseInt(d3.select(this).attr("r")-15))
                 .attr("x", parseInt(d3.select(this).attr("cx")))
                 .attr("id", "navigateText")
         })
-
         .on("mouseout", function() {
             let raggio = d3.select(this).attr("r")
             d3.select(this)
                 .attr("r", raggio / 1.2)
             d3.select("#navigateText").remove()
         });
+
 }

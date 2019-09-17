@@ -7,6 +7,8 @@ function saveGraph() {
     function save(dataBlob) {
         saveAs(dataBlob, 'D3 vis exported to PNG.png'); // FileSaver.js function
     }
+    let d= new Date();
+    log.set(log.size," saved clustered graph as a .png " +  d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds() )
 }
 // Below are the functions that handle actual exporting:
 // getSVGString ( svgNode ) and svgString2Image( svgString, width, height, format, callback )
@@ -124,4 +126,6 @@ function saveAsJsonButton(){
     var jsonse = JSON.stringify(cgraph);
     let blob = new Blob([jsonse], {type: "application/json"});
     saveAs(blob, "cgraph.json"); // FileSaver.js function
+    let d= new Date();
+    log.set(log.size," saved the clustered graph as .json file " +  d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds() )
 }

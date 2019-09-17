@@ -2,6 +2,8 @@
  * @function 
  */
 function flatClusterButton(){
+    let d= new Date();
+    log.set(log.size," flat view of the clustered graph " +  d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds() )
     allFalse();
     removeTransformation();
     for(let c of clusteredGraph.tree.clusters){

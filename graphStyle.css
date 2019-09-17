@@ -25,6 +25,12 @@
     font-size: 25px;
 
    }
+   #consoleText{
+    font-family: "Times New Roman", Times, serif;
+    fill: #555555;
+    font-size: 15px;
+
+   }
 
    #definition{
     color: #4CAF50; 
@@ -100,6 +106,12 @@ align-content: center;
   text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
 }
 #inctree {
+  background-color:#FFFFE0;
+border: 2px solid #4CAF50; 
+float: center;
+align-content: center;
+}
+#console {
   background-color:#FFFFE0;
 border: 2px solid #4CAF50; 
 float: center;

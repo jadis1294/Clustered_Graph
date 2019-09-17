@@ -2,6 +2,8 @@
  * @function 
  */
 function drawTree(){
+  let d= new Date();
+  log.set(log.size," Switched to tree view" +  d.getHours() +":" + d.getMinutes + ":" + d.getSeconds )
     let treeDataList=[
       {"name": "root", "parent": null, "hasChildren": true,"fill":"black"}, 
     ];

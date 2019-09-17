@@ -58,6 +58,9 @@ function createClusterButton() {
  * @function 
  */
 function zoomGraphButton() {
+    if (info==0) 
+        window.alert("move your mouse for zoom and translate or see the information about an object ")  
+    info++;
     allFalse();
     zoomGraphBoolean = true;
     changeRadiusAndDescription()
@@ -182,6 +185,8 @@ function deleteGraphButton() {
     clusteredGraph.graph.nodes.clear();
     clusteredGraph.graph.edges.clear();
     clusteredGraph.tree.clusters.clear();
+    let d= new Date();
+    log.set(log.size," deleted the graph" +  d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds() )
 }
 
 /**
@@ -204,6 +209,7 @@ function deleteObjectButton() {
                 d3.select(this).remove()
                 deleteCluster(id)
             }
+            
         });
     d3.select("#c_node")
         .selectAll("circle")
@@ -213,6 +219,8 @@ function deleteObjectButton() {
             if (deleteObjectBoolean == true) {
                 let id = parseInt(d3.select(this).attr("key"))
                 d3.select(this).remove()
+                let d= new Date();
+                log.set(log.size," deleted a node" +  d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds() )
                 clusteredGraph.graph.nodes.delete(id)
                 for (let c of clusteredGraph.tree.clusters)
                     c[1].nodes.delete(id)
@@ -231,6 +239,8 @@ function drawJsonButton() {
         window.alert("select a Json!")
         return;   
     }
+    let d= new Date();
+    log.set(log.size," loaded a .json file " +  d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds() )
     deleteGraphButton()
     let clusteredGraphReader = JSON.parse(reader.result);
 
@@ -268,7 +278,9 @@ function treeViewButton() {
     if (treeviewBoolean == true) return;
     treeviewBoolean = true;
     graphviewBoolean = false;
+    logViewBoolean=false;
     d3.select("#cgraph").remove();
+    d3.select("#console").remove();
     drawTree();
 
 }
@@ -279,7 +291,22 @@ function graphViewButton() {
     if (graphviewBoolean == true) return;
     graphviewBoolean = true;
     treeviewBoolean = false;
+    logViewBoolean=false;
     d3.select("#inctree").remove();
+    d3.select("#console").remove();
     initialize();
     redraw();
+}
+
+/**
+ * @function 
+ */
+function logViewButton(){
+    if (logViewBoolean == true) return;
+    graphviewBoolean = false;
+    treeviewBoolean = false;
+    logViewBoolean=true;
+    d3.select("#cgraph").remove();
+    d3.select("#inctree").remove();
+    drawConsole();
 }

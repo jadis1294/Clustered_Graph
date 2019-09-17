@@ -22,7 +22,7 @@ function redraw() {
         .remove()
 
     d3.select("#c_edge")
-        .selectAll("line")
+        .selectAll(".edges")
         .data(edges)
         .remove()
 

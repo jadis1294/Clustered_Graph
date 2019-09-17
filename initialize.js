@@ -1,7 +1,7 @@
 "use strict"
 document.getElementById('files').addEventListener('change', handleFileSelect, false);
 var editClusterBoolean,
-    legend=0,
+    info=0,
     simulationIntraClusters,
     createClusterBoolean,
     createEdgeBoolean,
@@ -12,7 +12,9 @@ var editClusterBoolean,
     deleteObjectBoolean,
     treeviewBoolean=false,
     graphviewBoolean=true,
+    logViewBoolean=false,
     reader,
+    log=new Map(),
     radiusCluster = 40,
     radiusNode = 9,
     clusters = [],
@@ -71,5 +73,6 @@ function initialize() {
         .attr('id', 'c_cluster_Fake')
     
     }
-
+let d= new Date();
+    log.set(log.size," log in " +  d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds() )
 initialize();
