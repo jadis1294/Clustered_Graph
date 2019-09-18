@@ -215,7 +215,6 @@ function deleteObjectButton() {
         .selectAll("circle")
         .data(Array.from(clusteredGraph.graph.nodes.values()))
         .on("click", function() {
-            console.log("cliccato nodo")
             if (deleteObjectBoolean == true) {
                 let id = parseInt(d3.select(this).attr("key"))
                 d3.select(this).remove()
@@ -310,3 +309,42 @@ function logViewButton(){
     d3.select("#inctree").remove();
     drawConsole();
 }
+
+/**
+ * @function 
+ */
+function popUpForRadiusButton(){
+    radiusCluster = prompt("Enter the radius you want for clusters", "40");
+    if(radiusCluster >120){
+            window.alert("impossible to have an optimal display for clusters with radius> 80")
+            return;   
+    }
+    if (radiusCluster == null || radiusCluster == "")
+      radiusCluster=40;
+      for (let c of clusteredGraph.tree.clusters)
+      c[1].r=radiusCluster
+      redraw();
+  }
+  /**
+ * @function 
+ */
+function popUpForNodeButton(){
+    radiusNode = prompt("Enter the radius you want for clusters", "9");
+    if(radiusNode >30){
+        window.alert("impossible to have an optimal display for nodes with radius> 30")
+        return;   
+}
+    if (radiusNode == null || radiusNode == "")
+      radiusNode=40;
+      for (let n of clusteredGraph.graph.nodes)
+      n[1].r=radiusNode;
+      redraw();
+  }
+
+/**
+ * @function 
+ */
+function getPalette(n){
+    color=n;
+    return;
+};

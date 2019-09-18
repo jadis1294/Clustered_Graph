@@ -1,17 +1,11 @@
    #title{
-      color: #FFFFD0;
+      color: #FFFF;
         letter-spacing: 2.5px;
           word-spacing: 10px;
               font-family: "Times New Roman", Times, serif;
-        font-size: 40px;
+        font-size: 30px;
         text-align: right;
         float: right;
-   }
-
-   #legend{
-  float: center;
-  align-content: center;
-  border: 2px solid #4CAF50; 
    }
    #text{
     color: #FFFFD0;
@@ -33,7 +27,7 @@
    }
 
    #definition{
-    color: #4CAF50; 
+    color:  DodgerBlue; 
     letter-spacing: 2.5px;
       word-spacing: 10px;
       font-family: "Times New Roman", Times, serif;
@@ -44,7 +38,7 @@
    #container{
      box-align: start;
      margin-inline-start: 0px;
-     border: 2px solid #4CAF50;
+     border: 2px solid DodgerBlue;
    }
     body{
       background-color:#555550;
@@ -75,7 +69,7 @@
 
       #cgraph {
       background-color:#FFFFE0;
-  border: 2px solid #4CAF50; 
+  border: 2px solid  DodgerBlue; 
 float: center;
 align-content: center;
 }
@@ -107,13 +101,13 @@ align-content: center;
 }
 #inctree {
   background-color:#FFFFE0;
-border: 2px solid #4CAF50; 
+border: 2px solid  DodgerBlue; 
 float: center;
 align-content: center;
 }
 #console {
   background-color:#FFFFE0;
-border: 2px solid #4CAF50; 
+border: 2px solid  DodgerBlue; 
 float: center;
 align-content: center;
 }
@@ -121,21 +115,21 @@ align-content: center;
 #files{
   background-color: #555555; /* Green */
   color: white;
-  padding: 20px 2px 20px;
+  padding: 18px 2px 18px;
   text-decoration: none;
   font-size: 12px;
     -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
-  border: 1px solid #4CAF50;
+  border: 1px solid  DodgerBlue;
     font-family: "Times New Roman", Times, serif;
 }
 #files:hover {
-  background-color: #4CAF50; /* Green */
+  background-color:  DodgerBlue; /* Green */
   color: white;
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   font-family: "Times New Roman", Times, serif;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .button{
@@ -144,14 +138,14 @@ align-content: center;
   padding: 20px 20px 20px;
   width: 120px;
   text-decoration: none;
-  font-size: 15px;
+  font-size: 16px;
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
-  border: 1px solid #4CAF50;
+  border: 0.5px solid  DodgerBlue;
   font-family: "Times New Roman", Times, serif;
 }
 .button:hover {
-  background-color: #4CAF50; /* Green */
+  background-color:  DodgerBlue; /* Green */
   color: white;
   box-shadow: 0 0px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
     letter-spacing: 0px;
@@ -165,7 +159,7 @@ align-content: center;
   transition: 1s
 }
 .button:focus{
-    background-color: #4CAF50;
+    background-color: DodgerBlue;
     font-family: "Times New Roman", Times, serif;
         letter-spacing: 0px;
           font-size: 14px;
@@ -174,3 +168,51 @@ align-content: center;
 .svg{
   float: center;
 }
+
+ /* The container must be positioned relative: */
+ .buttonsRight {
+  position: relative;
+  font-family: Arial;
+  align-content: center;
+  background-color: #555555; /* Green */
+  color: white;
+  font-size: 15px;
+  height: 55px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  border: 1px solid  DodgerBlue;
+
+}
+
+
+
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #3e8e41;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #555555;
+  min-width: 120px;
+  min-height: 50px;
+  overflow: visible;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  font-size: 10px;
+  text-decoration: none;
+  display: contents;
+}
+
+.dropdown-content a:hover {background-color: #555555}
+
+.show {display:block;}

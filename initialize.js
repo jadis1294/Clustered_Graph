@@ -2,6 +2,7 @@
 document.getElementById('files').addEventListener('change', handleFileSelect, false);
 var editClusterBoolean,
     info=0,
+    color=0,
     simulationIntraClusters,
     createClusterBoolean,
     createEdgeBoolean,

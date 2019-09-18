@@ -1,17 +1,45 @@
 "use strict"
 
+
 /**
  * @function
+ * @param {number}
  * @returns {String} color 
  * @description Get a randomic Color for the cluster's fill
  */
-function getRandomColor() {
+function getColor(c) {
     let letters = '0123456789ABCDEF';
-    let color = '#';
-    for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
+    let l="ABCDEF"
+    let colore="#";
+    //red
+    if(c==3){
+            colore += l[Math.floor(Math.random() * 6)];
+            colore += letters[Math.floor(Math.random() * 16)];
+        colore += '0000';
     }
-    return color;
+    //blue
+    if(c==2){
+    colore +='0000';
+    
+        for (var i = 0; i < 2; i++) {
+            colore += letters[Math.floor(Math.random() * 16)];
+    }
+}
+    //green
+    if(c==1){
+        colore +='00';
+        for (var i = 0; i < 2; i++) {
+            colore += letters[Math.floor(Math.random() * 16)];
+        }
+        colore +='00';
+    }
+    //random
+    if(c==0){
+        for (var i = 0; i < 6; i++) {
+            colore += letters[Math.floor(Math.random() * 16)];
+        }
+    }
+    return colore;
 }
 
 /**
@@ -78,7 +106,8 @@ function newCluster(coordinates, key, clusterLabel, level) {
     cluster.x = coordinates[0];
     cluster.y = coordinates[1];
     cluster.r = radiusCluster;
-    cluster.fill = getRandomColor();
+    //cluster.fill = getRandomColor();
+    cluster.fill = getColor(color);
     cluster.key = key;
     let foundedNodes = findNodesList(cluster);
     for (let item of foundedNodes) cluster.nodes.add(item);
