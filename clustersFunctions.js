@@ -70,8 +70,10 @@ function editCluster() {
                     item.r = radiusCluster * (item.cildren.size + 1)
                 redraw();
             }
-            let d= new Date();
-            log.set(log.size," created a cluster's children " +  d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds() )
+            text=" created a cluster's children ";
+            n=consoleCount;
+            consoleCount++;
+            addLog(text,n)
         });
     return;
 }
@@ -106,14 +108,15 @@ function newCluster(coordinates, key, clusterLabel, level) {
     cluster.x = coordinates[0];
     cluster.y = coordinates[1];
     cluster.r = radiusCluster;
-    //cluster.fill = getRandomColor();
     cluster.fill = getColor(color);
     cluster.key = key;
     let foundedNodes = findNodesList(cluster);
     for (let item of foundedNodes) cluster.nodes.add(item);
     let d= new Date();
-    log.set(log.size," created a cluster " +  d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds() )
-    //redraw();
+    text=" created a cluster ";
+    n=consoleCount;
+    consoleCount++;
+    addLog(text,n)
 }
 
 /**
@@ -144,8 +147,10 @@ function deleteCluster(id) {
                 c[1].parents.delete(padre)
         }
     }
-    let d= new Date();
-    log.set(log.size," deleted a cluster " +  d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds() )
+    text=" deleted a cluster ";
+    n=consoleCount;
+    consoleCount++;
+    addLog(text,n)
     redraw();
 }
 

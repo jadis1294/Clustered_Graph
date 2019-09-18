@@ -2,7 +2,7 @@
 <html lang="en">
    <head>
             <meta charset="UTF-8">
-            <title>Clustered Graph </title>
+            <title>Editor for Clustered Graph </title>
       <!-- Load D3 from site -->
 <script src="https://cdn.rawgit.com/eligrey/canvas-toBlob.js/f1a01896135ab378aa5c0118eadd81da55e698d8/canvas-toBlob.js"></script>
 <script src="https://cdn.rawgit.com/eligrey/FileSaver.js/e9d941381475b5df8b7d7691013401e171014e89/FileSaver.min.js"></script>
@@ -27,96 +27,82 @@
       <div id="container">
             <div id="buttonsLeft">
                   <table align="left">
-                        <tr><td><input class="button" type="button" onclick="drawJsonButton()" value="Draw A Json" /></td></tr>
-                        <tr><td><div class="dropdown">
-                                    <button class="button" type="button" onclick="myFunction2()">Save As...</button>
-                                    <div id="myDropdownsave" class="dropdown-content">
+                        <tr><td><input class="button" type="button" onclick="drawJsonButton()" value="Draw a Json" /></td></tr>  
+                        <tr><td><input class="button" type="button" onclick="deleteGraphButton()" value="Delete graph" /></td></tr>
+                        <tr><td>
+                              <div class="dropdown">
+                                    <button class="button" type="button" onclick="dropdownButton(0)">Save As...</button>
+                                          <div id="myDropdownsave" class="dropdown-content">
                                                 <input class="button" type="button" onclick="saveAsJsonButton()" value="Save as Json"/>
                                                 <input class="button" type="button" onclick="saveGraph()" value="Save as PNG"/>
-                              </div></div></td></tr>   
-                        <tr><td><input class="button" type="button" onclick="deleteGraphButton()" value="Delete graph" /></td></tr>
+                                          </div>
+                              </div>
+                        </td></tr>   
                         <tr><td><input class="button" type="button" onclick="deleteObjectButton()" value="Delete object"/></td></tr>
-                        <tr><td><div class="dropdown">
-                                    <button class="button" type="button" onclick="myFunction3()">Views...</button>
-                                    <div id="myDropdownview" class="dropdown-content">
-                                                <input class="button" type="button" onclick="logViewButton()" value="Log View"/>
-                                                <input class="button" type="button" onclick="graphViewButton()" value="Graph View"/>
-                                                <input class="button" type="button" onclick="treeViewButton()" value="Tree View"/>
-                              </div></div></td></tr> 
                         <tr><td><input class="button"type="button" onclick="" value="JsDoc" /></td></tr>
+                        <tr><td>
+                              <div class="dropdown">
+                              <button class="button" type="button" onclick="dropdownButton(1)">Views...</button>
+                                    <div id="myDropdownview" class="dropdown-content">
+                                          <input class="button" type="button" onclick="logViewButton()" value="Log View"/>
+                                          <input class="button" type="button" onclick="graphViewButton()" value="Graph View"/>
+                                          <input class="button" type="button" onclick="treeViewButton()" value="Tree View"/>
+                                    </div>
+                              </div>
+                        </td></tr> 
                   </table>
             </div>
                
             <div id="buttonsRight">
                   <table align="right">
-                        <tr><td><div class="dropdown">
-                              <button class="button" type="button" onclick="myFunction()">Create a..</button>
-                              <div id="myDropdowncreate" class="dropdown-content">
-                                    <input class="button" type="button" onclick="createClusterButton()" value="New Clusters"/>
-                                    <input class="button" type="button" onclick="createEdgesButton()" value="Edit Edges"/>
-                                    <input class="button" type="button" onclick="createNodesButton()" value="New Nodes"/>
-                              </div></div>
+                        <tr><td>
+                              <div class="dropdown">
+                              <button class="button" type="button" onclick="dropdownButton(2)">Create a..</button>
+                                    <div id="myDropdowncreate" class="dropdown-content">
+                                          <input class="button" type="button" onclick="createClusterButton()" value="New Clusters"/>
+                                          <input class="button" type="button" onclick="createEdgesButton()" value="Edit Edges"/>
+                                          <input class="button" type="button" onclick="createNodesButton()" value="New Nodes"/>
+                                    </div>
+                              </div>
                         </td></tr>
                         <tr><td><input class="button" type="button" onclick="moveClusterButton()" value="Drag Clusters" /></td></tr>
                         <tr><td><input class="button" type="button" onclick="moveNodeButton()" value="Drag Nodes" /></td></tr>      
                         <tr><td><input class="button" type="button" onclick="zoomGraphButton()" value="Navigate" /></td></tr>
-                        <tr><td><div class="dropdown">
-                              <button class="button" type="button" onclick="myFunction1()">Change...</button>
+                        <tr><td>
+                              <div class="dropdown">
+                                    <button class="button" type="button" onclick="dropdownButton(3)">Change...</button>
                                     <div id="myDropdownoption" class="dropdown-content">
-                                    <button class="button" type="button" onclick="myFunction5()">radius of</button>
-                                    <div id="myDropdownchange" class="dropdown-content">
-                                          <input class="button" type="button" onclick="popUpForRadiusButton()"value="Clusters" />
-                                          <input class="button" type="button" onclick="popUpForNodeButton()"value="Nodes" />
-                                    </div>                           
-                                    <button class="button" type="button" onclick="myFunction4()">Palette</button>
-                                    <div id="myDropdowncolor" class="dropdown-content">
-                                          <input class="button" type="button" onclick="getPalette(0)" value="Random"/>
-                                          <input class="button" type="button" onclick="getPalette(2)" value="blue"/>
-                                          <input class="button" type="button" onclick="getPalette(1)" value="green"/>
-                                          <input class="button" type="button" onclick="getPalette(3)" value="red"/>
+                                          <button class="button" type="button" onclick="dropdownButton(4)">radius of</button>
+                                          <div id="myDropdownchange" class="dropdown-content">
+                                                <input class="button" type="button" onclick="popUpForRadiusButton()"value="Clusters" />
+                                                <input class="button" type="button" onclick="popUpForNodeButton()"value="Nodes" />
+                                          </div>                           
+                                          <button class="button" type="button" onclick="dropdownButton(5)">Palette</button>
+                                          <div id="myDropdowncolor" class="dropdown-content">
+                                                <input class="button" type="button" onclick="getPalette(0)" value="Random"/>
+                                                <input class="button" type="button" onclick="getPalette(2)" value="blue"/>
+                                                <input class="button" type="button" onclick="getPalette(1)" value="green"/>
+                                                <input class="button" type="button" onclick="getPalette(3)" value="red"/>
+                                          </div>
                                     </div>
-                              </div></td></tr>  
+                              </div>      
+                        </td></tr>  
                         <tr><td><input class="button" type="button" onclick="flatClusterButton()" value="FLAT TIME" /></td></tr>
                   </table>
             </div>
                         
             <div id="svg">
-                              <script type="text/javascript"  src="ClusteredGraphLibrary/ClusteredGraph.js"></script>
-                              <script type="text/javascript"  src="redrawGraph.js"></script>
-                              <script type="text/javascript"  src="nodesEdgesFunction.js"></script>
-                              <script type="text/javascript"  src="clustersFunctions.js"></script>
-                              <script type="text/javascript"  src="saveGraph.js"></script>
-                              <script type="text/javascript"  src="buttonsFunctions.js"></script>
-                              <script type="text/javascript"  src="initialize.js"></script>
-                              <script type="text/javascript"  src="flatCluster.js"></script> 
-                              <script type="text/javascript"  src="treeDrawing.js"></script> 
-                              <script type="text/javascript"  src="consoleView.js"></script> 
+                  <script type="text/javascript"  src="ClusteredGraphLibrary/ClusteredGraph.js"></script>
+                  <script type="text/javascript"  src="redrawGraph.js"></script>
+                  <script type="text/javascript"  src="nodesEdgesFunction.js"></script>                        <script type="text/javascript"  src="clustersFunctions.js"></script>
+                  <script type="text/javascript"  src="saveGraph.js"></script>
+                  <script type="text/javascript"  src="buttonsFunctions.js"></script>
+                  <script type="text/javascript"  src="initialize.js"></script>
+                  <script type="text/javascript"  src="flatCluster.js"></script> 
+                  <script type="text/javascript"  src="treeDrawing.js"></script> 
+                  <script type="text/javascript"  src="consoleView.js"></script> 
             </div>
       </div>
-
-                      <script>
-                      /* myFunction toggles between adding and removing the show class, which is used to hide and show the dropdown content */
-                      function myFunction() {
-                        document.getElementById("myDropdowncreate").classList.toggle("show");
-                      }
-                                            /* myFunction toggles between adding and removing the show class, which is used to hide and show the dropdown content */
-                        function myFunction1() {
-                        document.getElementById("myDropdownoption").classList.toggle("show");
-                      }
-                                                                  /* myFunction toggles between adding and removing the show class, which is used to hide and show the dropdown content */
-                        function myFunction2() {
-                        document.getElementById("myDropdownsave").classList.toggle("show");
-                      }
-                      function myFunction3() {
-                        document.getElementById("myDropdownview").classList.toggle("show");
-                      }
-                      function myFunction4() {
-                        document.getElementById("myDropdowncolor").classList.toggle("show");
-                      }
-                      function myFunction5() {
-                        document.getElementById("myDropdownchange").classList.toggle("show");
-                      }
-                      </script>   
 </body>
 
 </html>

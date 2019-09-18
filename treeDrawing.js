@@ -2,8 +2,10 @@
  * @function 
  */
 function drawTree(){
-  let d= new Date();
-  log.set(log.size," Switched to tree view" +  d.getHours() +":" + d.getMinutes + ":" + d.getSeconds )
+  text=" Switched to tree view";
+  n=consoleCount;
+  consoleCount++;
+  addLog(text,n)
     let treeDataList=[
       {"name": "root", "parent": null, "hasChildren": true,"fill":"black"}, 
     ];
@@ -142,8 +144,6 @@ function drawVerticalTree(treeData,edgesData) {
       for(let item of edgesData){
         let p={};
         for(let i=0; i<nodes.descendants().length; i++){
-
-        console.log(i)
           if( nodes.descendants()[i].data.id== item.source){
             p.source=nodes.descendants()[i].data.id;
             p.x1=nodes.descendants()[i].x;

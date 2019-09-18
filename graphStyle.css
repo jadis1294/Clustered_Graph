@@ -1,57 +1,57 @@
-   #title{
-      color: #FFFF;
-        letter-spacing: 2.5px;
-          word-spacing: 10px;
-              font-family: "Times New Roman", Times, serif;
-        font-size: 30px;
-        text-align: right;
-        float: right;
-   }
-   #text{
+  #title
+  {
+    color: #FFFF;
+    letter-spacing: 2.5px;
+    word-spacing: 10px;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 30px;
+    text-align: right;
+    float: right;
+  }
+
+  #text
+  {
     color: #FFFFD0;
     letter-spacing: 1.5px;
-      word-spacing: 5px;
-      font-family: "Times New Roman", Times, serif;
-   }
-   #navigateText{
+    word-spacing: 5px;
+    font-family: "Times New Roman", Times, serif;
+  }
+
+  #navigateText
+  {
     font-family: "Times New Roman", Times, serif;
     fill: #555555;
     font-size: 25px;
+  }
 
-   }
-   #consoleText{
+  #consoleText
+  {
     font-family: "Times New Roman", Times, serif;
     fill: #555555;
     font-size: 15px;
+  }
 
-   }
-
-   #definition{
-    color:  DodgerBlue; 
-    letter-spacing: 2.5px;
-      word-spacing: 10px;
-      font-family: "Times New Roman", Times, serif;
-      text-align: center;
-      font-size: 20px;
-   }
-
-   #container{
-     box-align: start;
+  #container
+  {
      margin-inline-start: 0px;
      border: 2px solid DodgerBlue;
-   }
-    body{
+  }
+
+  body
+  {
       background-color:#555550;
       margin: 0 auto;
+  }
+  
+  #c_edge
+  {
+    stroke:grey;
+    stroke-width:3px;
+  }
 
-    }
-      #c_edge{
-      stroke:grey;
-      stroke-width:3px;
-      }
-
-      #c_cluster{
-      stroke:black;  
+ #c_cluster
+ {
+  stroke:black;  
       stroke-width:3px;
       opacity: 0.6;
       }
@@ -64,13 +64,12 @@
       #c_node{
         fill: #ccc;
         stroke: steelblue; 
-      stroke-width:3px;
+      stroke-width:2.5px;
       }
 
       #cgraph {
       background-color:#FFFFE0;
   border: 2px solid  DodgerBlue; 
-float: center;
 align-content: center;
 }
 
@@ -102,14 +101,12 @@ align-content: center;
 #inctree {
   background-color:#FFFFE0;
 border: 2px solid  DodgerBlue; 
-float: center;
-align-content: center;
+
 }
 #console {
   background-color:#FFFFE0;
 border: 2px solid  DodgerBlue; 
-float: center;
-align-content: center;
+
 }
 
 #files{
@@ -141,7 +138,7 @@ align-content: center;
   font-size: 16px;
   -webkit-transition-duration: 0.4s; /* Safari */
   transition-duration: 0.4s;
-  border: 0.5px solid  DodgerBlue;
+  border: 0.3px solid  DodgerBlue;
   font-family: "Times New Roman", Times, serif;
 }
 .button:hover {
@@ -162,33 +159,11 @@ align-content: center;
     background-color: DodgerBlue;
     font-family: "Times New Roman", Times, serif;
         letter-spacing: 0px;
-          font-size: 14px;
+          font-size: 17px;
   }
 
-.svg{
-  float: center;
-}
-
- /* The container must be positioned relative: */
- .buttonsRight {
-  position: relative;
-  font-family: Arial;
-  align-content: center;
-  background-color: #555555; /* Green */
-  color: white;
-  font-size: 15px;
-  height: 55px;
-  -webkit-transition-duration: 0.4s; /* Safari */
-  transition-duration: 0.4s;
-  border: 1px solid  DodgerBlue;
-
-}
 
 
-
-.dropbtn:hover, .dropbtn:focus {
-  background-color: #3e8e41;
-}
 
 .dropdown {
   position: relative;
@@ -199,20 +174,15 @@ align-content: center;
   display: none;
   position: absolute;
   background-color: #555555;
+  border: 1px solid  DodgerBlue;
   min-width: 120px;
-  min-height: 50px;
+  min-height: 55px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
   overflow: visible;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  font-size: 10px;
-  text-decoration: none;
-  display: contents;
-}
 
 .dropdown-content a:hover {background-color: #555555}
-
-.show {display:block;}
+.show {display:inline;}
+.show1 {display:block;}

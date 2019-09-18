@@ -1,8 +1,11 @@
 "use strict"
 document.getElementById('files').addEventListener('change', handleFileSelect, false);
-var editClusterBoolean,
+let editClusterBoolean,
+    n,
+    text,
     info=0,
     color=0,
+    consoleCount=0,
     simulationIntraClusters,
     createClusterBoolean,
     createEdgeBoolean,
@@ -14,11 +17,10 @@ var editClusterBoolean,
     treeviewBoolean=false,
     graphviewBoolean=true,
     logViewBoolean=false,
-    reader,
+    readerJson,
     log=new Map(),
     radiusCluster = 40,
     radiusNode = 9,
-    clusters = [],
     nodes = new Map(),
     edges = new Map(),
     clusters= new Map(),
@@ -45,7 +47,15 @@ function handleFileSelect(evt) {
     reader = new FileReader();
     reader.readAsText(file);
 }
-
+function addLog(text,n){
+    let d= new Date();
+    if(consoleCount>25) consoleCount=0;
+    log.set(consoleCount,{
+        "time": d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds(),
+        "text":text,
+        "numero": n
+})
+}
 /**
  * @function 
  * @description Initialize the Empty svg and the Svg's ID
@@ -74,6 +84,8 @@ function initialize() {
         .attr('id', 'c_cluster_Fake')
     
     }
-let d= new Date();
-    log.set(log.size," log in " +  d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds() )
+    text=" log in ";
+    n=consoleCount;
+    consoleCount++;
+    addLog(text,n)
 initialize();

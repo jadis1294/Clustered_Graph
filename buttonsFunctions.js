@@ -185,8 +185,10 @@ function deleteGraphButton() {
     clusteredGraph.graph.nodes.clear();
     clusteredGraph.graph.edges.clear();
     clusteredGraph.tree.clusters.clear();
-    let d= new Date();
-    log.set(log.size," deleted the graph" +  d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds() )
+    text=" deleted the graph ";
+    n=consoleCount;
+    consoleCount++;
+    addLog(text,n)
 }
 
 /**
@@ -219,7 +221,7 @@ function deleteObjectButton() {
                 let id = parseInt(d3.select(this).attr("key"))
                 d3.select(this).remove()
                 let d= new Date();
-                log.set(log.size," deleted a node" +  d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds() )
+                log.set(d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds()," deleted a node")
                 clusteredGraph.graph.nodes.delete(id)
                 for (let c of clusteredGraph.tree.clusters)
                     c[1].nodes.delete(id)
@@ -234,22 +236,23 @@ function deleteObjectButton() {
  * @function 
  */
 function drawJsonButton() {
-    if (reader=== undefined) {
+    if (readerJson=== undefined) {
         window.alert("select a Json!")
         return;   
     }
-    let d= new Date();
-    log.set(log.size," loaded a .json file " +  d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds() )
+    text=" loaded a .json file ";
+    n=consoleCount;
+    consoleCount++;
+    addLog(text,n)
     deleteGraphButton()
-    let clusteredGraphReader = JSON.parse(reader.result);
+    let clusteredGraphReaderJsonreaderJson = JSON.parse(readerJson.result);
 
-    for (let index = 0; index < clusteredGraphReader.clusters.length; index++)
-        clusters.set(clusters.size, clusteredGraphReader.clusters[index]);
-    for (let index = 0; index < clusteredGraphReader.nodes.length; index++)
-        nodes.set(nodes.size, clusteredGraphReader.nodes[index]);
-    for (let index = 0; index < clusteredGraphReader.edges.length; index++)
-        edges.set(edges.size, clusteredGraphReader.edges[index]);
-    console.log(edges)
+    for (let index = 0; index < clusteredGraphReaderJsonreaderJson.clusters.length; index++)
+        clusters.set(clusters.size, clusteredGraphReaderJsonreaderJson.clusters[index]);
+    for (let index = 0; index < clusteredGraphReaderJsonreaderJson.nodes.length; index++)
+        nodes.set(nodes.size, clusteredGraphReaderJsonreaderJson.nodes[index]);
+    for (let index = 0; index < clusteredGraphReaderJsonreaderJson.edges.length; index++)
+        edges.set(edges.size, clusteredGraphReaderJsonreaderJson.edges[index]);
     for (let c of clusters) {
         c[1].fill = getRandomColor();
         c[1].parents = new Set(c[1].parents);
@@ -270,6 +273,9 @@ function drawJsonButton() {
     redraw();
 
 }
+
+
+
 /**
  * @function 
  */
@@ -348,3 +354,14 @@ function getPalette(n){
     color=n;
     return;
 };
+
+
+/* opentoggles between adding and removing the show class, which is used to hide and show the dropdown content */
+function dropdownButton(p) {
+    if(p==0) document.getElementById("myDropdownsave").classList.toggle("show");
+    if(p==1) document.getElementById("myDropdownview").classList.toggle("show");
+    if(p==2) document.getElementById("myDropdowncreate").classList.toggle("show1");
+    if(p==3) document.getElementById("myDropdownoption").classList.toggle("show1");
+    if(p==4) document.getElementById("myDropdownchange").classList.toggle("show1");
+    if(p==5) ocument.getElementById("myDropdowncolor").classList.toggle("show1");
+    }
