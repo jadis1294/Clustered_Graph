@@ -83,6 +83,11 @@ align-content: center;
   stroke:#ccc;
   stroke-width: 3px;
 }
+#line {
+  fill: none;
+  stroke:#ccc;
+  stroke-width: 3px;
+}
 .node--internal circle {
   fill: #fff;
   stroke: steelblue;

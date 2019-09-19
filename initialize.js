@@ -1,11 +1,11 @@
 "use strict"
+//initialization of all the editor's variables
 document.getElementById('files').addEventListener('change', handleFileSelect, false);
-let editClusterBoolean,
-    n,
-    text,
+let text,
     info=0,
     color=0,
-    consoleCount=0,
+    consoleCount=1,
+    editClusterBoolean,
     simulationIntraClusters,
     createClusterBoolean,
     createEdgeBoolean,
@@ -40,21 +40,32 @@ let editClusterBoolean,
     });
 
 /**
- * @function 
+ * @function
+ * @returns {void} 
+ * @description initialize the reader for the json files
  */
 function handleFileSelect(evt) {
     var file = evt.target.files[0];    
-    reader = new FileReader();
-    reader.readAsText(file);
+    readerJson = new FileReader();
+    readerJson.readAsText(file);
 }
+
+/**
+ * @function
+ * @param {string}
+ * @param {number}
+ * @returns {void} 
+ * @description add a textual message in the log Map 
+ */
 function addLog(text,n){
     let d= new Date();
-    if(consoleCount>25) consoleCount=0;
+    if(consoleCount>25) consoleCount=1;
     log.set(consoleCount,{
         "time": d.getHours() +":" + d.getMinutes() + ":" + d.getSeconds(),
         "text":text,
         "numero": n
 })
+    consoleCount++;
 }
 /**
  * @function 
@@ -84,8 +95,10 @@ function initialize() {
         .attr('id', 'c_cluster_Fake')
     
     }
-    text=" log in ";
-    n=consoleCount;
-    consoleCount++;
-    addLog(text,n)
+
+
+
+    
+text=" log in ";
+addLog(text,consoleCount)
 initialize();

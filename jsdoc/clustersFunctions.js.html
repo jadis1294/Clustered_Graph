@@ -1,4 +1,32 @@
-"use strict"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: clustersFunctions.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: clustersFunctions.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict"
 
 
 /**
@@ -21,21 +49,21 @@ function getColor(c) {
     if(c==2){
     colore +='0000';
     
-        for (var i = 0; i < 2; i++) {
+        for (var i = 0; i &lt; 2; i++) {
             colore += letters[Math.floor(Math.random() * 16)];
     }
 }
     //green
     if(c==1){
         colore +='00';
-        for (var i = 0; i < 2; i++) {
+        for (var i = 0; i &lt; 2; i++) {
             colore += letters[Math.floor(Math.random() * 16)];
         }
         colore +='00';
     }
     //random
     if(c==0){
-        for (var i = 0; i < 6; i++) {
+        for (var i = 0; i &lt; 6; i++) {
             colore += letters[Math.floor(Math.random() * 16)];
         }
     }
@@ -77,15 +105,15 @@ function editCluster() {
 /**
  * @function
  * @param {Cluster}
- * @returns {Set<number>} 
- * @description take a cluster and return the set of the nodes that have distance< cluster
+ * @returns {Set&lt;number>} 
+ * @description take a cluster and return the set of the nodes that have distance&lt; cluster
  */
 function findNodesList(cluster) {
     //console.log("inizio find node")
     let foundedNodes = new Set();
     for (let node of clusteredGraph.graph.nodes) {
         //console.log(node)
-        if (Math.abs(node.x - cluster.x) < cluster.r && Math.abs(node.y - cluster.y) < cluster.r) {
+        if (Math.abs(node.x - cluster.x) &lt; cluster.r &amp;&amp; Math.abs(node.y - cluster.y) &lt; cluster.r) {
             //console.log("era minore")
             foundedNodes.add(node.id)
         }
@@ -212,4 +240,26 @@ function changeRadiusAndDescription() {
             d3.select("#navigateText").remove()
         });
 
-}
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Cluster.html">Cluster</a></li><li><a href="ClusteredGraph.html">ClusteredGraph</a></li><li><a href="Edge.html">Edge</a></li><li><a href="InclusionTree.html">InclusionTree</a></li><li><a href="node.html">node</a></li><li><a href="UnderlyingGraph.html">UnderlyingGraph</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addLog">addLog</a></li><li><a href="global.html#allFalse">allFalse</a></li><li><a href="global.html#changeRadiusAndDescription">changeRadiusAndDescription</a></li><li><a href="global.html#createClusterButton">createClusterButton</a></li><li><a href="global.html#createEdgesButton">createEdgesButton</a></li><li><a href="global.html#createNodesButton">createNodesButton</a></li><li><a href="global.html#deleteCluster">deleteCluster</a></li><li><a href="global.html#deleteGraphButton">deleteGraphButton</a></li><li><a href="global.html#deleteObjectButton">deleteObjectButton</a></li><li><a href="global.html#dragCluster">dragCluster</a></li><li><a href="global.html#dragNode">dragNode</a></li><li><a href="global.html#drawConsole">drawConsole</a></li><li><a href="global.html#drawJsonButton">drawJsonButton</a></li><li><a href="global.html#drawTree">drawTree</a></li><li><a href="global.html#editCluster">editCluster</a></li><li><a href="global.html#findNodesList">findNodesList</a></li><li><a href="global.html#flatClusterButton">flatClusterButton</a></li><li><a href="global.html#forceClusters">forceClusters</a></li><li><a href="global.html#getColor">getColor</a></li><li><a href="global.html#getPalette">getPalette</a></li><li><a href="global.html#getSVGString">getSVGString</a></li><li><a href="global.html#graphViewButton">graphViewButton</a></li><li><a href="global.html#handleFileSelect">handleFileSelect</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#logViewButton">logViewButton</a></li><li><a href="global.html#moveClusterButton">moveClusterButton</a></li><li><a href="global.html#moveNodeButton">moveNodeButton</a></li><li><a href="global.html#newCluster">newCluster</a></li><li><a href="global.html#newEdge">newEdge</a></li><li><a href="global.html#newNode">newNode</a></li><li><a href="global.html#popUpForNodeButton">popUpForNodeButton</a></li><li><a href="global.html#popUpForRadiusButton">popUpForRadiusButton</a></li><li><a href="global.html#redraw">redraw</a></li><li><a href="global.html#removeTransformation">removeTransformation</a></li><li><a href="global.html#saveAsJsonButton">saveAsJsonButton</a></li><li><a href="global.html#saveGraph">saveGraph</a></li><li><a href="global.html#svgString2Image">svgString2Image</a></li><li><a href="global.html#treeViewButton">treeViewButton</a></li><li><a href="global.html#zoomGraphButton">zoomGraphButton</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Sep 19 2019 15:25:40 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

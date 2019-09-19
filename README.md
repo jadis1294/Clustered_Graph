@@ -7,3 +7,4 @@ edges of G do not intersect except at common end-points; (ii) the boundaries of
 the regions representing clusters do not intersect; and (iii) each edge intersects
 the boundary of a region at most one time. A c-graph is c-planar if it admits a
 c-planar drawing.
+

@@ -17,9 +17,7 @@ function newNode(cluster,key,coordinates,label) {
     nodeToInsert.key=key;
     nodeToInsert.r=radiusNode;
     text=" created a node ";
-    n=consoleCount;
-    consoleCount++;
-    addLog(text,n)
+    addLog(text,consoleCount)
 }
 
 
@@ -56,15 +54,17 @@ function newEdge(key,coordinates,nodo,label)
             edge.y2=parseInt(d3.select(this).attr("cy"))
             d3.select("#c_node").selectAll("circle").transition().duration(1000).attr("r",radiusNode);
             redraw();
-            l.text=" created an Edge ";
-            l.n=consoleCount;
-            consoleCount++;
-            addLog(l)
+            text=" created an Edge ";
+            addLog(text,consoleCount)
             createEdgesButton();
         });
 }
 
-
+/**
+ * @function
+ * @returns {void} 
+ * @description function to select the node in the svg to Drag
+ */
 function dragNode() {
 	if(dragNodeBoolean==false) return;
     d3.select("#c_node")

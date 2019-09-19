@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ClusteredGraphLibrary/ClusteredGraph.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ClusteredGraphLibrary/ClusteredGraph.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict"
+/**
+ * @class node
+ */
+class node{
+    /**
+ *Class node
+ * @param {string} label
+ * @param {Set&lt;number>} rotationScheme id's array of the outgoing edges from the node 
+ */
+    constructor(id,label,rotationScheme){
+ 	    this.id=id;
+ 	    this.label=label;
+ 	    this.rotationScheme=rotationScheme;
+    }
+}
+
+
+/**
+ * @class Edge
+ */
+class Edge{
+    /**
+    * class Edge
+    * @param {number} id
+    * @param {string} label 
+    * @param {number} source - Source node's id 
+    * @param {number} target - Target node's id
+    */
+    constructor(id,label,source,target){
+ 	    this.id=id;
+ 	    this.label=label;
+        this.source=source;
+        this.target=target;
+    }
+}
+
+/**
+ * @class Cluster
+ * @description Clusters are the internal node of the InclusionTree
+ */
+class Cluster{
+    /**
+    * @param {string} label
+    * @param {number} level -depth of the cluster in the InclusionTree
+    * @param {Set&lt;number>} cildren - Set of the cildrens cluster's id
+    * @param {Set&lt;number>} parents - Set of the parents's id of the Cluster
+    * @param {Set&lt;number>} nodes - id of the cluster's node at the cluster's level 
+    */
+    constructor(label,level,cildren,parents,nodes)
+    {
+ 	    this.label=label;
+ 	    this.level=level;
+         this.cildren=cildren;
+         this.parents=parents;
+ 	    this.nodes=nodes;
+    }
+}
+
+/**
+ * @class UnderlyingGraph
+ * @description the UnderlyingGraph of the clusteredGraph
+ */
+class UnderlyingGraph{
+    /**
+     * @param {string} label
+     * @param {boolean} embedded boolean value to decide if the rotationScheme of the node should be read
+     * @param {Map&lt;number,node>} nodes Map of the nodes id in the graph
+     * @param {Map&lt;number,Edge>} edges List of the edges id in the graph
+     */
+    constructor(label,embedded,nodes,edges) 
+    {
+        this.label= label;
+        this.embedded= embedded;   //se è embedded il rotationScheme(attributo dei nodi) va letto, altrimenti no
+        this.nodes= nodes;
+        this.edges=edges;
+    }
+}          
+
+/**
+ * @class InclusionTree
+ * @description the InclusionTree of the ClusteredGraph
+ */
+class InclusionTree{
+    /**
+     * @param {string} label
+     * @param {Map&lt;number,Cluster>} clusters Clusters in the InclusionTree
+     */
+    constructor(label,clusters)
+    {
+        this.label=label;
+        this.clusters=clusters;
+    }
+
+
+
+/**
+ * @function
+ * @param {number} idCluster
+ * @returns {number} numberNode value of the nodes number
+ * @description Count all the nodes in the cluster with id = idCluster
+ */
+    nodesInClusterCount(idCluster)
+    {
+        var numberNode=nodesInClusterList(idCluster).size;
+    	return numberNode;
+    }
+    
+ /**
+  * @function
+ * @param {number} idCluster
+ * @returns {Set&lt;number>}
+ * @description Get a set of the nodes id in the cluster
+ */
+    nodesInClusterList(idCluster)
+    {
+        let cluster= clusters.get(idCluster);
+    	var nodesInCluster=new Set(Array.from(cluster.nodes));
+        for (let item of cluster.cildren){
+            nodesInCluster.add(nodesInClusterList(item))
+        }
+        return nodesInCluster;
+    }
+
+ /**
+  * @function
+ * @param {number} idCluster1 
+ * @param {number} idCluster2
+ * @returns {Set&lt;number>} edges
+ * @description get a list of nodes in the Internal cluster
+ */
+    edgeListBetweenTwoClusters(idCluster1,idCluster2)
+    {
+        let edges=new Set();
+        let arrayedge;
+        let nodesCluster1= getNodesInCluster(idCluster1);
+        let nodesCluster2= getNodesInCluster(idCluster2);
+        let edgeInCluster1= new Set();
+        let edgeInCluster2=new Set();
+        for (let itemCluster1 of nodesCluster1){
+            arrayedge=Array.from(itemCluster1.rotationScheme)
+            arrayedge.forEach(itemA => edgeInCluster1.add(itemA))
+        }
+        for (let itemCluster2 of nodesCluster2){
+            arrayedge=Array.from(itemCluster2.rotationScheme)
+            arrayedge.forEach(itemA => edgeInCluster1.add(itemA))
+        }
+        for(let item1 of edgeInCluster1)
+            for(let item2 of edgeInCluster2){
+                if(item1==item2) edges.add(item1);
+            }
+        return edges;
+        }
+
+ /**
+  * @function
+ * @param {number} idCluster1 
+ * @param {number} idCluster2
+ * @returns {number}
+ * @description get the number of edges between two cluster
+ */
+    edgeNumberBetweenTwoClusters(idCluster1,idCluster2)
+    {
+        return edgeListBetweenTwoClusters(idCluster1,idCluster2).size
+    }
+
+
+/**
+ * @function
+ * @param {number} idCluster 
+ * @returns {Set&lt;number>}
+ * @description get all the cildrens id of the input cluster
+ */
+    cildrenCluster(idCluster)
+    {
+        let clu= clusteredGraph.tree.clusters.get(idCluster);
+        let cildrenSet= new Set();
+        for(let item of clu.cildren){
+            cildrenSet.add(item)
+        }
+        return cildrenSet;
+    }
+
+}
+
+/**
+ * @class ClusteredGraph
+ * @description A ClusteredGraph is a pain(G,T) where G is the UnderlyingGraph and T is the InclusionTree
+ */
+class ClusteredGraph{
+    /** 
+     * @param {UnderlyingGraph} graph 
+     * @param {InclusionTree} tree 
+     */
+    constructor(graph,tree)
+    {
+	this.graph=graph;
+	this.tree=tree;
+    }
+}      
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Cluster.html">Cluster</a></li><li><a href="ClusteredGraph.html">ClusteredGraph</a></li><li><a href="Edge.html">Edge</a></li><li><a href="InclusionTree.html">InclusionTree</a></li><li><a href="node.html">node</a></li><li><a href="UnderlyingGraph.html">UnderlyingGraph</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addLog">addLog</a></li><li><a href="global.html#allFalse">allFalse</a></li><li><a href="global.html#changeRadiusAndDescription">changeRadiusAndDescription</a></li><li><a href="global.html#createClusterButton">createClusterButton</a></li><li><a href="global.html#createEdgesButton">createEdgesButton</a></li><li><a href="global.html#createNodesButton">createNodesButton</a></li><li><a href="global.html#deleteCluster">deleteCluster</a></li><li><a href="global.html#deleteGraphButton">deleteGraphButton</a></li><li><a href="global.html#deleteObjectButton">deleteObjectButton</a></li><li><a href="global.html#dragCluster">dragCluster</a></li><li><a href="global.html#dragNode">dragNode</a></li><li><a href="global.html#drawConsole">drawConsole</a></li><li><a href="global.html#drawJsonButton">drawJsonButton</a></li><li><a href="global.html#drawTree">drawTree</a></li><li><a href="global.html#editCluster">editCluster</a></li><li><a href="global.html#findNodesList">findNodesList</a></li><li><a href="global.html#flatClusterButton">flatClusterButton</a></li><li><a href="global.html#forceClusters">forceClusters</a></li><li><a href="global.html#getColor">getColor</a></li><li><a href="global.html#getPalette">getPalette</a></li><li><a href="global.html#getSVGString">getSVGString</a></li><li><a href="global.html#graphViewButton">graphViewButton</a></li><li><a href="global.html#handleFileSelect">handleFileSelect</a></li><li><a href="global.html#initialize">initialize</a></li><li><a href="global.html#logViewButton">logViewButton</a></li><li><a href="global.html#moveClusterButton">moveClusterButton</a></li><li><a href="global.html#moveNodeButton">moveNodeButton</a></li><li><a href="global.html#newCluster">newCluster</a></li><li><a href="global.html#newEdge">newEdge</a></li><li><a href="global.html#newNode">newNode</a></li><li><a href="global.html#popUpForNodeButton">popUpForNodeButton</a></li><li><a href="global.html#popUpForRadiusButton">popUpForRadiusButton</a></li><li><a href="global.html#redraw">redraw</a></li><li><a href="global.html#removeTransformation">removeTransformation</a></li><li><a href="global.html#saveAsJsonButton">saveAsJsonButton</a></li><li><a href="global.html#saveGraph">saveGraph</a></li><li><a href="global.html#svgString2Image">svgString2Image</a></li><li><a href="global.html#treeViewButton">treeViewButton</a></li><li><a href="global.html#zoomGraphButton">zoomGraphButton</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Sep 19 2019 15:25:40 GMT+0200 (Central European Summer Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

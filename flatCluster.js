@@ -1,11 +1,11 @@
 /**
- * @function 
+ * @function
+ * @returns {void} 
+ * @description complete the operation of flattization of the clustered graph
  */
 function flatClusterButton(){
     l.text=" flatted the graph ";
-    l.n=consoleCount;
-    consoleCount++;
-    addLog(l)
+    addLog(text,consoleCount);
     allFalse();
     removeTransformation();
     for(let c of clusteredGraph.tree.clusters){
