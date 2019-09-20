@@ -4,6 +4,7 @@
  * @description redrawClusters the graph everytime it changes 
  */
 
+
 function redraw() {
     let clus = [],
         nodes = Array.from(clusteredGraph.graph.nodes.values()),
@@ -28,6 +29,11 @@ function redraw() {
         .data(edges)
         .remove()
 
+        d3.select("#c_text")
+        .selectAll("text")
+        .remove()
+
+
     d3.select("#c_node")
         .selectAll("circle")
         .data(nodes)
@@ -51,10 +57,16 @@ function redraw() {
           .enter().append("path")
           .attr("class", "edge")
           .attr("d", function(d) {
-             return "M" + d.x1 + "," + d.y1
-               + "C" + d.x1 + "," + (d.y1 + d.y2) /1.7
-               + " " + d.x2 + "," +  (d.y1 + d.y2) / 1.7
-               + " " + d.x2 + "," + d.y2;
+             return "M" + clusteredGraph.graph.nodes.get(d.source).x + "," 
+                + clusteredGraph.graph.nodes.get(d.source).y 
+                + "C" + clusteredGraph.graph.nodes.get(d.source).x  + "," 
+                + (clusteredGraph.graph.nodes.get(d.source).y 
+                + clusteredGraph.graph.nodes.get(d.target).y ) /1.7
+                + " " + clusteredGraph.graph.nodes.get(d.target).x  + "," 
+                +  (clusteredGraph.graph.nodes.get(d.source).y  
+                + clusteredGraph.graph.nodes.get(d.target).y ) / 1.7
+                + " " + clusteredGraph.graph.nodes.get(d.target).x  + "," 
+                + clusteredGraph.graph.nodes.get(d.target).y ;
              })
              .attr("key", function(d) {
                 return d.id;
@@ -117,6 +129,27 @@ function redraw() {
         .attr("key", function(d) {
             return d.key
         });
+
+    d3.select("#c_text")
+      .selectAll("circle")
+      .data(clus)
+      .enter()
+      .append("text")
+      .attr("dy", ".35em")
+      .text(function(d){
+          return d.text;
+      })
+      .attr("y", function(d){
+          return d.y+d.r-15;
+        })
+      .attr("x", function(d){
+          return d.x;
+      })
+      .attr("id", "clusterText")
+
+
+
+
     let clustersLevelOne = new Set();
     for (let item of clusteredGraph.tree.clusters) {
         if (item[1].level == 1) {
@@ -136,9 +169,37 @@ function redraw() {
         }
 
     }
+
+        for (let cluster of clusteredGraph.tree.clusters){
+            let nodesInClusters=new Set()
+            for(let item of cluster[1].nodes){
+                nodesInClusters.add(clusteredGraph.graph.nodes.get(item))
+            }
+            forceNodes(nodesInClusters)
+        }
+
+
     forceClusters(clustersLevelOne);
 }
 
+
+function forceNodes(nodesInClusters){
+    simulationIntraNodes = d3.forceSimulation(Array.from(nodesInClusters.values()))
+    .force("collide", d3.forceCollide().radius(function(d) {
+        return d.r;
+    }).iterations(20))
+    .on("tick", function() {
+        d3.select("#c_node")
+            .selectAll("circle")
+            .attr("cx", function(d) {
+                return d.x;
+            })
+            .attr("cy", function(d) {
+                return d.y;
+            })
+    });
+
+}
 
 /**
  * @function
@@ -196,10 +257,8 @@ function forceClusters(clustersLevelX) {
             }
             for (let nodoid of item.nodes)
                 itemcildren.add(clusteredGraph.graph.nodes.get(nodoid))
-            console.log(itemcildren)
             simulationIntraClusters = d3.forceSimulation(Array.from(itemcildren))
                 .force("collide", d3.forceCollide().radius(function(d) {
-                    console.log(d.r);
                     return d.r;
                 }).iterations(20))
                 .on("tick", function() {

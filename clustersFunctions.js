@@ -211,5 +211,35 @@ function changeRadiusAndDescription() {
                 .attr("r", raggio / 1.2)
             d3.select("#navigateText").remove()
         });
+}
 
+/**
+ * @function
+ * @param {string}
+ * @returns {void} 
+ * @description insert the string t when a cluster is selected
+ */
+function insertText(t){
+    d3.select("#c_cluster")
+        .selectAll("circle")
+        .data(Array.from(clusteredGraph.tree.clusters.values()))
+        .on("click",function(){
+            clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key"))).text=t;
+            redraw();
+        })
+}
+/**
+ * @function
+ * @param {string}
+ * @returns {void} 
+ * @description change the color of a cluster in t when it is selected
+ */
+function changeColor(t){
+    d3.select("#c_cluster")
+    .selectAll("circle")
+    .data(Array.from(clusteredGraph.tree.clusters.values()))
+    .on("click",function(){
+        clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key"))).fill=t;
+        redraw();
+});
 }

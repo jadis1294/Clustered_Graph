@@ -7,6 +7,7 @@ let text,
     consoleCount=1,
     editClusterBoolean,
     simulationIntraClusters,
+    simulationIntraNodes,
     createClusterBoolean,
     createEdgeBoolean,
     createNodesBoolean,
@@ -36,7 +37,9 @@ let text,
     }),
     dragN=d3.drag().on("drag",function(d){
         if(dragNodeBoolean==false) return;
-        d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+        d3.select(this)
+        .attr("cx", d.x = d3.event.x)
+        .attr("cy", d.y = d3.event.y);
     });
 
 /**
@@ -81,7 +84,10 @@ function initialize() {
     d3.select("#cgraph")
         .append('g')
         .attr('id', 'c_cluster')
-
+    
+    d3.select("#cgraph")
+        .append('g')
+        .attr('id', 'c_text')
     d3.select("#cgraph")
         .append('g')
         .attr('id', 'c_node')

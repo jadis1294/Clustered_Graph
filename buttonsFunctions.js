@@ -313,6 +313,7 @@ function treeViewButton(p) {
     logViewBoolean=false;
     d3.select("#cgraph").remove();
     d3.select("#console").remove();
+    d3.select("#inctree").remove();
     drawTree(p);
 
 }
@@ -394,6 +395,69 @@ function getPalette(n){
     color=n;
 };
 
+/**
+ * @function
+ * @param {number} 
+ * @returns {void}
+ * @description to see the complete graph or just a part of that
+ */
+function graphDecompositionButton(p){
+        d3.select("#cgraph").remove();
+        d3.select("#inctree").remove();
+        d3.select("#console").remove();
+        initialize();
+        redraw();
+        if(p==0){
+            d3.select("#c_node").remove();
+            d3.select("#c_edge").remove();
+        }
+        if(p==1){
+        d3.select("#c_cluster").remove();
+        d3.select("#c_text").remove();
+        d3.select("#c_edge").remove();
+    }
+    if(p==2){
+        d3.select("#c_node").remove();
+        d3.select("#c_text").remove();
+        d3.select("#c_cluster").remove();
+
+    }
+}
+/**
+ * @function 
+ * @returns {void}
+ * @description create a popUp where insert text used in insertText(t) function
+ */
+function addTextButton(){
+    allFalse();
+    if (clusteredGraph.tree.clusters.size==0) {
+        window.alert("Impossible add text in a cluster without creating at least one")
+        return;   
+    }
+    let t = prompt("enter the text which you want on a cluster and select it", "...");
+    if (t == null || t == "") return;
+    insertText(t);
+}
+
+
+/**
+ * @function 
+ * @returns {void}
+ * @description create a popUp where insert the exadecimal value of the color
+ */
+function changeSingleColorButton(){
+    allFalse();
+    if (clusteredGraph.tree.clusters.size==0) {
+        window.alert("Impossible change color of a cluster without creating at least one")
+        return;   
+    }
+    let t = prompt("enter the value of the hexadecimal color you want: " , "#******")
+    if(t[0]=="#" && t.length==7) changeColor(t);
+    else{
+        window.alert("this isn't a color!")
+        return;
+    }
+}
 
 /* opentoggles between adding and removing the show class, which is used to hide and show the dropdown content */
 function dropdownButton(p) {
@@ -404,4 +468,21 @@ function dropdownButton(p) {
     if(p==4) document.getElementById("myDropdownchange").classList.toggle("show1");
     if(p==5) document.getElementById("myDropdowncolor").classList.toggle("show1");
     if(p==6) document.getElementById("myDropdowntree").classList.toggle("show");
+    if(p==7) document.getElementById("myDropdowngraph").classList.toggle("show");
     }
+
+
+var rgbToHex = function (rgb) { 
+        var hex = Number(rgb).toString(16);
+        if (hex.length < 2) {
+             hex = "0" + hex;
+        }
+        return hex;
+      };
+
+var fullColorHex = function(r,g,b) {   
+        var red = rgbToHex(r);
+        var green = rgbToHex(g);
+        var blue = rgbToHex(b);
+        return red+green+blue;
+      };

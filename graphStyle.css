@@ -16,6 +16,13 @@
     word-spacing: 5px;
     font-family: "Times New Roman", Times, serif;
   }
+  #c_text
+  {
+    color: #FFFFD0;
+    letter-spacing: 1.5px;
+    word-spacing: 5px;
+    font-family: "Times New Roman", Times, serif;
+  }
 
   #navigateText
   {

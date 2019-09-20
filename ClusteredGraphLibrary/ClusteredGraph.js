@@ -6,7 +6,7 @@ class node{
     /**
  *Class node
  * @param {string} label
- * @param {Set<number>} rotationScheme id's array of the outgoing edges from the node 
+ * @param {Set<number>} rotationScheme id's set of the outgoing edges from the node 
  */
     constructor(id,label,rotationScheme){
  	    this.id=id;
