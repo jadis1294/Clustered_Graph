@@ -324,7 +324,7 @@ function treeViewButton(p) {
  * @description delete the other views and redraw the cgraph
  */
 function graphViewButton() {
-    if (graphviewBoolean == true) return;
+    if (graphviewBoolean == true ||flatted==true) return;
     graphviewBoolean = true;
     treeviewBoolean = false;
     logViewBoolean=false;
@@ -469,9 +469,15 @@ function dropdownButton(p) {
     if(p==5) document.getElementById("myDropdowncolor").classList.toggle("show1");
     if(p==6) document.getElementById("myDropdowntree").classList.toggle("show");
     if(p==7) document.getElementById("myDropdowngraph").classList.toggle("show");
+    if(p==8) document.getElementById("myDropdownFlat").classList.toggle("show");
     }
 
-
+/**
+ * @function 
+ * @param {string}
+ * @returns {void}
+ * @description create a hexadecimal color from a rgb color
+ */
 var rgbToHex = function (rgb) { 
         var hex = Number(rgb).toString(16);
         if (hex.length < 2) {
@@ -480,9 +486,69 @@ var rgbToHex = function (rgb) {
         return hex;
       };
 
+      /**
+ * @function 
+ * @param {string}
+ * @returns {void}
+ * @description create a full hexadecimal color from a rgb color
+ */
 var fullColorHex = function(r,g,b) {   
         var red = rgbToHex(r);
         var green = rgbToHex(g);
         var blue = rgbToHex(b);
         return red+green+blue;
       };
+      
+
+/**
+ * @function 
+ * @returns {void}
+ * @description return the clustered configuration of the graph 
+ */
+function retunInClusteredButton(){
+    if(returned==true) return;
+    treeviewBoolean=false;
+    nodes = new Map();
+    for(let item of nodesCopy){
+        let n =new node(item[0],item[1].label,
+            new Set(Array.from(item[1].rotationScheme)));
+        nodes.set(item[0],n);
+        n.cluster=item[1].cluster;
+        n.x=item[1].x;
+        n.y=item[1].y;
+        n.key=item[1].key;
+        n.r=item[1].r;
+    }
+    edges = new Map()
+    for(let item of edgesCopy){
+        let edge= new Edge(item[1].id,item[1].label,item[1].source,item[1].target);
+        edges.set(item[0],edge);
+        edge.x1=item[1].x1;
+        edge.y1=item[1].y1;
+        edge.x2=item[1].x2;
+        edge.y2=item[1].y2;
+    }
+    clusters= new Map();
+    for(let item of clustersCopy){
+        let cluster = new Cluster(item[1].label, item[1].level, 
+                new Set(Array.from(item[1].cildren)), 
+                new Set(Array.from(item[1].parents)),
+                new Set(Array.from(item[1].nodes)));
+        clusters.set(item[0],cluster);
+        cluster.x = item[1].x;
+        cluster.y = item[1].y;
+        cluster.r = item[1].r;
+        cluster.fill = item[1].fill;
+        cluster.key = item[1].key;
+    }
+    undGraph=new UnderlyingGraph("grafo",false,nodes,edges),
+    incTree= new InclusionTree("albero",clusters),
+    clusteredGraph= new ClusteredGraph(undGraph,incTree),
+    d3.select("#inctree").remove();
+    d3.select("#console").remove();
+    d3.select("#cgraph").remove();
+    returned=true;
+    flatted=false
+    initialize();
+    redraw();
+}

@@ -8,7 +8,7 @@
  * @description Create a new Node in #c_node SVG
  */
 function newNode(cluster,key,coordinates,label) {
-    let nodeToInsert= new node(clusteredGraph.graph.nodes.size,label,new Set());
+    let nodeToInsert= new node(key,label,new Set());
     clusteredGraph.graph.nodes.set(key,nodeToInsert);
     cluster.nodes.add(clusteredGraph.graph.nodes.size-1)
     nodeToInsert.cluster=cluster.label;
@@ -20,7 +20,22 @@ function newNode(cluster,key,coordinates,label) {
     addLog(text,consoleCount)
 }
 
-
+/**
+ * @function
+ * @param {number} labelCluster
+ * @param {number} labelNode
+ * @returns {void} 
+ * @description Create a new Node in #c_node SVG for the flattization of the c-graph
+ */
+function addFakeNode(labelCluster,labelNode){
+    let ultimaChiave;
+    for(let key of clusteredGraph.graph.nodes) ultimaChiave= key[0];
+    ultimaChiave++;
+    for(let c of clusteredGraph.tree.clusters)
+        if(c[1].label==labelCluster){
+            newNode(c[1],ultimaChiave,[c[1].x,c[1].y],labelNode);
+        }
+}
 /**
  * @function
  * @param {node} nodo
@@ -70,4 +85,38 @@ function dragNode() {
     d3.select("#c_node")
         .selectAll("circle") // For new circle, go through the update process
         .call(dragN)
+}
+
+/**
+ * @function
+ * @param {node} nodo
+ * @param {string} sourceLabel
+ * @param {string} targetLabel
+ * @returns {void} 
+ * @description Create a new Fake Edge in svg #C_EDGE for the flattizaton of the graph
+ */
+function addFakeEdge(sourceLabel,targetLabel){
+    let s,t,ultimaChiave;
+    if(clusteredGraph.graph.edges.size==0)
+        ultimaChiave=0;
+else{ 
+    for(let key of clusteredGraph.graph.edges)
+    ultimaChiave= key[0]+1;
+}
+
+for(let item of clusteredGraph.graph.nodes){
+    if(item[1].label==sourceLabel)
+        s=clusteredGraph.graph.nodes.get(item[1].id);
+    if(item[1].label==targetLabel)
+        t=clusteredGraph.graph.nodes.get(item[1].id);
+}
+    
+let e= new Edge(ultimaChiave,"edgeFake"+ultimaChiave,s.id,t.id);
+            clusteredGraph.graph.edges.set(ultimaChiave,e);
+            s.rotationScheme.add(e.id);
+            t.rotationScheme.add(e.id)
+            e.x1=s.x;
+            e.y1=s.y;
+            e.x2=t.x;
+            e.y2=t.y;
 }

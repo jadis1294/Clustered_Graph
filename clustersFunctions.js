@@ -241,5 +241,40 @@ function changeColor(t){
     .on("click",function(){
         clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key"))).fill=t;
         redraw();
-});
+    });
 }
+
+/**
+ * @function
+ * @param {number}
+ * @returns {Set<number>} 
+ * @description create a Set<number> of all the nodes in the input cluster and his childrens
+ */
+function nodesInClusterList(idCluster)
+{
+    let cluster= clusteredGraph.tree.clusters.get(idCluster);
+    var nodesInCluster=new Set(Array.from(cluster.nodes));
+    for (let item of cluster.cildren){
+        let l= nodesInClusterList(item)
+        for(let i of l)
+            nodesInCluster.add(i)
+    }
+    return nodesInCluster;
+}
+
+/**
+ * @function
+ * @param {Cluster} cluster
+ * @param {string} label
+ * @returns {void} 
+ * @description Create a new cluster in #c_cluster SVG for the flattization
+ */
+function addFakeCluster(cluster,label){
+    let ultimaChiave;
+    for(let key of clusteredGraph.tree.clusters) ultimaChiave= key[0];
+    ultimaChiave++;
+    let newCoords=[cluster.x,cluster.y];
+    newCluster(newCoords,ultimaChiave,label,1);
+    clusteredGraph.tree.clusters.get(ultimaChiave).fill=cluster.fill;
+}
+

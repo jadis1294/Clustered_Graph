@@ -39,7 +39,15 @@
                               </div>
                         </td></tr>   
                         <tr><td><input class="button" type="button" onclick="deleteObjectButton()" value="Delete object"/></td></tr>
-                        <tr><td><input class="button"type="button" onclick="window.location.href='file:///home/Jadis/Documenti/gitClone/Clustered_Graph/jsdoc/index.html'" value="JsDoc" /></td></tr>
+                        <tr><td>
+                                    <div class="dropdown">
+                                                <button class="button" type="button" onclick="dropdownButton(8)">Flat...</button>
+                                                      <div id="myDropdownFlat" class="dropdown-content">
+                                                            <input class="button" type="button" onclick="flatClusterButton()" value="ON"/>
+                                                            <input class="button" type="button" onclick="retunInClusteredButton()" value="OFF"/>
+                                                      </div>
+                                                </div>
+                                          </td></tr>
                         <tr><td>
                               <div class="dropdown">
                               <button class="button" type="button" onclick="dropdownButton(1)">Views...</button>
@@ -105,7 +113,7 @@
                               </div>      
                         </td></tr>
                         <tr><td><input class="button" type="button" onclick="addTextButton()" value="Add text" /></td></tr>  
-                        <tr><td><input class="button" type="button" onclick="flatClusterButton()" value="FLAT TIME" /></td></tr>
+                        <tr><td><input class="button"type="button" onclick="window.location.href='file:///home/Jadis/Documenti/gitClone/Clustered_Graph/jsdoc/index.html'" value="JsDoc" /></td></tr>
                   </table>
             </div>
                         
