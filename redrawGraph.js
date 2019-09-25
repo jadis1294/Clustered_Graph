@@ -6,14 +6,11 @@
 
 
 function redraw() {
-    let clus = [],
+    console.log("sono entrato in redraw")
+    let clus = Array.from(clusteredGraph.tree.clusters.values()),
         nodes = Array.from(clusteredGraph.graph.nodes.values()),
-        edges = Array.from(clusteredGraph.graph.edges.values()),
-        clusFake = [];
-    for (let c of clusteredGraph.tree.clusters)
-        if (c[1].label == "c_fake")
-            clusFake.push(c[1])
-        else clus.push(c[1])
+        edges = Array.from(clusteredGraph.graph.edges.values());
+
     d3.select("#c_cluster")
         .selectAll("circle")
         .data(clus)
@@ -25,7 +22,7 @@ function redraw() {
         .remove()
 
     d3.select("#c_edge")
-        .selectAll(".edges")
+        .selectAll("path")
         .data(edges)
         .remove()
 
@@ -34,6 +31,27 @@ function redraw() {
         .remove()
 
 
+        d3.select("#c_cluster")
+        .selectAll("circle")
+        .data(clus)
+        .enter()
+        .append("circle")
+        .attr("r", function(d) {
+            return d.r;
+        })
+        .attr("id", "cluster")
+        .attr("cx", function(d) {
+            return d.x;
+        })
+        .attr("cy", function(d) {
+            return d.y;
+        })
+        .attr("fill", function(d) {
+            return d.fill;
+        })
+        .attr("key", function(d) {
+            return d.key
+        });
     d3.select("#c_node")
         .selectAll("circle")
         .data(nodes)
@@ -45,7 +63,7 @@ function redraw() {
             return d.x;
         })
         .attr("cy", function(d) {
-            return d.y
+            return d.y;
         })
         .attr("key", function(d) {
             return d.key
@@ -72,63 +90,6 @@ function redraw() {
                 return d.id;
             })
             .attr("id", "edge");
-
-    d3.select("#c_cluster_Fake")
-        .selectAll("circle")
-        .data(clusFake)
-        .enter()
-        .append("circle")
-        .attr("r", function(d) {
-            return d.r;
-        })
-        .attr("id", "clusterFake")
-        .attr("cx", function(d) {
-            return d.x;
-        })
-        .attr("cy", function(d) {
-            return d.y;
-        })
-        .attr("fill", function(d) {
-            return d.fill;
-        })
-        .attr("key", function(d) {
-            return d.key
-        });
-    let sim = d3.forceSimulation(clusFake)
-        .force("collide", d3.forceCollide().radius(function(d) {
-            return d.r;
-        }).iterations(20))
-        .on("tick", function() {
-            d3.selectAll("circle")
-                .attr("cx", function(d) {
-                    return d.x;
-                })
-                .attr("cy", function(d) {
-                    return d.y;
-                })
-        });
-
-    d3.select("#c_cluster")
-        .selectAll("circle")
-        .data(clus)
-        .enter()
-        .append("circle")
-        .attr("r", function(d) {
-            return d.r;
-        })
-        .attr("id", "cluster")
-        .attr("cx", function(d) {
-            return d.x;
-        })
-        .attr("cy", function(d) {
-            return d.y;
-        })
-        .attr("fill", function(d) {
-            return d.fill;
-        })
-        .attr("key", function(d) {
-            return d.key
-        });
 
     d3.select("#c_text")
       .selectAll("circle")

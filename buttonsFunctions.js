@@ -99,10 +99,12 @@ function createNodesButton() {
     allFalse();
     removeTransformation();
     createNodesBoolean = true;
-    d3.select("#c_cluster")
-        .selectAll("circle")
-        .data(Array.from(clusteredGraph.tree.clusters.values()))
+    d3.select("#cgraph")
         .on("click", function() {
+            d3.select("#c_cluster")
+            .selectAll("circle")
+            .data(Array.from(clusteredGraph.tree.clusters.values()))
+            .on("click", function() {
             if (createNodesBoolean == true) {
                 let cluster = clusteredGraph.tree.clusters.get(parseInt(d3.select(this).attr("key")));
                 let ultimaChiave;
@@ -116,7 +118,8 @@ function createNodesButton() {
                 newNode(cluster, ultimaChiave, d3.mouse(this), "n" + ultimaChiave);
                 redraw();
             }
-        });
+        })
+});
 }
 /**
  * @function 
@@ -168,7 +171,8 @@ function moveClusterButton() {
         .on("click", function() {
             if (dragClusterBoolean == true)
                 dragCluster();
-        });
+            });
+        redraw();
 }
 
 
@@ -190,6 +194,7 @@ function moveNodeButton() {
             if (dragNodeBoolean == true)
                 dragNode();
         });
+        redraw();
 }
 /**
  * @function 

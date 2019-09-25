@@ -11,6 +11,9 @@ function newNode(cluster,key,coordinates,label) {
     let nodeToInsert= new node(key,label,new Set());
     clusteredGraph.graph.nodes.set(key,nodeToInsert);
     cluster.nodes.add(clusteredGraph.graph.nodes.size-1)
+    if(cluster.nodes.size>5){
+        cluster.r+=2
+    }
     nodeToInsert.cluster=cluster.label;
     nodeToInsert.x=coordinates[0];
     nodeToInsert.y=coordinates[1];

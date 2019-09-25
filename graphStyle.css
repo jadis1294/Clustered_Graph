@@ -73,9 +73,9 @@
         stroke: steelblue; 
       stroke-width:2.5px;
       }
-
+/* COLORE ORIGINALE CGRAPH: #FFFFE0F*/
       #cgraph {
-      background-color:#FFFFE0;
+      background-color:#FFFFFF;
   border: 2px solid  DodgerBlue; 
 align-content: center;
 }
@@ -111,7 +111,7 @@ align-content: center;
   text-shadow: 0 1px 0 #fff, 0 -1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff;
 }
 #inctree {
-  background-color:#FFFFE0;
+  background-color:#FFFFFF;
 border: 2px solid  DodgerBlue; 
 
 }
