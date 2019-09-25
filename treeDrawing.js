@@ -115,11 +115,13 @@ var node = g.selectAll(".node")
       return "node" + 
         (d.children ? " node--internal" : " node--leaf"); })
     .attr("transform", function(d) { 
-      return "translate(" + 0 + "," +d.y + ")"; })
+      return "translate(" + 0 + "," +d.y + ")"; });
 
 // adds the circle to the node
 node.append("circle")
-  .attr("r", 10);
+  .attr("r", 10)
+  .attr("cx" ,function(d){ return d.x})
+  .attr("cy",function(d){return d.y});
 
 // adds the text to the node
 node.append("text")
@@ -207,7 +209,9 @@ function drawVerticalTree(treeData,edgesData) {
         .attr("r", 10)
         .attr("id",function(d){
           return d.data.name; 
-      });
+      })
+      .attr("cx" ,function(d){ return d.x})
+      .attr("cy",function(d){return d.y});
           
           // adds the text to the node
     node.append("text")

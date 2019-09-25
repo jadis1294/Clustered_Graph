@@ -261,6 +261,30 @@ function deleteObjectButton() {
             }
         });
 }
+
+
+function createCgraph(clusteredGraphReader){
+    for (let index = 0; index < clusteredGraphReader.clusters.length; index++)
+        clusters.set(clusters.size, clusteredGraphReader.clusters[index]);
+    for (let index = 0; index < clusteredGraphReader.nodes.length; index++)
+        nodes.set(nodes.size, clusteredGraphReader.nodes[index]);
+    for (let index = 0; index < clusteredGraphReader.edges.length; index++)
+        edges.set(edges.size, clusteredGraphReader.edges[index]);
+    for (let c of clusters) {
+        c[1].fill = getColor(0);
+        c[1].parents = new Set(c[1].parents);
+        c[1].cildren = new Set(c[1].cildren);
+        c[1].nodes = new Set(c[1].nodes);
+        c[1].r = radiusCluster * (c[1].cildren.size + 1)
+        c[1].key = c[0];
+    }
+    for (let n of nodes) {
+        n[1].rotationScheme = new Set(n[1].rotationScheme);
+        n[1].r = radiusNode;
+        n[1].key = n[0];
+    }
+}
+
 /**
  * @function 
  * @returns {void}
@@ -273,29 +297,10 @@ function drawJsonButton() {
     }
     text=" loaded a .json file ";
     addLog(text,consoleCount);
-    deleteGraphButton();
-    let clusteredGraphReaderJsonreaderJson = JSON.parse(readerJson.result);
-
-    for (let index = 0; index < clusteredGraphReaderJsonreaderJson.clusters.length; index++)
-        clusters.set(clusters.size, clusteredGraphReaderJsonreaderJson.clusters[index]);
-    for (let index = 0; index < clusteredGraphReaderJsonreaderJson.nodes.length; index++)
-        nodes.set(nodes.size, clusteredGraphReaderJsonreaderJson.nodes[index]);
-    for (let index = 0; index < clusteredGraphReaderJsonreaderJson.edges.length; index++)
-        edges.set(edges.size, clusteredGraphReaderJsonreaderJson.edges[index]);
-    for (let c of clusters) {
-        c[1].fill = getRandomColor();
-        c[1].parents = new Set(c[1].parents);
-        c[1].cildren = new Set(c[1].cildren);
-        c[1].nodes = new Set(c[1].nodes);
-        c[1].r = radiusCluster * (c[1].cildren.size + 1)
-        c[1].key = c[0];
-    }
-    for (let n of nodes) {
-        n[1].rotationScheme = new Set(n[1].rotationScheme);
-        n[1].r = radiusNode;
-        n[1].key = n[0];
-    }
-
+    removeAll();
+    let clusteredGraphReader = JSON.parse(readerJson.result);
+    console.log(clusteredGraphReader)
+    createCgraph(clusteredGraphReader);
     undGraph = new UnderlyingGraph("grafo", false, nodes, edges);
     incTree = new InclusionTree("albero", clusters);
     clusteredGraph = new ClusteredGraph(undGraph, incTree);
@@ -335,6 +340,7 @@ function graphViewButton() {
     logViewBoolean=false;
     d3.select("#inctree").remove();
     d3.select("#console").remove();
+    d3.select("#cgraph").remove()
     initialize();
     redraw();
 }
@@ -352,6 +358,7 @@ function logViewButton(){
     logViewBoolean=true;
     d3.select("#cgraph").remove();
     d3.select("#inctree").remove();
+    d3.select("#console").remove();
     drawConsole();
 }
 
@@ -468,13 +475,15 @@ function changeSingleColorButton(){
 function dropdownButton(p) {
     if(p==0) document.getElementById("myDropdownsave").classList.toggle("show");
     if(p==1) document.getElementById("myDropdownview").classList.toggle("show");
-    if(p==2) document.getElementById("myDropdowncreate").classList.toggle("show1");
-    if(p==3) document.getElementById("myDropdownoption").classList.toggle("show1");
-    if(p==4) document.getElementById("myDropdownchange").classList.toggle("show1");
-    if(p==5) document.getElementById("myDropdowncolor").classList.toggle("show1");
+    if(p==2) document.getElementById("myDropdowncreate").classList.toggle("show");
+    if(p==3) document.getElementById("myDropdownoption").classList.toggle("show");
+    if(p==4) document.getElementById("myDropdownchange").classList.toggle("show");
+    if(p==5) document.getElementById("myDropdowncolor").classList.toggle("show");
     if(p==6) document.getElementById("myDropdowntree").classList.toggle("show");
     if(p==7) document.getElementById("myDropdowngraph").classList.toggle("show");
     if(p==8) document.getElementById("myDropdownFlat").classList.toggle("show");
+    if(p==9) document.getElementById("myDropdownNew").classList.toggle("show");
+    if(p==10) document.getElementById("myDropdownTemplates").classList.toggle("show");
     }
 
 /**
@@ -556,4 +565,13 @@ function retunInClusteredButton(){
     flatted=false
     initialize();
     redraw();
+}
+
+function removeAll(){
+    d3.select("#inctree").remove();
+    d3.select("#console").remove();
+    d3.select("#cgraph").remove();
+    clusteredGraph.graph.nodes.clear();
+    clusteredGraph.graph.edges.clear();
+    clusteredGraph.tree.clusters.clear();
 }

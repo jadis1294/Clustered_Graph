@@ -104,10 +104,6 @@ function initialize() {
         .append("g")
         .attr("id", "c_edge")
     
-    d3.select("#cgraph")
-        .append('g')
-        .attr('id', 'c_cluster_Fake')
-    
     }
 
 
