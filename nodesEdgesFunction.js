@@ -108,12 +108,17 @@ else{
 }
 
 for(let item of clusteredGraph.graph.nodes){
-    if(item[1].label==sourceLabel)
+    //console.log(targetLabel)
+    //console.log(item[1].label)
+    if(item[1].label==sourceLabel){
         s=clusteredGraph.graph.nodes.get(item[1].id);
-    if(item[1].label==targetLabel)
+    }
+    if(item[1].label==targetLabel){
         t=clusteredGraph.graph.nodes.get(item[1].id);
+    }
 }
-    
+    //console.log(s)
+    //console.log(t)
 let e= new Edge(ultimaChiave,"edgeFake"+ultimaChiave,s.id,t.id);
             clusteredGraph.graph.edges.set(ultimaChiave,e);
             s.rotationScheme.add(e.id);

@@ -277,12 +277,36 @@ function createCgraph(clusteredGraphReader){
         c[1].nodes = new Set(c[1].nodes);
         c[1].r = radiusCluster * (c[1].cildren.size + 1)
         c[1].key = c[0];
+        if(c[1].x==undefined)
+            c[1].x=500;
+        if(c[1].y==undefined)
+        c[1].y=150;
     }
     for (let n of nodes) {
         n[1].rotationScheme = new Set(n[1].rotationScheme);
         n[1].r = radiusNode;
         n[1].key = n[0];
+        if(n[1].x==undefined){
+            for (let c of clusters){
+                if(c[1].nodes.has(n[0]))
+                    n[1].x=c[1].x;
+            }
+        }
+        if(n[1].y==undefined){
+            for (let c of clusters){
+                if(c[1].nodes.has(n[0]))
+                    n[1].y=c[1].y;
+            }
+        }
     }
+    for (let e of edges){
+        if(e[1].x1==undefined){
+            e[1].x1=nodes.get(e[1].source).x
+            e[1].y1=nodes.get(e[1].source).y
+            e[1].x2=nodes.get(e[1].target).x
+            e[1].y2=nodes.get(e[1].target).y
+        }
+    } 
 }
 
 /**
@@ -304,6 +328,7 @@ function drawJsonButton() {
     undGraph = new UnderlyingGraph("grafo", false, nodes, edges);
     incTree = new InclusionTree("albero", clusters);
     clusteredGraph = new ClusteredGraph(undGraph, incTree);
+    initialize();
     redraw();
 
 }
@@ -377,7 +402,7 @@ function popUpForRadiusButton(){
     if (radiusCluster == null || radiusCluster == "")
       radiusCluster=40;
       for (let c of clusteredGraph.tree.clusters)
-      c[1].r=radiusCluster
+      c[1].r=radiusCluster * (c[1].cildren.size + 1)
       redraw();
   }
 /**

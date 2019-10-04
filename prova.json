@@ -1,11 +1,27 @@
 {
-    "nodes":[],
-    "edges":[],
-    "clusters":
-    [
-    {"label":"c0", "level": 1, "x" : 438.2247351428353, "y" : 140.8474239881162, "cildren": [], "parents":[], "nodes":[] },
-    {"label":"c1", "level": 1, "x" : 593, "y" : 177.8474239881162, "cildren": [], "parents":[], "nodes":[] },
-    {"label":"c2", "level": 1, "x" : 628, "y" : 100, "cildren": [], "parents":[], "nodes":[] }
-    ]
-
-}
+            "nodes":[
+                {"id":0,"label":"n0","rotationScheme":[4,5],"cluster":"c4","key":0,"r":9,"index":0},
+                {"id":1,"label":"n1","rotationScheme":[0,1,2],"cluster":"c2","key":1,"r":9,"index":0},
+                {"id":2,"label":"n2","rotationScheme":[2,4,6,7],"cluster":"c1","key":2,"r":9,"index":0},
+                {"id":3,"label":"n3","rotationScheme":[0,5,6],"cluster":"c4","key":3,"r":9,"index":1},
+                {"id":4,"label":"n4","rotationScheme":[3,7],"cluster":"c5","key":4,"r":9,"index":0},
+                {"id":5,"label":"n5","rotationScheme":[1,3],"cluster":"c5","key":5,"r":9,"index":1}
+                    ],
+            "edges":[
+                {"id":0,"label":"e0","source":3,"target":1},
+                {"id":1,"label":"e1","source":1,"target":5},
+                {"id":2,"label":"e2","source":2,"target":1},
+                {"id":3,"label":"e3","source":5,"target":4},
+                {"id":4,"label":"e4","source":0,"target":2},
+                {"id":5,"label":"e5","source":3,"target":0},
+                {"id":6,"label":"e6","source":3,"target":2},
+                {"id":7,"label":"e7","source":4,"target":2}
+                    ],
+            "clusters":[
+                {"label":"c0","level":1,"cildren":[4],"parents":[],"nodes":[],"r":80,"fill":"#8AC267","key":0,"index":0},
+                {"label":"c1","level":1,"cildren":[],"parents":[],"nodes":[2],"r":40,"fill":"#7DE42A","key":1,"index":1},
+                {"label":"c2","level":1,"cildren":[],"parents":[],"nodes":[1],"r":40,"fill":"#770B54","key":2,"index":2},
+                {"label":"c3","level":1,"cildren":[5],"parents":[],"nodes":[],"r":80,"fill":"#7AC563","key":3,"index":3},
+                {"label":"c4","level":2,"cildren":[],"parents":[0],"nodes":[0,3],"r":40,"fill":"#F8F736","key":4,"index":0},
+                {"label":"c5","level":2,"cildren":[],"parents":[3],"nodes":[4,5],"r":40,"fill":"#DF2169","key":5,"index":0}
+            ]}

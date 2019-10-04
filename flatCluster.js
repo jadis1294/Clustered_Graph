@@ -57,96 +57,89 @@ function flatClusterButton() {
     let clustersDaCambiare = new Map();
     let archi = new Set();
     let nodiArchiEsterni = new Set();
+
     for (let c of clusteredGraph.tree.clusters) {
-        if (c[1].cildren.size == 0 && c[1].level != 1) {
-            clustersDaCambiare.set(c[0], c[1])
-        }
+        if (c[1].cildren.size != 0 && c[1].nodes.size==0) {
+             clustersDaCambiare.set(c[0], c[1])
+         }
     }
     for(let c of clustersDaCambiare){
-        for (let item of c[1].nodes) {
+            let nodi=nodesInClusterList(c[0])
+            console.log(nodi)
+        for (let item of nodi) {
             //per ogni arco "arc" della rotation schema del nodo "item"
             for (let arc of clusteredGraph.graph.nodes.get(item).rotationScheme) {
-                if (!(nodesInClusterList(Array.from(c[1].parents)[0]).has(clusteredGraph.graph.edges.get(arc).target) &&
-                        nodesInClusterList(Array.from(c[1].parents)[0]).has(clusteredGraph.graph.edges.get(arc).source))) {
+                if (!(nodesInClusterList(c[0]).has(clusteredGraph.graph.edges.get(arc).target) &&
+                        nodesInClusterList(c[0]).has(clusteredGraph.graph.edges.get(arc).source))) {
                     archi.add(clusteredGraph.graph.edges.get(arc))
                     nodiArchiEsterni.add(clusteredGraph.graph.nodes.get(item));
                 }
             }
         }
     }
-    //console.log(archi)
-    //inizio dell'algoritmo
-
-    //STEP 1: CREAZIONE CLUSTER FITTIZI
-    //per ogni cluster da cambiare
-    // elimina il genitore diretto(quello con livello = livello figlio-1)
-    //  e abbassa il libello di uno del cluster considerato c[1]
-    for (let c of clustersDaCambiare ){
-        for (let item of c[1].nodes) {
-            for (let i of clusteredGraph.graph.nodes.get(item).rotationScheme) {
-                //SE E SOLO SE I NODI HANNO ARCHI USCENTI CREO I CLUSTER FITTIZI
-                if (archi.has(clusteredGraph.graph.edges.get(i))) {
-                    for (let parent of c[1].parents){
-                        if (clusteredGraph.tree.clusters.get(parent).level == parseInt(c[1].level) - 1) {
-                            c[1].level -= 1;
-                            addFakeCluster(c[1], c[1].label + "_" + "X");
-                            addFakeCluster(c[1], c[1].label + "_" + "Y");
-                            //deleteCluster(parent)
+    console.log(archi)
+    // //STEP 1: CREAZIONE CLUSTER FITTIZI
+    // //per ogni cluster da cambiare
+    // // abbassa il livello dei figli di 1 e elimina se stesso dalla lista dei genitori dei figli
+    // //  crea due cluster ed elimina il cluster selezionato
+    for(let cluster of clustersDaCambiare){
+        addFakeCluster(cluster[1], cluster[1].label + "_" + "X");
+        addFakeCluster(cluster[1], cluster[1].label + "_" + "Y");
+        for(let figlioId of cluster[1].cildren){
+            clusteredGraph.tree.clusters.get(figlioId).level-=1;
+            clusteredGraph.tree.clusters.get(figlioId).parents.delete(cluster[0]);
+            for(let nodo of nodiArchiEsterni){
+                if(clusteredGraph.tree.clusters.get(figlioId).nodes.has(nodo.id)){
+                    for (let i of nodo.rotationScheme) {
+                        if (archi.has(clusteredGraph.graph.edges.get(i))) {
+                            addFakeNode(cluster[1].label + "_" + "X", "X"+"n" + nodo.id +"e"+i);
+                            addFakeNode(cluster[1].label + "_" + "Y", "Y"+"n" + nodo.id +"e"+i);
                         }
-                                //IN OGNI CASO ELIMINO IL CLUSTER GENITORE
-        deleteCluster(parent);
+                    }
                 }
             }
-            }
         }
-    }
-    console.log(nodiArchiEsterni)
 
-    //STEP 2: CREAZIONE NODI FITTIZI
-    //per ogni nodo con archi esterni creo due nodi nei cluster fittizi creati prima
-    for (let item of nodiArchiEsterni) {
-        for (let i of item.rotationScheme) {
-            if (archi.has(clusteredGraph.graph.edges.get(i))) {
-                addFakeNode(item.cluster + "_X", "n" + item.id + "_X"+"arc"+i);
-                addFakeNode(item.cluster + "_Y", "n" + item.id + "_Y"+"arc"+i);
-            }
-        }
+        clusteredGraph.tree.clusters.delete(cluster[0]);
     }
+
+    // //STEP TRE: CREAZIONE ARCHI FITTIZI
     //STEP TRE: CREAZIONE ARCHI FITTIZI
     for (let i of archi) {
         if (nodiArchiEsterni.has(clusteredGraph.graph.nodes.get(i.source)) &&
             nodiArchiEsterni.has(clusteredGraph.graph.nodes.get(i.target))) {
             console.log("source e target avevano nodi fittizi")
             addFakeEdge(clusteredGraph.graph.nodes.get(i.source).label,
-                "n" + clusteredGraph.graph.nodes.get(i.source).id + "_X"+"arc"+i.id);
+                "X"+"n" + clusteredGraph.graph.nodes.get(i.source).id + "e"+i.id);
 
-            addFakeEdge("n" + clusteredGraph.graph.nodes.get(i.source).id + "_X"+"arc"+i.id,
-                "n" + clusteredGraph.graph.nodes.get(i.source).id + "_Y"+"arc"+i.id);
-            addFakeEdge("n" + clusteredGraph.graph.nodes.get(i.source).id + "_Y"+"arc"+i.id,
-                "n" + clusteredGraph.graph.nodes.get(i.target).id + "_Y"+"arc"+i.id);
+            addFakeEdge("X"+"n" + clusteredGraph.graph.nodes.get(i.source).id + "e"+i.id,
+                        "Y"+"n" + clusteredGraph.graph.nodes.get(i.source).id + "e"+i.id);
 
-            addFakeEdge("n" + clusteredGraph.graph.nodes.get(i.target).id + "_Y"+"arc"+i.id,
-                "n" + clusteredGraph.graph.nodes.get(i.target).id + "_X"+"arc"+i.id);
+            addFakeEdge("Y"+"n" + clusteredGraph.graph.nodes.get(i.source).id + "e"+i.id,
+                        "Y"+"n" + clusteredGraph.graph.nodes.get(i.target).id + "e"+i.id);
 
-            addFakeEdge("n" + clusteredGraph.graph.nodes.get(i.target).id + "_X"+"arc"+i.id,
-                clusteredGraph.graph.nodes.get(i.target).label)
+            addFakeEdge("Y"+"n" + clusteredGraph.graph.nodes.get(i.target).id + "e"+i.id,
+                        "X"+"n" + clusteredGraph.graph.nodes.get(i.target).id + "e"+i.id);
+
+            addFakeEdge("X"+"n" + clusteredGraph.graph.nodes.get(i.target).id + "e"+i.id,
+                        clusteredGraph.graph.nodes.get(i.target).label)
         } else {
             if (nodiArchiEsterni.has(clusteredGraph.graph.nodes.get(i.source))) {
                 console.log("solo source aveva nodi fittizi")
                 addFakeEdge(clusteredGraph.graph.nodes.get(i.source).label,
-                    "n" + clusteredGraph.graph.nodes.get(i.source).id + "_X"+"arc"+i.id);
-                addFakeEdge("n" + clusteredGraph.graph.nodes.get(i.source).id + "_X"+"arc"+i.id,
-                    "n" + clusteredGraph.graph.nodes.get(i.source).id + "_Y"+"arc"+i.id);
-                addFakeEdge("n" + clusteredGraph.graph.nodes.get(i.source).id + "_Y"+"arc"+i.id,
+                            "X"+"n" + clusteredGraph.graph.nodes.get(i.source).id + "e"+i.id);
+                addFakeEdge("X"+"n" + clusteredGraph.graph.nodes.get(i.source).id + "e"+i.id,
+                            "Y"+"n" + clusteredGraph.graph.nodes.get(i.source).id + "e"+i.id);
+                addFakeEdge("Y"+"n" + clusteredGraph.graph.nodes.get(i.source).id + "e"+i.id,
                     clusteredGraph.graph.nodes.get(i.target).label)
             }
             if (nodiArchiEsterni.has(clusteredGraph.graph.nodes.get(i.target))) {
                 console.log("solo target aveva nodi fittizi")
                 addFakeEdge(clusteredGraph.graph.nodes.get(i.source).label,
-                    "n" + clusteredGraph.graph.nodes.get(i.target).id + "_Y"+"arc"+i.id);
-                addFakeEdge("n" + clusteredGraph.graph.nodes.get(i.target).id + "_Y"+"arc"+i.id,
-                    "n" + clusteredGraph.graph.nodes.get(i.target).id + "_X"+"arc"+i.id);
-                addFakeEdge("n" + clusteredGraph.graph.nodes.get(i.target).id + "_X"+"arc"+i.id,
+                            "Y"+"n" + clusteredGraph.graph.nodes.get(i.target).id + "e"+i.id);
+                addFakeEdge("Y"+"n" + clusteredGraph.graph.nodes.get(i.target).id + "e"+i.id,
+                            "X"+"n" + clusteredGraph.graph.nodes.get(i.target).id + "e"+i.id);
+                addFakeEdge("X"+"n" + clusteredGraph.graph.nodes.get(i.target).id + "e"+i.id,
                     clusteredGraph.graph.nodes.get(i.target).label);
             }
         }
@@ -155,7 +148,8 @@ function flatClusterButton() {
         clusteredGraph.graph.nodes.get(i.source).rotationScheme.delete(i.id)
         clusteredGraph.graph.nodes.get(i.target).rotationScheme.delete(i.id)
     }
-    //ridisegno il grafo nella treeView per essere visualizzato meglio
+
+ 
     flatted = true
     treeViewButton(0);
 }
